@@ -1,0 +1,136 @@
+<project name="HK Core" basedir="." default="build">
+
+    <property file="build.properties"/>
+
+    <path id="compile.classpath">
+        <fileset file="${lib.root.dir}/commons/commons-lang-2.1.jar"/>
+        <fileset file="${lib.root.dir}/spring/org.springframework.transaction-3.0.2.RELEASE.jar"/>
+        <fileset file="${lib.root.dir}/spring/org.springframework.core-3.0.2.RELEASE.jar"/>
+        <fileset file="${lib.root.dir}/spring/org.springframework.beans-3.0.2.RELEASE.jar"/>
+        <fileset file="${lib.root.dir}/spring/org.springframework.context-3.0.2.RELEASE.jar"/>
+        <fileset file="${lib.root.dir}/spring/org.springframework.orm-3.0.2.RELEASE.jar"/>
+        <fileset file="${lib.root.dir}/spring/org.springframework.web-3.0.2.RELEASE.jar"/>
+        <fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar"/>
+        <fileset file="${lib.root.dir}/logger/slf4j-api-1.5.10.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/joda-time-1.6.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/TechProUtil.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/shiro-all-1.2.1.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/google-collect-1.0-rc2.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/lambdaj-2.0-with-dependencies.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/junit-4.10.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/paypal_base.jar"/>
+        <fileset file="${lib.root.dir}/citrus/SFA-1.2.jar"/>
+        <fileset file="${lib.root.dir}/icici/sfa.jar"/>
+        <fileset file="${lib.root.dir}/citrus/citruspay-merchant-kit-1.0.jar"/>
+        <fileset file="${lib.root.dir}/stripes/stripes-1.5.3-patched.jar"/>
+        <fileset file="${lib.root.dir}/solr/apache-solr-solrj-3.3.0.jar"/>
+        <fileset file="${lib.root.dir}/solr/apache-solr-core-3.3.0.jar"/>
+        <fileset file="${lib.root.dir}/solr/apache-solr-test-framework-3.3.0.jar"/>
+        <fileset file="${lib.root.dir}/solr/lucene-test-framework-3.3.0.jar"/>
+        <fileset file="${lib.root.dir}/hibernate/hibernate-annotations-3.4.0.GA.jar"/>
+        <fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar"/>
+        <fileset file="${lib.root.dir}/rest/resteasy-jaxrs-2.3.0.GA.jar"/>
+        <fileset file="${lib.root.dir}/rest/jaxrs-api-2.3.0.GA.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/gson-1.4.jar"/>
+        <fileset file="${project.common.dir}/dependencies/javaee.jar"/>
+        <fileset file="${project.common.dir}/dependencies/testng-5.8-jdk15.jar"/>
+        <fileset file="${project.common.dir}/dist/hk-common.jar"/>
+        <fileset file="${lib.root.dir}/freemarker/freemarker.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/HKBridgeClient-1.2.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/activemq-core-5.7.0.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/activemq-pool-5.7.0.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/spring-jms-3.1.0.RELEASE.jar"/>
+
+        <fileset file="${lib.root.dir}/rest/resteasy-jaxrs-2.3.0.GA.jar"/>
+        <fileset file="${lib.root.dir}/rest/jaxrs-api-2.3.0.GA.jar"/>
+
+        <fileset file="${lib.root.dir}/thirdParty/jaxen-1.1.1.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar"/>
+        <fileset file="${lib.root.dir}/http/httpclient-4.0.jar"/>
+        <fileset file="${lib.root.dir}/commons/commons-codec-1.4.jar"/>
+        <fileset file="${lib.root.dir}/commons/commons-httpclient-3.0.1.jar"/>
+        <fileset file="${lib.root.dir}/axis/commons-logging-1.0.4.jar"/>
+    	<fileset file="${lib.root.dir}/thirdParty/opencsv-2.3.jar"/>
+
+    </path>
+
+
+    <!-- Copy any resource or configuration files
+     <target name="copyresources">
+         <copy todir="${package.target.dir}" includeEmptyDirs="no">
+             <fileset dir="${project.src.dir}">
+                 <patternset>
+                     <include name="**/*.conf" />
+                     <include name="**/*.properties" />
+                     <include name="**/*.xml" />
+                     <exclude name="**/*.java" />
+                 </patternset>
+             </fileset>
+         </copy>
+
+     </target>
+     -->
+
+    <target name="build.dependencies" depends="dependencies.check,build.common"/>
+    <target name="dependencies.check">
+        <condition property="build.common.available">
+            <available file="${project.common}/dist/hk-common.jar"/>
+        </condition>
+
+    </target>
+
+    <target name="build.common" unless="build.common.available">
+        <ant dir="${project.common.dir}" target="build" inheritall="false">
+            <property name="build.env" value="${build.env}"/>
+        </ant>
+    </target>
+
+
+    <target name="compile" depends="prepare, build.dependencies">
+        <javac srcdir="src" destdir="${package.target.dir}" debug="true" debuglevel="lines,vars,source" source="1.6"
+               deprecation="false" nowarn="true">
+            <classpath refid="compile.classpath"/>
+            <compilerarg value="-Xlint">
+            </compilerarg>
+        </javac>
+    </target>
+    <target name="build.env.check">
+        <condition property="build.env.prod">
+            <equals arg1="${build.env}" arg2="prod"/>
+        </condition>
+    </target>
+
+
+    <!--<target name="build" depends="compile,build.exploded" description="build production WAR">
+         <jar destfile="${project.dist.dir}/${package.jar.name}">
+             <zipfileset dir="${package.target.dir}" includes="**/**" excludes="test/**/**" />
+         </jar>
+     </target>-->
+
+
+    <target name="build" depends="compile" description="build core jar">
+        <mkdir dir="${project.dist.dir}"/>
+        <jar destfile="${project.dist.dir}/${package.jar.name}">
+            <zipfileset dir="${package.target.dir}" includes="**/**" excludes="test/**/**"/>
+        </jar>
+    </target>
+
+
+    <!-- Remove classes directory for clean build -->
+    <target name="clean" description="Prepare for clean build">
+        <delete dir="${package.target.dir}"/>
+        <delete dir="${project.dist.dir}"/>
+        <delete dir="${package.reports.dir}"/>
+    </target>
+
+    <!-- Check timestamp on files -->
+    <target name="prepare">
+        <mkdir dir="${project.dist.dir}"/>
+        <mkdir dir="${package.target.dir}"/>
+        <tstamp/>
+    </target>
+
+
+</project>
+

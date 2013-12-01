@@ -1,0 +1,132 @@
+body{background:#fff;
+}
+.vtabs {
+	/* a border is required for IE otherwise the tab panels will not be aligned correctly. */
+	position: relative; width:961px; margin-top:9px;
+}
+.vtabs .vtabs-tab-column {
+	left: 0; 
+	margin-top:15px; 
+	float:left;
+	padding-left:20px;
+	width:223px;
+}
+.vtabs .vtabs-tab-column ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+/* css for tab that is open */
+.vtabs .vtabs-tab-column ul li.open, .vtabs .vtabs-tab-column ul li.closed {
+	padding:7px 0px 0px 0px;
+	margin-left:0px; 
+	z-index:10;
+	background:url(../images/tab-but-blue.jpg) no-repeat left top;
+	width:217px; 
+	height:34px;
+	float:right;
+	font-size:14px;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	text-align:left;
+	color:#fff;
+	text-decoration:none;
+	font-weight:bold;	
+}
+/* css for tab that is closed */
+/*.vtabs .vtabs-tab-column ul li {
+	text-align:left;
+	color:#897b06;
+	background:url(../yellow-tab.png) no-repeat left top;
+	width:289px; 
+	height:80px;
+}*/
+.vtabs .vtabs-tab-column ul li img{
+	border:0px;
+}
+/* css for tab hover */	
+.vtabs .vtabs-tab-column ul li:hover {
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	text-align:left;
+	color:#fff;
+	text-decoration:none;
+	font-weight:bold;	
+	background:url(../images/tab-but-blue-s.jpg) no-repeat left top;
+	height:34px;
+	padding:7px 0px 0px 0px;
+	margin-left:0px; 
+	width:217px;
+	font-size:14px;
+}
+.vtabs .vtabs-tab-column ul li.open {
+	background:url(../images/tab-but-white.jpg) no-repeat left top;
+	width:215px; 
+	height:34px;
+	padding:9px 2px 0px 0px;
+	margin-left:0px; 
+	float:right;
+	position:relative;
+}
+
+/* css for link on tab that's open */
+.vtabs .vtabs-tab-column ul li a.open, .vtabs .vtabs-tab-column ul li a.closed {
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size:14px;
+	text-align:left;
+	color:#303030;
+	font-weight:bold;
+	margin: 0px auto;
+	text-decoration: none;	
+	padding:5px 2px 3px 12px;
+}
+
+/* css for link on tab that's closed */
+.vtabs .vtabs-tab-column ul li a.closed {
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	text-align:left;
+	color:#fff;
+	text-decoration:none;
+	font-weight:bold;
+	padding:5px 2px 1px 21px;	
+}	
+
+.box-heading-s a{	
+	color:#000;
+	text-transform: uppercase;
+	text-decoration:none;	
+}
+.box-heading-s a:hover{	
+	color:#000;
+	text-transform: uppercase;
+	text-decoration:underline;	
+}
+.box-img-s{
+	width:81px;
+	height:70px;
+	margin:11px auto 0px auto;
+	border:0px;
+}
+.box-img-s a{
+	border:0px;
+}
+
+
+.vtabs .vtabs-content-column {
+	padding: 0px;
+	float:right;
+	width:719px;
+	background:#FFF;
+	border:#ccd1d2 1px solid;
+	z-index:5;
+	position:relative;
+	margin-left:-50px;
+}
+/* css for the content panels */
+.vtabs .vtabs-content-column .vtabs-content-panel {
+	padding-left: 14px;
+	padding-right: 14px;
+	padding-top: 10px;
+	padding-bottom: 3px;
+	margin: 0px;
+	height:242px; 
+}
+

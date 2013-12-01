@@ -1,0 +1,972 @@
+/sports-nutrition
+-/sports-nutrition/protein : Protein
+--/sports-nutrition/protein/whey-protein : Whey Protein
+--/sports-nutrition/protein/mass-gainer : Mass Gainer
+--/sports-nutrition/protein/protein-blends : Protein Blends
+--/sports-nutrition/protein/casein-protein : Casein Protein
+--/sports-nutrition/protein/soy-protein : Soy Protein
+--/sports-nutrition/protein/egg-protein : Egg Protein
+--/sports-nutrition/protein/ready-to-drink  : Ready To Drink
+--/sports-nutrition/protein/protein-bars : Protein Bars
+--/sports-nutrition/protein/super-savers : Super Savers
+-/sports-nutrition/pre-post-workout : Pre/Post-Workout
+--/sports-nutrition/pre-post-workout/pre-workout : Pre-Workout
+--/sports-nutrition/pre-post-workout/creatine : Creatine
+--/sports-nutrition/pre-post-workout/glutamine : Glutamine
+--/sports-nutrition/pre-post-workout/nitric-oxide : Nitric Oxide
+---/sports-nutrition/pre-post-workout/carb-blends : Carb Blends
+--/sports-nutrition/pre-post-workout/electrolytes : Electrolytes
+--/sports-nutrition/pre-post-workout/hardcore : Hardcore
+-/sports-nutrition/weight-management: Weight Management
+--/sports-nutrition/weight-management/fat-burner : Fat Burner
+--/sports-nutrition/weight-management/meal-replacement : Meal Replacement
+--/sports-nutrition/weight-management/appetite-control : Appetite Control
+--/sports-nutrition/weight-management/weight-gainer : Weight Gainer
+--/sports-nutrition/weight-management/sweeteners : Sweeteners
+--/sports-nutrition/weight-management/diet-plans : Diet Plans
+-/sports-nutrition/workout-essentials : Workout Essentials
+--/sports-nutrition/workout-essentials/multivitamins :  Multivitamins
+--/sports-nutrition/workout-essentials/amino-acids-bcaa : Amino Acids / BCAA
+--/sports-nutrition/workout-essentials/liver-support  : Liver Support
+--/sports-nutrition/workout-essentials/joint-support : Joint Support
+--/sports-nutrition/workout-essentials/detox-supplements : Detox Supplements
+--/sports-nutrition/workout-essentials/zma :ZMA
+--/sports-nutrition/workout-essentials/other-support : Other Support
+-/sports-nutrition/accessories: Accessories
+--/sports-nutrition/accessories/shakers
+--/sports-nutrition/accessories/storage
+--/sports-nutrition/accessories/gloves-straps-belts: Gloves/Straps/Belts
+--/sports-nutrition/accessories/apparel: Apparel
+--/sports-nutrition/accessories/gym-essential-kits
+--/sports-nutrition/accessories/tanning-creams-lotions : Tanning Creams/Lotions
+-/sports-nutrition/popular-brands: Popular Brands
+--/brand/sports-nutrition/ON: ON
+--/brand/sports-nutrition/Dymatize: Dymatize
+--/brand/sports-nutrition/Muscletech: MuscleTech
+--/brand/sports-nutrition/MuscleBlaze: MuscleBlaze
+--/brand/sports-nutrition/TWINLAB: Twinlab
+--/brand/sports-nutrition/Gaspari+Nutrition: Gaspari Nutrition
+--/brand/sports-nutrition/Universal+Nutrition: Universal Nutrition
+--/brand/sports-nutrition/Ultimate+Nutrition: Ultimate Nutrition
+--/brand/sports-nutrition/MusclePharm: MusclePharm
+--/brand/sports-nutrition/Nature%27s+Best: Nature's Best
+--/brand/sports-nutrition/Weider: Weider
+--/brand/sports-nutrition/BSN : BSN
+
+/health-nutrition
+-/health-nutrition/shop-by-concern: Shop by Condition
+--/health-nutrition/shop-by-concern/arthritis-support
+--/health-nutrition/shop-by-concern/heart-support : Heart/ Blood Pressure
+--/health-nutrition/shop-by-need/hair-skin-nails:Hair/ Skin/ Nails
+--/health-nutrition/shop-by-concern/fertility-support
+--/health-nutrition/shop-by-need/sexual-wellness
+--/health-nutrition/shop-by-need/bone-muscle:Bone/ Muscle
+--/health-nutrition/shop-by-concern/diabetes-support
+--/health-nutrition/shop-by-concern/eye-health
+--/health-nutrition/shop-by-concern/immunity
+--/health-nutrition/shop-by-concern/other-concerns
+
+-/health-nutrition/shop-by-need
+--/health-nutrition/shop-by-need/men-health
+--/health-nutrition/shop-by-need/women-health
+--/health-nutrition/shop-by-need/children
+--/health-nutrition/shop-by-need/prenatal-care
+--/health-nutrition/shop-by-need/post-pregnancy
+--/health-nutrition/shop-by-need/elderly-care
+
+
+-/health-nutrition/dietary-supplements: Shop by Product
+--/health-nutrition/dietary-supplements/multivitamins
+--/health-nutrition/dietary-supplements/omegas-fish-oil-flax:Omegas/ Fish Oil/ Flax
+--/health-nutrition/dietary-supplements/vitamin-a-z
+--/health-nutrition/dietary-supplements/minerals
+--/health-nutrition/dietary-supplements/herbs
+--/health-nutrition/dietary-supplements/anti-oxidants:Anti-Oxidants
+--/health-nutrition/dietary-supplements/condition-specific
+--/health-nutrition/dietary-supplements/other-supplements
+
+-/health-nutrition/weight-management
+--/health-nutrition/weight-management/fat-metabolism : Fat Burners
+--/health-nutrition/weight-management/weight-gain
+--/health-nutrition/weight-management/meal-replacement
+--/health-nutrition/weight-management/low-calorie-food
+--/health-nutrition/weight-management/sweeteners
+--/health-nutrition/weight-management/diets
+
+-/health-nutrition/alternative-remedies: Ayurveda
+--/health-nutrition/alternative-remedies/formulations
+--/health-nutrition/alternative-remedies/juices
+--/health-nutrition/alternative-remedies/single-herb
+--/health-nutrition/alternative-remedies/green-supplement
+
+-/health-nutrition/healthy-food
+--/health-nutrition/healthy-food/beverages
+--/health-nutrition/healthy-food/organic
+--/health-nutrition/healthy-food/gluten-free
+--/health-nutrition/healthy-food/drinks-and-powders
+--/health-nutrition/healthy-food/breakfasts-and-snacks
+--/health-nutrition/healthy-food/food-preparation
+--/health-nutrition/healthy-food/disorder-specific
+
+/sports : Sports & Fitness
+-/sports/fitness-accessories
+--/sports/fitness-accessories/abs-core : Abs & Core
+---/sports/fitness-accessories/abs-core/pilates-yoga : Pilates & Yoga
+---/sports/fitness-accessories/abs-core/fitness-mats
+---/sports/fitness-accessories/abs-core/gym-balls
+---/sports/fitness-accessories/abs-core/abs-oblique-trainers : Abs/Oblique Trainers
+--/sports/fitness-accessories/strength-training
+---/sports/fitness-accessories/strength-training/upper-body
+---/sports/fitness-accessories/strength-training/arm-leg-weights : Arm & Leg Weights
+---/sports/fitness-accessories/strength-training/medicine-balls
+---/sports/fitness-accessories/strength-training/dumbbells
+---/sports/fitness-accessories/strength-training/kettlebells
+---/sports/fitness-accessories/strength-training/gym-rods
+---/sports/fitness-accessories/strength-training/weight-plates
+---/sports/fitness-accessories/strength-training/dumbbell-and-plate-rack
+--/sports/fitness-accessories/aerobics-general-fitness : Aerobics & General Fitness
+---/sports/fitness-accessories/aerobics-general-fitness/aerobic-steppers
+---/sports/fitness-accessories/aerobics-general-fitness/hand-grips
+---/sports/fitness-accessories/aerobics-general-fitness/jump-ropes
+---/sports/fitness-accessories/aerobics-general-fitness/resistance-bands
+--/sports/fitness-accessories/support-gear
+---/sports/fitness-accessories/support-gear/hand-wrist : Hand & Wrist
+---/sports/fitness-accessories/support-gear/back
+---/sports/fitness-accessories/support-gear/knee
+---/sports/fitness-accessories/support-gear/elbow
+---/sports/fitness-accessories/support-gear/thighs
+---/sports/fitness-accessories/support-gear/ankle
+--/sports/fitness-accessories/rehabilitation-supports
+--/sports/fitness-accessories/heart-rate-monitors
+---/sports/fitness-accessories/heart-rate-monitors/accessories
+--/sports/fitness-accessories/weighing-scales
+---/sports/fitness-accessories/weighing-scales/Analog
+---/sports/fitness-accessories/weighing-scales/Digital
+---/sports/fitness-accessories/weighing-scales/BMI
+--/sports/fitness-accessories/gym-clothing
+--/sports/fitness-accessories/gym-essential-kits
+--/sports/fitness-accessories/bottles-shakers : Bottles & Shakers
+--/sports/fitness-accessories/fitness-watches
+--/sports/fitness-accessories/combos
+--/sports/fitness-accessories/miscellaneous-accessories
+--/sports/fitness-accessories/sklz : SKLZ
+-/sports/fitness-equipment
+--/sports/fitness-equipment/premium-fitness-equipments
+---/sports/fitness-equipment/premium-fitness-equipments/treadmills
+---/sports/fitness-equipment/premium-fitness-equipments/crosstrainers
+---/sports/fitness-equipment/premium-fitness-equipments/exercise-bikes
+---/sports/fitness-equipment/premium-fitness-equipments/home-gyms
+---/sports/fitness-equipment/premium-fitness-equipments/miscellaneous-equipments
+--/sports/fitness-equipment/treadmills
+---/sports/fitness-equipment/treadmills/home
+---/sports/fitness-equipment/treadmills/commercial
+--/sports/fitness-equipment/crosstrainers
+---/sports/fitness-equipment/crosstrainers/home
+---/sports/fitness-equipment/crosstrainers/commercial
+--/sports/fitness-equipment/exercise-bike
+---/sports/fitness-equipment/exercise-bike/home
+---/sports/fitness-equipment/exercise-bike/commercial
+--/sports/fitness-equipment/rowers
+--/sports/fitness-equipment/home-gym
+---/sports/fitness-equipment/home-gym/multi-gym-accessories
+--/sports/fitness-equipment/smith-machines
+--/sports/fitness-equipment/steppers
+--/sports/fitness-equipment/bench-equipments
+--/sports/fitness-equipment/multi-utility-equipments
+--/sports/fitness-equipment/abdominal-machines
+--/sports/fitness-equipment/heart-rate-monitors
+---/sports/fitness-equipment/heart-rate-monitors/accessories
+--/sports/fitness-equipment/massage-equipments
+--/sports/fitness-equipment/trampolines
+--/sports/fitness-equipment/weighing-scales
+---/sports/fitness-equipment/weighing-scales/Analog
+---/sports/fitness-equipment/weighing-scales/Digital
+---/sports/fitness-equipment/weighing-scales/BMI
+--/sports/fitness-equipment/miscellaneous-equipments
+-/sports/sports-equipment
+--/sports/sports-equipment/football
+---/sports/sports-equipment/football/balls
+---/sports/sports-equipment/football/gloves
+---/sports/sports-equipment/football/shin-guards
+---/sports/sports-equipment/football/accessories
+--/sports/sports-equipment/badminton
+---/sports/sports-equipment/badminton/rackets
+---/sports/sports-equipment/badminton/shuttles
+---/sports/sports-equipment/badminton/accessories
+--/sports/sports-equipment/table-tennis
+---/sports/sports-equipment/table-tennis/tt-tables: TT Tables
+---/sports/sports-equipment/table-tennis/rackets
+---/sports/sports-equipment/table-tennis/blades
+---/sports/sports-equipment/table-tennis/rubbers
+---/sports/sports-equipment/table-tennis/balls
+---/sports/sports-equipment/table-tennis/accessories
+--/sports/sports-equipment/cricket
+---/sports/sports-equipment/cricket/bats
+----/sports/sports-equipment/cricket/bats/kashmir-willow: Kashmir Willow
+----/sports/sports-equipment/cricket/bats/english-willow: English Willow
+---/sports/sports-equipment/cricket/balls
+---/sports/sports-equipment/cricket/gloves
+---/sports/sports-eqipment/cricket/helmets
+---/sports/sports-equipment/cricket/pads
+---/sports/sports-equipment/cricket/guards
+---/sports/sports-equipment/cricket/bags
+---/sports/sports-equipment/cricket/caps
+---/sports/sports-equipment/cricket/cricket-wear
+---/sports/sports-equipment/cricket/accessories
+--/sports/sports-equipment/chess
+--/sports/sports-equipment/swimming
+---/sports/sports-equipment/swimming/goggles
+---/sports/sports-equipment/swimming/caps
+---/sports/sports-equipment/swimming/accessories
+---/sports/sports-equipment/swimming/combos
+--/sports/sports-equipment/tennis
+---/sports/sports-equipment/tennis/rackets
+---/sports/sports-equipment/tennis/balls
+---/sports/sports-equipment/tennis/strings
+---/sports/sports-equipment/tennis/accessories
+--/sports/sports-equipment/basketball
+---/sports/sports-equipment/basketball/balls
+---/sports/sports-equipment/basketball/accessories
+--/sports/sports-equipment/volleyball
+---/sports/sports-equipment/volleyball/balls
+--/sports/sports-equipment/squash
+---/sports/sports-equipment/squash/rackets
+---/sports/sports-equipment/squash/balls
+---/sports/sports-equipment/squash/strings
+---/sports/sports-equipment/squash/accessories
+--/sports/sports-equipment/boxing
+---/sports/sports-equipment/boxing/punching-bags
+---/sports/sports-equipment/boxing/gloves
+---/sports/sports-equipment/boxing/wraps
+---/sports/sports-equipment/boxing/protection-gear
+---/sports/sports-equipment/boxing/boxing-clothing
+---/sports/sports-equipment/boxing/jabs
+---/sports/sports-equipment/boxing/accessories
+--/sports/sports-equipment/hockey
+---/sports/sports-equipment/hockey/sticks
+---/sports/sports-equipment/hockey/balls
+--/sports/sports-equipment/golf
+--/sports/sports-equipment/skating
+--/sports/sports-equipment/sports-watches
+--/sports/sports-equipment/other-balls
+--/sports/sports-equipment/combos
+--/sports/sports-equipment/sklz : SKLZ
+-/sports/apparel
+--/sports/apparel/men
+--/sports/apparel/women
+--/sports/apparel/kids
+--/sports/apparel/3d-t-shirts : 3D T Shirts
+--/sports/apparel/gym-clothing
+--/sports/apparel/sports-wear
+--/sports/apparel/bags
+--/sports/apparel/caps
+--/sports/apparel/socks
+--/sports/apparel/tracksuits
+--/sports/apparel/bottles-shakers : Bottles & Shakers
+--/sports/apparel/miscellaneous
+-/sports/footwear
+--/sports/footwear/lifestyle-sport
+--/sports/footwear/football-shoes
+--/sports/footwear/athletics-shoes
+--/sports/footwear/court-shoes
+--/sports/footwear/basketball-shoes
+--/sports/footwear/cricket-shoes
+--/sports/footwear/jogging-shoes
+--/sports/footwear/table-tennis-shoes
+--/sports/footwear/slippers
+--/sports/footwear/kids-shoes
+--/sports/footwear/other-shoes
+--/sports/footwear/accessories
+-/sports/fab-corner
+--/sports/fab-corner/win-win-deals
+--/sports/fab-corner/league-of-innovations
+--/sports/fab-corner/new-arrivals
+--/sports/fab-corner/footwear-clearance
+--/sports/fab-corner/flat-50-off
+
+/diabetes
+-/diabetes/devices : Monitoring Devices
+--/diabetes/devices/meters : Glucose Meters
+--/diabetes/devices/bp-monitor : BP Monitors
+--/diabetes/devices/body-fat-monitor: Body Fat Monitors
+--/diabetes/devices/step-counter: Step Counters
+-/diabetes/testing-supplies
+--/diabetes/testing-supplies/strips
+--/diabetes/testing-supplies/lancets
+--/diabetes/testing-supplies/lancing-devices
+--/diabetes/testing-supplies/insulin-supplies
+-/diabetes/diabetic-food
+--/diabetes/diabetic-food/sweetener
+--/diabetes/diabetic-food/sugar-free-drinks : Sugar Free Drinks
+--/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food
+--/diabetes/diabetic-food/diabetic-supplements
+-/diabetes/weight-management
+--/diabetes/weight-management/weighing-scales : Weighing Scales
+--/diabetes/weight-management/body-fat-monitor
+--/diabetes/weight-management/treadmills
+--/diabetes/weight-management/step-counter
+--/diabetes/weight-management/low-calorie-diet
+-/diabetes/foot-care
+--/diabetes/foot-care/insoles-and-heelcups : Insoles & Heel Cups
+--/diabetes/foot-care/sock-and-slippers : Shoes & Slippers
+--/diabetes/foot-care/neat-and-fresh-feet : Neat & Fresh Feet
+--/diabetes/foot-care/guards-and-supports : Guards & Supports
+-/diabetes/what-s-new : What's New
+--/diabetes/what-s-new/just-in  :Just In
+--/diabetes/what-s-new/combos
+--/diabetes/what-s-new/diabetes-checkups : Diabetes Checkups
+--/diabetes/what-s-new/diabetes-management : Diabetes Management
+
+/health-devices : Health Devices
+-/health-devices/blood-pressure
+--/health-devices/blood-pressure/arm-bp-monitor : Arm BP Monitor
+--/health-devices/blood-pressure/wrist-bp-monitor : Wrist BP Monitor
+--/health-devices/blood-pressure/bp : Manual BP Monitor
+---/health-devices/blood-pressure/bp/aneroid-sphygmomanometer : Aneroid
+---/health-devices/blood-pressure/bp/clock-type-sphygmomanometer: Dial
+---/health-devices/blood-pressure/bp/mercury-sphygmomanometer : Mercury
+---/health-devices/blood-pressure/bp/mercury-free-sphygmomanometer: Mercury Free
+---/health-devices/blood-pressure/bp/electrical-sphygmomanometer: Electrical
+--/health-devices/blood-pressure/heart-rate-monitor : Heart Rate Monitors
+
+--/health-devices/blood-pressure/accessories : BP Accessories
+--/health-devices/blood-pressure/combo : BP Combos
+-/health-devices/respiratory-care
+--/health-devices/respiratory-care/vaporiser : Vaporiser
+--/health-devices/respiratory-care/sleep-apnea
+---/health-devices/respiratory-care/sleep-apnea/cpap-machines : CPAP Machines
+---/health-devices/respiratory-care/sleep-apnea/bipap-machines : BiPAP Machines
+---/health-devices/respiratory-care/sleep-apnea/nasal-face-masks : Nasal Face Masks
+--/health-devices/respiratory-care/nebulizer: Nebulizers
+---/health-devices/respiratory-care/nebulizer/compressor-nebulizer: Compressor
+---/health-devices/respiratory-care/nebulizer/ultrasonic-nebulizer: Ultrasonic
+---/health-devices/respiratory-care/nebulizer/nebulizer-for-kids: Kids Nebulizer
+--/health-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
+--/health-devices/respiratory-care/lung-exerciser: Lung Exercisers
+--/health-devices/respiratory-care/pulse-oximeters : Pulse Oximeters
+---/health-devices/respiratory-care/pulse-oximeters/fingertip-oximeter: Finger Tip
+---/health-devices/respiratory-care/pulse-oximeters/Wrist-oximeter: Wrist
+---/health-devices/respiratory-care/pulse-oximeters/handheld-oximeter: Handheld
+-/health-devices/pain-management : Pain Management
+--/health-devices/pain-management/massager : Massagers
+---/health-devices/pain-management/massager/handheld
+---/health-devices/pain-management/massager/abdominal-massager : Abdominal
+---/health-devices/pain-management/massager/back-massager : Back
+---/health-devices/pain-management/massager/foot-massager : Foot
+--/health-devices/pain-management/pain-relief : Pain Relief
+---/health-devices/pain-management/pain-relief/pain-therapy
+---/health-devices/pain-management/pain-relief/hot-cold-pack
+---/health-devices/pain-management/pain-relief/heat-therapy
+---/health-devices/pain-management/pain-relief/infrared-massager
+--/health-devices/pain-management/supports : Body Supports
+---/health-devices/pain-management/supports/cervical-support : Cervical
+---/health-devices/pain-management/supports/shoulder-support : Shoulder
+---/health-devices/pain-management/supports/abdominal-support : Abdominal
+---/health-devices/pain-management/supports/back-support : Back
+--/health-devices/pain-management/hand-supports : Hand Supports
+---/health-devices/pain-management/hand-supports/elbow-support : Elbow
+---/health-devices/pain-management/hand-supports/wrist-support : Wrist
+---/health-devices/pain-management/hand-supports/finger-splints : Finger
+--/health-devices/pain-management/leg-supports : Leg Supports
+---/health-devices/pain-management/leg-supports/thigh-support : Thigh
+---/health-devices/pain-management/leg-supports/knee-support : Knee
+---/health-devices/pain-management/leg-supports/calf-support : Calf
+---/health-devices/pain-management/leg-supports/ankle-support : Ankle
+---/health-devices/pain-management/leg-supports/foot-support : Foot
+--/health-devices/pain-management/fracture-products : Fracture
+--/health-devices/pain-management/crepe-bandages
+--/health-devices/pain-management/physiotherapy-aids
+---/health-devices/pain-management/physiotherapy-aids/orthotic-aids
+---/health-devices/pain-management/physiotherapy-aids/traction-kits
+---/health-devices/pain-management/physiotherapy-aids/compression-stockings : Compression Stockings
+-/health-devices/medical-care : Medical Care
+--/health-devices/medical-care/innovative-health-devices:Innovative Health Devices
+--/health-devices/medical-care/weighing-scales
+---/health-devices/medical-care/weighing-scales/digital
+---/health-devices/medical-care/weighing-scales/analog
+--/health-devices/medical-care/wheel-chair
+---/health-devices/medical-care/wheel-chair/power-wheel-chairs: Power
+---/health-devices/medical-care/wheel-chair/manual-wheel-chairs: Manual
+---/health-devices/medical-care/wheel-chair/commode : Commode
+--/health-devices/medical-care/walking-aids
+---/health-devices/medical-care/walking-aids/walking-sticks
+---/health-devices/medical-care/walking-aids/crutches
+---/health-devices/medical-care/walking-aids/walkers
+--/health-devices/medical-care/heat-treatment : Heat/Cold Treatment
+---/health-devices/medical-care/heat-treatment/blankets
+---/health-devices/medical-care/heat-treatment/hot-water-bottles
+---/health-devices/medical-care/heat-treatment/heating-pads
+---/health-devices/medical-care/heat-treatment/hot-cold-pack
+--/health-devices/medical-care/bed : Mattress
+---/health-devices/medical-care/bed/air-bed : Air Bed
+---/health-devices/medical-care/bed/water-bed : Water Bed
+--/health-devices/medical-care/family-care
+---/health-devices/medical-care/family-care/first-aid
+---/health-devices/medical-care/family-care/medicine : Medicine Management
+---/health-devices/medical-care/family-care/crepe-bandages
+---/health-devices/medical-care/family-care/band-aids
+---/health-devices/medical-care/family-care/thermometers : Digital Thermometers
+---/health-devices/medical-care/family-care/infrared-thermometer
+---/health-devices/medical-care/family-care/ear-thermometer
+---/health-devices/medical-care/family-care/hearing-aids
+--/health-devices/medical-care/women-care
+---/health-devices/medical-care/women-care/ovulation-kits
+---/health-devices/medical-care/women-care/menopause-kits
+---/health-devices/medical-care/women-care/pregnancy-kits
+---/health-devices/medical-care/women-care/chlamydia-test
+---/health-devices/medical-care/women-care/breast-screening
+--/health-devices/medical-care/baby-care
+---/health-devices/medical-care/baby-care/guards
+---/health-devices/medical-care/baby-care/mosquito-nets
+---/health-devices/medical-care/baby-care/baby-thermometer : Baby Thermometer
+---/health-devices/medical-care/baby-care/medical-kits
+---/health-devices/medical-care/baby-care/nebulizer
+---/health-devices/medical-care/baby-care/humidifier
+---/health-devices/medical-care/baby-care/strollers
+---/health-devices/medical-care/baby-care/walkers
+---/health-devices/medical-care/baby-care/stature-meter
+---/health-devices/medical-care/weighing-scales/baby
+---/health-devices/medical-care/weighing-scales/kitchen
+-/health-devices/clinical-products
+--/health-devices/clinical-products/stethoscope
+---/health-devices/clinical-products/stethoscope/general
+---/health-devices/clinical-products/stethoscope/cardiology
+---/health-devices/clinical-products/stethoscope/pediatric
+---/health-devices/clinical-products/stethoscope/dual-head
+--/health-devices/clinical-products/steth-accessories : Stethoscope Parts
+---/health-devices/clinical-products/steth-accessories/binaurals
+---/health-devices/clinical-products/steth-accessories/spares
+--/health-devices/clinical-products/dressing-aids
+---/health-devices/clinical-products/dressing-aids/dressing-pads
+---/health-devices/clinical-products/dressing-aids/tapes
+---/health-devices/clinical-products/dressing-aids/bandages
+--/health-devices/clinical-products/clinic-apparel
+---/health-devices/clinical-products/clinic-apparel/examination-gloves
+---/health-devices/clinical-products/clinic-apparel/surgical-cap
+---/health-devices/clinical-products/clinic-apparel/face-mask
+---/health-devices/clinical-products/clinic-apparel/uniforms
+--/health-devices/clinical-products/supplies
+---/health-devices/clinical-products/supplies/undersheets
+---/health-devices/clinical-products/supplies/urine-pot : Bed Pan
+--/health-devices/clinical-products/devices
+---/health-devices/clinical-products/devices/fetal-doppler
+---/health-devices/clinical-products/devices/suction-devices
+---/health-devices/clinical-products/devices/knee-hammer
+
+
+/home-living:Home & Living
+-/home-living/breakfast-maker:Breakfast Maker
+--/home-living/breakfast-maker/sandwich-maker:Sandwich Maker
+--/home-living/breakfast-maker/popup-toaster:Pop-up Toaster
+--/home-living/breakfast-maker/coffee-maker:Coffee Maker
+--/home-living/breakfast-maker/electric-kettles:Electric Kettles
+-/home-living/mix-grind-chop:Mixer & Blender
+--/home-living/mix-grind-chop/juicer-mixer-grinder:Juicer Mixer Grinder
+---/home-living/mix-grind-chop/juicer-mixer-grinder/juicer:Juicer
+---/home-living/mix-grind-chop/juicer-mixer-grinder/mixer-grinder:Mixer Grinder
+---/home-living/mix-grind-chop/juicer-mixer-grinder/jmg:Juicer Mixer Grinder
+--/home-living/mix-grind-chop/hand-blender:Hand Blender
+--/home-living/mix-grind-chop/food-processor:Food Processor
+--/home-living/mix-grind-chop/chopper:Chopper
+-/home-living/cook-fry:Cook & Fry
+--/home-living/cook-fry/induction-cooker:Induction Cooker
+--/home-living/cook-fry/cooker:Cooker
+---/home-living/cook-fry/cooker/rice-cooker:Rice Cooker
+---/home-living/cook-fry/cooker/pressure-cooker:Pressure Cooker
+--/home-living/cook-fry/steamer-fryer:Steamer & Fryer
+--/home-living/cook-fry/microwave:Microwave & OTG
+---/home-living/cook-fry/microwave/solo:Solo
+---/home-living/cook-fry/microwave/grill:Grill
+---/home-living/cook-fry/microwave/convection:Convection
+---/home-living/cook-fry/microwave/OTG:OTG
+-/home-living/home-appliances:Home Appliances
+--/home-living/home-appliances/iron:Iron
+---/home-living/home-appliances/iron/dry:Dry Iron
+---/home-living/home-appliances/iron/steam:Steam Iron
+--/home-living/home-appliances/lights:Emergency Light
+--/home-living/home-appliances/vacuum-cleaner:Vacuum Cleaner
+
+/eye
+-/eye/lenses
+--/eye/lenses/yearly
+--/eye/lenses/monthly-disposables
+--/eye/lenses/2-weekly-disposables
+--/eye/lenses/daily-disposables
+--/eye/lenses/multi-focal-lenses
+--/eye/lenses/toric-lenses
+--/eye/lenses/color-lenses
+-/eye/sunglasses
+--/eye/sunglasses/aviator       :Aviator
+--/eye/sunglasses/square         :Square
+--/eye/sunglasses/cat-eye       :Cat Eye
+--/eye/sunglasses/wayfarer      :Wayfarer
+--/eye/sunglasses/wrap          :Wrap
+--/eye/sunglasses/retro         :Retro
+--/eye/sunglasses/women
+--/eye/sunglasses/men
+--/eye/sunglasses/unisex
+--/eye/sunglasses/kids    :   Kids
+-/eye/eyeglasses :Eyeglasses
+--/eye/eyeglasses/half-rim :Half Rim
+---/eye/eyeglasses/half-rim/small   : Small
+---/eye/eyeglasses/half-rim/medium  : Medium
+---/eye/eyeglasses/half-rim/large   :   Large
+---/eye/eyeglasses/half-rim/oval
+---/eye/eyeglasses/half-rim/rectangular
+--/eye/eyeglasses/full-rim :Full Rim
+---/eye/eyeglasses/full-rim/small   : Small
+---/eye/eyeglasses/full-rim/medium  : Medium
+---/eye/eyeglasses/full-rim/large   :   Large
+---/eye/eyeglasses/full-rim/oval
+---/eye/eyeglasses/full-rim/rectangular
+--/eye/eyeglasses/frameless
+---/eye/eyeglasses/frameless/small   : Small
+---/eye/eyeglasses/frameless/medium  : Medium
+---/eye/eyeglasses/frameless/large   :   Large
+---/eye/eyeglasses/frameless/oval
+---/eye/eyeglasses/frameless/rectangular
+--/eye/eyeglasses/reading-glasses :Reading Glasses
+--/eye/eyeglasses/kids :  Kids
+--/eye/eyeglasses/men    : Men
+---/eye/eyeglasses/men/small   : Small
+---/eye/eyeglasses/men/medium  : Medium
+---/eye/eyeglasses/men/large   :   Large
+---/eye/eyeglasses/men/oval
+---/eye/eyeglasses/men/rectangular
+--/eye/eyeglasses/women   :  Women
+---/eye/eyeglasses/women/small   : Small
+---/eye/eyeglasses/women/medium  : Medium
+---/eye/eyeglasses/women/large   :   Large
+---/eye/eyeglasses/women/oval
+---/eye/eyeglasses/women/rectangular
+--/eye/eyeglasses/unisex   : Unisex
+---/eye/eyeglasses/unisex/small   : Small
+---/eye/eyeglasses/unisex/medium  : Medium
+---/eye/eyeglasses/unisex/large   :   Large
+---/eye/eyeglasses/unisex/oval
+---/eye/eyeglasses/unisex/rectangular
+-/eye/eye-care
+--/eye/eye-care/solutions
+--/eye/eye-care/lens-case
+--/eye/eye-care/lens-cleaner :Lens Cleaner
+--/eye/eye-care/eye-patches : Eye Patches
+--/eye/eye-care/under-eye-creams : Under Eye Creams
+--/eye/eye-care/relaxing-masks : Relaxing Masks
+--/eye/eye-care/eye-supplements  :Eye Supplements
+-/eye/what-s-new  :What's New
+--/eye/what-s-new/just-in :Just In
+--/eye/what-s-new/top-deals:Top Deals
+--/eye/what-s-new/gift-kits:  Gift Kits
+--/eye/what-s-new/eye-care-services:Eye Care Services
+
+/personal-care
+-/personal-care/pain-relief
+--/personal-care/pain-relief/supports
+---/personal-care/pain-relief/supports/crepe-bandages
+---/personal-care/pain-relief/supports/cervical-supports
+---/personal-care/pain-relief/supports/shoulder-clavicle-supports
+---/personal-care/pain-relief/supports/chest-supports
+---/personal-care/pain-relief/supports/wrist-forearm-supports
+---/personal-care/pain-relief/supports/elbow-thumb-supports
+---/personal-care/pain-relief/supports/arm-supports
+---/personal-care/pain-relief/supports/abdominal-supports
+---/personal-care/pain-relief/supports/back-supports
+---/personal-care/pain-relief/supports/compression-supports
+---/personal-care/pain-relief/supports/knee-supports
+---/personal-care/pain-relief/supports/ankle-supports
+---/personal-care/pain-relief/supports/traction-accessories
+---/personal-care/pain-relief/supports/premium-range
+---/personal-care/pain-relief/bandages
+--/personal-care/pain-relief/sprays
+--/personal-care/pain-relief/first-aid-kits
+--/personal-care/pain-relief/heating-belt
+--/personal-care/pain-relief/hot-cold-therapy
+--/personal-care/pain-relief/physiotherapy-aids
+--/personal-care/pain-relief/patches
+--/personal-care/pain-relief/balms-creams: Balms & Creams
+-/personal-care/women
+--/personal-care/women/self-defense
+---/personal-care/women/pepper-spray
+---/personal-care/women/alarms
+--/personal-care/women/sanitary-napkins
+--/personal-care/women/tampons
+--/personal-care/women/panty-liners
+--/personal-care/women/ovulation-kits
+--/personal-care/women/menopause-kits
+--/personal-care/women/pregnancy
+---/personal-care/women/pregnancy/pregnancy-kits
+---/personal-care/women/pregnancy/pre-pregnancy
+---/personal-care/women/pregnancy/post-pregnancy
+--/personal-care/women/chlamydia-test
+--/personal-care/women/condoms
+--/personal-care/women/intimate-care
+--/personal-care/women/combo-offers
+-/personal-care/sexual-wellness
+--/personal-care/sexual-wellness/accessories
+--/personal-care/sexual-wellness/condoms
+---/personal-care/sexual-wellness/condoms/dotted
+---/personal-care/sexual-wellness/condoms/ultra-thin
+---/personal-care/sexual-wellness/condoms/flavoured
+---/personal-care/sexual-wellness/condoms/long-lasting
+---/personal-care/sexual-wellness/condoms/others
+--/personal-care/sexual-wellness/female-condoms
+--/personal-care/sexual-wellness/sexual-enhancers
+--/personal-care/sexual-wellness/supplements
+--/personal-care/sexual-wellness/fertility
+---/personal-care/sexual-wellness/fertility/men
+---/personal-care/sexual-wellness/fertility/women
+--/personal-care/sexual-wellness/combo-offers
+-/personal-care/foot-care-pedicure : Foot Care/Pedicure
+--/personal-care/foot-care-pedicure/fresh-beautiful-feet: Fresh & Beautiful Feet
+--/personal-care/foot-care-pedicure/insoles
+---/personal-care/foot-care-pedicure/insoles/gel-insoles
+---/personal-care/foot-care-pedicure/insoles/latex-insoles
+---/personal-care/foot-care-pedicure/insoles/fashion-insoles
+---/personal-care/foot-care-pedicure/insoles/silicon-insoles
+---/personal-care/foot-care-pedicure/shoe-care
+--/personal-care/foot-care-pedicure/nail-care
+---/personal-care/foot-care-pedicure/nail-care/nail-clippers
+---/personal-care/foot-care-pedicure/nail-care/nail-cleaners
+---/personal-care/foot-care-pedicure/nail-care/nail-file
+--/personal-care/foot-care-pedicure/nail-care/miscellaneous
+--/personal-care/foot-care-pedicure/combo-offers
+-/personal-care/oral-hygiene
+--/personal-care/oral-hygiene/manual-toothbrushes
+--/personal-care/oral-hygiene/electronic-toothbrushes
+---/personal-care/oral-hygiene/electronic-toothbrushes/juniors
+---/personal-care/oral-hygiene/electronic-toothbrushes/Adults
+---/personal-care/oral-hygiene/electronic-toothbrushes/refills
+--/personal-care/oral-hygiene/interdental-brush
+--/personal-care/oral-hygiene/mini-flosser
+--/personal-care/oral-hygiene/tongue-cleaner
+--/personal-care/oral-hygiene/mouth-wash-freshener :  Mouth Wash & Freshener
+--/personal-care/oral-hygiene/toothpaste
+--/personal-care/oral-hygiene/accessories
+-/personal-care/misc
+--/personal-care/misc/adult-diapers
+---/personal-care/misc/adult-diapers/pull-ups-diapers
+---/personal-care/misc/adult-diapers/diapers
+---/personal-care/misc/adult-diapers/underpads
+---/personal-care/misc/adult-diapers/diaper-rash-cream
+--/personal-care/misc/elderly-mobiles
+--/personal-care/misc/mosquito-repellents
+---/personal-care/misc/mosquito-repellents/mosquito-nets
+---/personal-care/misc/mosquito-repellents/mosquito-coils
+---/personal-care/misc/mosquito-repellents/mosquito-machines-refills: Mosquito Machines & Refills
+---/personal-care/misc/mosquito-repellents/mosquito-mats
+--/personal-care/misc/grooming
+---/personal-care/misc/grooming/Shavers-trimmers: Shavers & Trimmers
+---/personal-care/misc/grooming/razors-blades: Razors & Blades
+---/personal-care/misc/grooming/shaving-cream-gel: Shaving Cream & Gel
+---/personal-care/misc/grooming/shaving-brushes
+---/personal-care/misc/grooming/scissors
+---/personal-care/misc/grooming/after-shave-lotion: After Shave Lotion
+--/personal-care/misc/smoking-cessation
+--/personal-care/misc/wipes-tissues:Wipes & Tissues
+--/personal-care/misc/travel-kits
+--/personal-care/misc/sanitizers
+--/personal-care/misc/air-freshener
+--/personal-care/misc/buds
+--/personal-care/misc/hair-builders-fibres
+--/personal-care/misc/anti-snoring-sprays
+
+/beauty
+-/beauty/what-s-new: What's New
+--/beauty/what-s-new/new-arrivals
+--/beauty/what-s-new/gift-ideas
+---/beauty/what-s-new/gift-ideas/for-her
+---/beauty/what-s-new/gift-ideas/for-him
+--/beauty/what-s-new/limited-period-offers
+--/beauty/what-s-new/camisoles
+--/beauty/what-s-new/natural-products
+--/beauty/what-s-new/home-spa-products
+--/beauty/what-s-new/organic-skin-care
+--/beauty/what-s-new/organic-make-up
+--/beauty/what-s-new/personal-hygiene
+---/beauty/what-s-new/personal-hygiene/sanitary-napkins
+---/beauty/what-s-new/personal-hygiene/tampons
+---/beauty/what-s-new/personal-hygiene/panty-liners:Panty Liners
+---/beauty/what-s-new/personal-hygiene/ovulation-kits
+---/beauty/what-s-new/personal-hygiene/menopause-kits
+---/beauty/what-s-new/personal-hygiene/pregnancy
+---/beauty/what-s-new/personal-hygiene/chlamydia-test
+---/beauty/what-s-new/personal-hygiene/condoms
+---/beauty/what-s-new/personal-hygiene/intimate-care:Intimate Care
+---/beauty/what-s-new/personal-hygiene/combo-offers
+--/beauty/what-s-new/women-nutrition
+---/beauty/what-s-new/women-nutrition/fertility
+---/beauty/what-s-new/women-nutrition/calcium
+---/beauty/what-s-new/women-nutrition/wellness
+---/beauty/what-s-new/women-nutrition/weight-watch
+--/beauty/what-s-new/spas-salons : Spas & Salons
+--/beauty/what-s-new/breast-cancer-home-test
+-/beauty/face-care
+--/beauty/face-care/cleanser
+---/beauty/face-care/cleanser/normal
+---/beauty/face-care/cleanser/oily
+---/beauty/face-care/cleanser/dry
+---/beauty/face-care/cleanser/cleansing-milk
+--/beauty/face-care/toner
+--/beauty/face-care/cream
+---/beauty/face-care/cream/normal
+---/beauty/face-care/cream/oily
+---/beauty/face-care/cream/dry
+--/beauty/face-care/lotion
+---/beauty/face-care/lotion/normal
+---/beauty/face-care/lotion/oily
+---/beauty/face-care/lotion/dry
+--/beauty/face-care/scrub
+--/beauty/face-care/fairness
+--/beauty/face-care/acne-blemish-control
+--/beauty/face-care/night-treatment
+--/beauty/face-care/anti-aging
+---/beauty/face-care/anti-aging/creams
+---/beauty/face-care/anti-aging/serum
+--/beauty/face-care/sun-protection
+--/beauty/face-care/facial
+---/beauty/face-care/facial/bleach
+---/beauty/face-care/facial/massage-cream
+---/beauty/face-care/facial/gel
+---/beauty/face-care/facial/kit
+--/beauty/face-care/mask-pack : Mask & Pack
+--/beauty/face-care/eye-care
+--/beauty/face-care/steamers-massagers : Steamers & Massagers
+-/beauty/bath-body : Bath & Body
+--/beauty/bath-body/soap-body-wash : Soap & Body Wash
+---/beauty/bath-body/soap-body-wash/soap
+---/beauty/bath-body/soap-body-wash/body-wash
+--/beauty/bath-body/body-scrub
+--/beauty/bath-body/bath-salts-bubbles : Bath Salts & Bubbles
+--/beauty/bath-body/body-lotion
+--/beauty/bath-body/body-treatment
+---/beauty/bath-body/body-treatment/anti-marks
+---/beauty/bath-body/body-treatment/body-oil
+--/beauty/bath-body/body-shaping
+---/beauty/bath-body/body-shaping/creams
+---/beauty/bath-body/body-shaping/shapewear
+---/beauty/bath-body/body-shaping/accessories
+--/beauty/bath-body/talc-deodorant : Talc & Deodorant
+---/beauty/bath-body/talc-deodorant/talc
+---/beauty/bath-body/talc-deodorant/deodorant
+--/beauty/bath-body/hand-foot-care : Hand & Foot Care
+---/beauty/bath-body/hand-foot-care/hand-care
+---/beauty/bath-body/hand-foot-care/foot-care
+--/beauty/bath-body/hair-removal
+--/beauty/bath-body/accessories
+--/beauty/bath-body/fragrances
+-/beauty/make-up
+--/beauty/make-up/organic-make-up
+--/beauty/make-up/face
+---/beauty/make-up/face/primer
+---/beauty/make-up/face/concealer
+---/beauty/make-up/face/foundation
+---/beauty/make-up/face/powder
+---/beauty/make-up/face/blush
+---/beauty/make-up/face/highlighter
+--/beauty/make-up/eyes
+---/beauty/make-up/eyes/kohl
+---/beauty/make-up/eyes/eye-liner
+---/beauty/make-up/eyes/eye-brow
+---/beauty/make-up/eyes/mascara
+---/beauty/make-up/eyes/eye-shadow
+---/beauty/make-up/eyes/false-eyelashes
+--/beauty/make-up/lips
+---/beauty/make-up/lips/lip-gloss
+---/beauty/make-up/lips/lipstick
+---/beauty/make-up/lips/lip-liner
+---/beauty/make-up/lips/lip-balm
+--/beauty/make-up/nail
+---/beauty/make-up/nail/nail-polish
+---/beauty/make-up/nail/remover
+---/beauty/make-up/nail/nail-treatment
+---/beauty/make-up/nail/nail-art
+---/beauty/make-up/nail/nail-tools
+--/beauty/make-up/kit
+--/beauty/make-up/body
+--/beauty/make-up/make-up-remover
+--/beauty/make-up/tools
+---/beauty/make-up/tools/brushes-applicators : Brushes & Applicators
+---/beauty/make-up/tools/eyelash-curler
+---/beauty/make-up/tools/tweezers
+---/beauty/make-up/tools/mirror
+---/beauty/make-up/tools/other
+--/beauty/make-up/wipes-tissues : Wipes & Tissues
+--/beauty/make-up/sindoor
+--/beauty/make-up/coloured-lenses
+-/beauty/hair-care
+--/beauty/hair-care/shampoo
+--/beauty/hair-care/conditioner
+--/beauty/hair-care/hair-mask
+--/beauty/hair-care/hair-color
+--/beauty/hair-care/hair-oil
+--/beauty/hair-care/serum
+--/beauty/hair-care/styling-products
+--/beauty/hair-care/hair-loss-treatment : Hair Loss & Treatment
+---/beauty/hair-care/hair-loss-treatment/hair-loss
+---/beauty/hair-care/hair-loss-treatment/hair-supplements
+---/beauty/hair-care/hair-loss-treatment/hair-building-fibres
+---/beauty/hair-care/hair-loss-treatment/anti-dandruff
+--/beauty/hair-care/hair-styling-tools
+---/beauty/hair-care/hair-styling-tools/dryers
+---/beauty/hair-care/hair-styling-tools/straighteners
+---/beauty/hair-care/hair-styling-tools/curlers
+---/beauty/hair-care/hair-styling-tools/accessories
+--/beauty/hair-care/combs-brushes : Combs & Brushes
+---/beauty/hair-care/combs-brushes/comb
+---/beauty/hair-care/combs-brushes/brush
+-/beauty/men
+--/beauty/men/shaving
+---/beauty/men/shaving/cream-foam-gel : Cream, Foam & Gel
+---/beauty/men/shaving/razor
+---/beauty/men/shaving/cartridges
+---/beauty/men/shaving/shaver
+---/beauty/men/shaving/after-shave
+---/beauty/men/shaving/kits
+---/beauty/men/shaving/brush
+--/beauty/men/deodorant
+--/beauty/men/hair-gel
+--/beauty/men/shower-gel
+--/beauty/men/lotion
+--/beauty/men/fairness
+--/beauty/men/face-wash
+--/beauty/men/face-mask
+--/beauty/men/talc
+--/beauty/men/fragrances
+
+/parenting
+-/parenting/moms-maternity : Moms & Maternity
+--/parenting/moms-maternity/am-i-pregnant : Am I Pregnant?
+--/parenting/moms-maternity/ovulation-kits
+--/parenting/moms-maternity/skin-care-for-moms
+--/parenting/moms-maternity/nutrition-for-moms
+--/parenting/moms-maternity/maternity-belts
+--/parenting/moms-maternity/maternity-pads
+--/parenting/moms-maternity/post-pregnancy-body-shaping
+-/parenting/diapering
+--/parenting/diapering/diapers
+---/parenting/diapering/diapers/combo-offers
+---/parenting/diapering/diapers/small
+---/parenting/diapering/diapers/medium
+---/parenting/diapering/diapers/large
+---/parenting/diapering/diapers/xl-xxl : XL/XXL
+--/parenting/diapering/nappies
+--/parenting/diapering/wipes
+--/parenting/diapering/diaper-rash-creams
+--/parenting/diapering/changing-mats
+--/parenting/diapering/diaper-bags
+--/parenting/diapering/potty-training
+--/parenting/diapering/diaper-liners
+-/parenting/feeding-nursing : Feeding & Nursing
+--/parenting/feeding-nursing/breastfeeding-aids
+---/parenting/feeding-nursing/breastfeeding-aids/breast-pumps
+---/parenting/feeding-nursing/breastfeeding-aids/breast-milk-bottles
+---/parenting/feeding-nursing/breastfeeding-aids/breast-pads
+---/parenting/feeding-nursing/breastfeeding-aids/breast-shields
+---/parenting/feeding-nursing/breastfeeding-aids/misc
+--/parenting/feeding-nursing/nipples-teats : Nipples & Teats
+--/parenting/feeding-nursing/formula-supplements : Formula & Supplements
+--/parenting/feeding-nursing/bibs-napkins : Bibs & Napkins
+--/parenting/feeding-nursing/sterilizers-warmers : Sterilizers & Warmers
+--/parenting/feeding-nursing/bottle-cleaning
+--/parenting/feeding-nursing/teethers
+--/parenting/feeding-nursing/pacifiers
+--/parenting/feeding-nursing/bottles
+---/parenting/feeding-nursing/bottles/breast-milk-bottles
+---/parenting/feeding-nursing/bottles/glass-bottles
+---/parenting/feeding-nursing/bottles/plastic-bottles
+--/parenting/feeding-nursing/baby-kids-utensils : Baby & Kids Utensils
+---/parenting/feeding-nursing/baby-kids-utensils/bowls-plates : Bowls & Plates
+---/parenting/feeding-nursing/baby-kids-utensils/feeders
+---/parenting/feeding-nursing/baby-kids-utensils/sippers-cups : Sippers & Cups
+---/parenting/feeding-nursing/baby-kids-utensils/spoons-forks : Spoons & Forks
+---/parenting/feeding-nursing/baby-kids-utensils/food-storage
+---/parenting/feeding-nursing/baby-kids-utensils/lunch-boxes
+---/parenting/feeding-nursing/baby-kids-utensils/water-bottles
+---/parenting/feeding-nursing/baby-kids-utensils/milk-powder-containers
+-/parenting/bath-skin-care : Bath & Skin Care
+--/parenting/bath-skin-care/soaps-gels : Soaps & Gels
+--/parenting/bath-skin-care/shampoo
+--/parenting/bath-skin-care/creams-lotions : Creams & Lotions
+--/parenting/bath-skin-care/powder
+--/parenting/bath-skin-care/oral-care
+---/parenting/bath-skin-care/oral-care/toothpaste
+---/parenting/bath-skin-care/oral-care/toothbrush
+--/parenting/bath-skin-care/massage-oils
+--/parenting/bath-skin-care/towels-wraps
+--/parenting/bath-skin-care/laundry-detergents
+--/parenting/bath-skin-care/bath-tubs-accessories : Bath Tubs & Accessories
+---/parenting/bath-skin-care/bath-tubs-accessories/bath-tubs
+---/parenting/bath-skin-care/bath-tubs-accessories/accessories
+---/parenting/bath-skin-care/bath-tubs-accessories/bath-toys
+--/parenting/bath-skin-care/grooming
+---/parenting/bath-skin-care/grooming/combs-hair-brushes : Combs & Brushes
+---/parenting/bath-skin-care/grooming/nail-clippers-scissors: Nail Clippers & Scissors
+---/parenting/bath-skin-care/grooming/ear-buds-cotton-balls:Ear Buds & Cotton Balls
+---/parenting/bath-skin-care/grooming/sunglasses
+---/parenting/bath-skin-care/grooming/powder-puff
+--/parenting/bath-skin-care/sunscreen
+--/parenting/bath-skin-care/combo-packs
+-/parenting/health-safety : Health & Safety
+--/parenting/health-safety/thermometers
+--/parenting/health-safety/medical-care
+--/parenting/health-safety/eye-care : Eye Care
+---/parenting/health-safety/eye-care/eyeglasses
+---/parenting/health-safety/eye-care/sunglasses
+--/parenting/health-safety/child-proofing
+--/parenting/health-safety/baby-monitors
+--/parenting/health-safety/disinfectants
+--/parenting/health-safety/repellents
+--/parenting/health-safety/misc
+--/parenting/health-safety/baby-kids-health-accessories : Baby & Kids Health Accessories
+---/parenting/health-safety/baby-kids-health-accessories/humidifiers
+---/parenting/health-safety/baby-kids-health-accessories/nasal-aspirators
+-/parenting/toys-more : Toys & More
+--/parenting/toys-more/toys
+---/parenting/toys-more/toys/rattles
+---/parenting/toys-more/toys/bath-toys
+---/parenting/toys-more/toys/teethers
+---/parenting/toys-more/toys/other-toys
+--/parenting/toys-more/strollers
+--/parenting/toys-more/car-seats
+--/parenting/toys-more/walkers-cycles-cars : Walkers, Cycles & Cars
+--/parenting/toys-more/books-cds : Books & Cds
+--/parenting/toys-more/apparels
+---/parenting/toys-more/apparels/caps
+---/parenting/toys-more/apparels/shoes
+---/parenting/toys-more/apparels/socks
+---/parenting/toys-more/apparels/t-shirts : T-shirts
+--/parenting/toys-more/school-supplies
+---/parenting/toys-more/school-supplies/school-bags
+---/parenting/toys-more/school-supplies/lunch-boxes
+---/parenting/toys-more/school-supplies/water-bottles
+--/parenting/toys-more/furniture
+---/parenting/toys-more/furniture/play-mats
+---/parenting/toys-more/furniture/baby-bed
+---/parenting/toys-more/furniture/table-chair
+---/parenting/toys-more/furniture/swings
+---/parenting/toys-more/furniture/bassinets-bouncers
+--/parenting/toys-more/baby-carriers
+--/parenting/toys-more/misc
+
+/services
+-/services/organ-specific-tests :Organ Specific Tests
+--/services/organ-specific-tests/eye
+--/services/organ-specific-tests/liver
+--/services/organ-specific-tests/brain
+--/services/organ-specific-tests/heart
+--/services/organ-specific-tests/kidney
+-/services/disease-specific-tests :Disease Specific Tests
+--/services/disease-specific-tests/hiv :HIV
+--/services/disease-specific-tests/dengue
+--/services/disease-specific-tests/diabetes
+--/services/disease-specific-tests/thyroid
+--/services/disease-specific-tests/arthritis
+--/services/disease-specific-tests/hepatitis
+--/services/disease-specific-tests/tuberculosis
+--/services/disease-specific-tests/vitamin-profile :Vitamin Profile
+--/services/disease-specific-tests/lipid-profile :Lipid Profile/Cholestrol
+-/services/health-checkups
+--/services/health-checkups/radiology
+--/services/health-checkups/pathology
+--/services/health-checkups/pre-marital
+--/services/health-checkups/complete-health-checkups :Complete Health Checkups

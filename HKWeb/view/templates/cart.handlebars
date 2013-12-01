@@ -1,0 +1,61 @@
+<div id="appOfferID">
+{{#view id="applicableOfferContainer" class="applicableOfferContainer" controllerBinding="controller"}}
+  <div class="applicableOfferHead">Offers available for your cart</div>
+  {{#each array in controller.finalApplicableOffers}}
+    <div class="offerRow">
+      {{#each value in array}}
+        <div class="applicableOffer minHeight">
+          <div class="applicableOfferDesc" style="width: 92%;">{{value.description}}</div>
+          {{#if value.terms}}
+            <div class="applicableOfferTerms"><strong>Terms:</strong>{{value.terms}}</div>
+          {{/if}}
+          {{#if value.endDate}}
+            <div class="offerEndDate">Valid till: {{value.endDate}}</div>
+          {{/if}}
+          {{#if controller.isHKUser}}
+            {{#if value.removeFlag}}
+              <div class="appliedButton">APPLIED</div>
+              <div class="removeButton">
+                <form {{bindAttr action="controller.applyURL"}} method="post">
+                  <input name="offer" {{bindAttr value="value.id"}} type="hidden">        
+                  <input name="removeOffer" value="REMOVE" style="border: 1px solid #ddd !important;" class="button_raj" type="submit">
+                  <div style="display: none;">
+                    <input type="hidden" name="_sourcePage" value="nO5Kai0iUtU9VJRiFjXm-vAFsFkyxchJ">
+                    <input type="hidden" name="__fp" value="CATsOzMhS2E=">
+                  </div>
+                </form>
+              </div>
+            {{else}}
+            <div class="applyFormButton">
+              <form {{bindAttr action="controller.applyURL"}} method="post">
+                <input name="offer" {{bindAttr value="value.id"}} type="hidden">        
+                <input name="applyOffer" value="APPLY" class="button_raj" type="submit">
+                <div style="display: none;">
+                  <input type="hidden" name="_sourcePage" value="nO5Kai0iUtU9VJRiFjXm-vAFsFkyxchJ">
+                  <input type="hidden" name="__fp" value="CATsOzMhS2E=">
+                </div>
+              </form>
+            </div>
+          {{/if}}
+
+          {{else}}
+            
+            {{#if controller.isTempUser}}
+              <div class="loginLinkCSS">
+                <a class="lrg" {{bindAttr href = "controller.loginWithRedirectURL"}} >login / signup</a> to apply
+              </div>
+            {{/if}}
+
+            {{#if controller.isHKUnverified}}
+              <div class="loginLinkCSS">
+                <a class="lrg" {{bindAttr href = "controller.verifyActionURL"}} >Verify your account</a> to apply
+              </div>
+            {{/if}}
+
+          {{/if}}
+        </div>
+      {{/each}}
+    </div>
+  {{/each}}
+{{/view}}
+</div>

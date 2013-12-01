@@ -1,0 +1,151 @@
+<project name="HK Admin Core" basedir="." default="build">
+
+	<property file="build.properties" />
+
+	<path id="compile.classpath">
+		<fileset file="${lib.root.dir}/commons/commons-lang-2.1.jar" />
+		<fileset file="${lib.root.dir}/commons/commons-io-1.4.jar" />
+    <fileset file="${lib.root.dir}/commons/commons-email-1.1.jar" />
+		<fileset file="${lib.root.dir}/spring/org.springframework.transaction-3.0.2.RELEASE.jar" />
+		<fileset file="${lib.root.dir}/spring/org.springframework.core-3.0.2.RELEASE.jar" />
+		<fileset file="${lib.root.dir}/spring/org.springframework.beans-3.0.2.RELEASE.jar" />
+		<fileset file="${lib.root.dir}/spring/org.springframework.context-3.0.2.RELEASE.jar" />
+		<fileset file="${lib.root.dir}/spring/org.springframework.orm-3.0.2.RELEASE.jar" />
+		<fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar" />
+		<fileset file="${lib.root.dir}/logger/slf4j-api-1.5.10.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/joda-time-1.6.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/gson-1.4.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/poi-3.6-20091214.jar" />
+		<fileset file="${lib.root.dir}/hibernate/hibernate-annotations-3.4.0.GA.jar" />
+		<fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar" />
+		<fileset file="${lib.root.dir}/stripes/stripes-1.5.3-patched.jar" />
+		<fileset file="${project.common.dir}/dependencies/javaee.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/itextpdf-5.2.1.jar" />
+        <fileset file="${lib.root.dir}/thirdParty/activation.jar" />
+        <fileset file="${lib.root.dir}/axis/axis.jar" />
+        <fileset file="${lib.root.dir}/axis/axis-ant.jar" />
+        <fileset file="${lib.root.dir}/axis/commons-discovery-0.2.jar" />
+        <fileset file="${lib.root.dir}/axis/commons-logging-1.0.4.jar" />
+        <fileset file="${lib.root.dir}/axis/jaxrpc.jar" />
+        <fileset file="${lib.root.dir}/axis/log4j-1.2.8.jar" />
+        <fileset file="${lib.root.dir}/axis/mailapi.jar" />
+        <fileset file="${lib.root.dir}/axis/saaj.jar" />
+        <fileset file="${lib.root.dir}/axis/wsdl4j-1.5.1.jar" />
+        <fileset file="${lib.root.dir}/fedex/DeleteShipmentClient.jar" />
+        <fileset file="${lib.root.dir}/fedex/FedExShip.jar" />
+        <fileset file="${lib.root.dir}/fedex/PickupWebServiceClient.jar" />
+        <fileset file="${lib.root.dir}/fedex/TrackWebServiceClient.jar" />
+		<fileset file="${lib.root.dir}/barcode/barcode4j.jar" />
+		<fileset file="${project.common.dir}/dependencies/groovy-all-1.5.6.jar" />
+		<fileset file="${project.common.dir}/dist/hk-common.jar" />
+		<fileset file="${project.core.dir}/dist/hk-core.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
+        <fileset file="${lib.root.dir}/freemarker/freemarker.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/jets3t-0.8.1.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/IOTCourierTrack.jar" />
+
+		<fileset file="${lib.root.dir}/thirdParty/HKBridgeClient-1.2.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/activemq-core-5.7.0.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/activemq-pool-5.7.0.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/spring-jms-3.1.0.RELEASE.jar" />
+        <fileset file="${lib.root.dir}/rest/resteasy-jaxrs-2.3.0.GA.jar" />
+        <fileset file="${lib.root.dir}/rest/jaxrs-api-2.3.0.GA.jar" />
+        <fileset file="${lib.root.dir}/mysql/mysql-connector-java-5.1.10-bin.jar" />
+
+	</path>
+
+
+	<!-- Copy any resource or configuration files 
+	<target name="copyresources">
+		<copy todir="${package.target.dir}" includeEmptyDirs="no">
+			<fileset dir="${project.src.dir}">
+				<patternset>
+					<include name="**/*.conf" />
+					<include name="**/*.properties" />
+					<include name="**/*.xml" />
+					<exclude name="**/*.java" />
+				</patternset>
+			</fileset>
+		</copy>
+
+	</target>
+	-->
+
+	<target name="build.dependencies" depends="dependencies.check,build.core" />
+	<target name="dependencies.check">
+		<condition property="build.core.available">
+			<available file="${project.core.dir}/dist/hk-core.jar" />
+		</condition>
+	</target>
+
+	<target name="build.core" unless="build.core.available">
+		<ant dir="${project.core.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
+	</target>
+
+	<target name="compile" depends="prepare, build.dependencies">
+		<mkdir dir="${package.target.dir}" />
+		<javac srcdir="src" destdir="${package.target.dir}" debug="true" debuglevel="lines,vars,source" source="1.5" deprecation="false" nowarn="true">
+			<classpath refid="compile.classpath" />
+			<compilerarg value="-Xlint">
+			</compilerarg>
+		</javac>
+	</target>
+	<target name="build.env.check">
+		<condition property="build.env.prod">
+			<equals arg1="${build.env}" arg2="prod" />
+		</condition>
+	</target>
+
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="compile.classpath" />
+
+	<target name="compile.groovy" depends = "prepare" description="Compile Java classes for project">
+		<groovyc srcdir="src" destdir="${package.target.dir}" fork="true" listfiles="true">
+			<classpath refid="compile.classpath" />
+			<javac debug="${compiler.debug}">
+			</javac>
+		</groovyc>
+
+	</target>
+
+
+	<!--<target name="build" depends="compile,build.exploded" description="build production WAR">
+		<jar destfile="${project.dist.dir}/${package.jar.name}">
+			<zipfileset dir="${package.target.dir}" includes="**/**" excludes="test/**/**" />
+		</jar>
+	</target>-->
+
+
+
+	<target name="build" depends="compile.groovy, compile" description="build report jar">
+		<jar destfile="${project.dist.dir}/${package.jar.name}">
+			<zipfileset dir="${package.target.dir}" includes="**/**" excludes="test/**/**" />
+		</jar>
+	</target>
+
+
+	<!-- Remove classes directory for clean build -->
+	<target name="clean" description="Prepare for clean build">
+
+		<delete dir="${package.target.dir}" />
+		<delete dir="${project.dist.dir}" />
+	</target>
+
+	<target name="dir.check">
+		<condition property="dir.exists">
+			<available file="${directory}" type="dir" />
+		</condition>
+	</target>
+
+	<!-- Check timestamp on files -->
+	<target name="prepare">
+		<mkdir dir="${project.dist.dir}" />
+		<mkdir dir="${package.target.dir}" />
+		<tstamp />
+	</target>
+
+
+</project>
+

@@ -1,0 +1,35 @@
+#shadowbox_overlay,#shadowbox{visibility:hidden}
+#shadowbox_overlay,#shadowbox_loading{position:absolute}
+#shadowbox_overlay{display:block;z-index:998}
+#shadowbox_overlay,#shadowbox_container,#shadowbox_body,#shadowbox_toolbar{margin:0}
+#shadowbox_overlay,#shadowbox_container,#shadowbox_title,#shadowbox_body,#shadowbox_toolbar{padding:0}
+#shadowbox_overlay,#shadowbox_container,#shadowbox_loading{top:0;left:0}
+#shadowbox_container{position:fixed;height:0;z-index:999}
+#shadowbox_container,#shadowbox_loading,#shadowbox_content.html{width:100%}
+#shadowbox_container,div.shadowbox_message{text-align:center}
+#shadowbox{display:none;margin:0 auto;font-family:Verdana,Arial,Helvetica,sans-serif;text-align:left}
+#shadowbox,#shadowbox_body,#shadowbox_body_inner{position:relative}
+#shadowbox_title{height:25px}
+#shadowbox_title,#shadowbox_body,#shadowbox_body_inner,#shadowbox_toolbar{overflow:hidden}
+#shadowbox_title_inner{height:16px;font-size:16px;line-height:16px;white-space:nowrap;padding:5px 0 4px 8px}
+#shadowbox_title_inner,#shadowbox_loading span a:visited,#shadowbox_loading span a:link,#shadowbox_loading span a,#shadowbox_toolbar_inner div a{color:#2C4051}
+#shadowbox_body{background:#fff;border:8px solid #fff;}
+#shadowbox_loading{background:#fff;height:10000px}
+#shadowbox_loading img,#shadowbox_loading span,#shadowbox_counter{float:left}
+#shadowbox_loading img{margin:10px 10px 0 10px}
+#shadowbox_loading span{margin-top:16px;font-size:10px}
+#shadowbox_content.html{height:100%;overflow:auto}
+#shadowbox_toolbar,#shadowbox_toolbar_inner{height:22px}
+#shadowbox_toolbar{background:#fff}
+#shadowbox_toolbar_inner{color:#2C4051}
+#shadowbox_toolbar_inner div{padding-top:4px;padding-bottom:2px;font-size:11px;height:12px;line-height:10px}
+#shadowbox_toolbar_inner div span.shortcut,#shadowbox_counter a.shadowbox_counter_current,div.shadowbox_message a:focus,div.shadowbox_message a:hover{text-decoration:underline}
+#shadowbox_toolbar_inner div span.shortcut,#shadowbox_counter a.shadowbox_counter_current{font-weight:bold}
+#shadowbox_toolbar_inner div a,div.shadowbox_message a:visited,div.shadowbox_message a:link{text-decoration:none}
+#shadowbox_nav_next,#shadowbox_nav_previous,#shadowbox_nav_close{float:right;padding-right:10px}
+#shadowbox_counter{padding-left:10px}
+#shadowbox_counter a{padding:0 4px 0 0}
+div.shadowbox_message{padding:10px}
+div.shadowbox_message a:visited,div.shadowbox_message a:link{color:#bed333}
+#shadowbox_overlay{cursor:pointer}
+#shadowbox_title_inner{color:#fff;}

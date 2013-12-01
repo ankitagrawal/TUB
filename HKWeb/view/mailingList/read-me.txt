@@ -1,0 +1,2 @@
+The folder is added to store mailing lists.
+Category wise mailing lists are created.

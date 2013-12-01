@@ -1,0 +1,7 @@
+project.env=dev
+
+DB_SERVER=125.63.70.203 
+DB_PORT=3306
+DB_NAME=healthkart_qa_backup_more2
+DB_USERID=hkadmin
+DB_PASSWD=admin2K11!

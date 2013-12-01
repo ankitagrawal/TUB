@@ -1,0 +1,464 @@
+@charset "utf-8";
+/* CSS Document */
+
+body				{
+					background:url(../images/bg.jpg);
+					margin:0 auto; 
+					font-family:Arial, Helvetica, sans-serif; 
+					font-size:13px; 
+					color:#222; 
+					line-height:18px;
+					}
+					
+p,form				{
+					margin:0px;
+					}
+					
+img					{
+					border:none;	
+					}					
+					
+.clr				{
+					clear:both;
+					}
+					
+.row				{ 
+					width:100%;
+					clear:both;
+					}
+			
+			
+			
+			
+
+.header				{
+					background: url(../images/bg-header.png) bottom left repeat-x #fcec95;
+					height:120px;				
+					}
+					
+.headerInr			{
+					width:990px; 
+					clear:both; 
+					margin:0 auto;
+					}					
+										
+.splendaLogo		{
+					width:200px;
+					float:left;
+					padding-top:12px;
+					}
+					
+.headerRightBar		{
+					width:300px;
+				 	float:right;
+					padding-right:2px;
+					}
+					
+.socialIconsHeader	{
+					float:right;
+					margin-top:4px;
+					background:#fff;
+					width:auto;
+					padding:7px 12px 3px 12px;
+					}	
+
+.healthkartLogo		{
+					float:right;
+					margin-top:15px;
+					}					
+									
+					
+
+
+
+
+.container 				{
+						width:990px; 
+						clear:both; 
+						margin:12px auto 30px auto;
+						}	
+										
+.bgNav					{ 
+						background: url(../images/bg-nav.png) top left repeat-x #cfe9f8;
+						height:48px;
+						line-height:48px;
+						}	
+							
+.nav					{
+						width:990px;
+						margin:0 auto;
+						clear:both;	
+						}
+
+.nav ul					{
+						margin:0px; padding:0px; list-style:none;
+						}
+												
+.nav ul li				{
+						font-size:18px;
+						font-family:Arial, Helvetica, sans-serif;
+						float:left;
+						margin:0px;	
+						border-right:1px solid #95c4e3;
+						}
+
+.nav ul li.lastLi		{
+						font-size:18px;
+						font-family:Arial, Helvetica, sans-serif;
+						float:left;
+						margin:0px;	
+						border:none;
+						}
+										
+.nav ul li a			{ 
+						padding:0px 43px 0px 43px;
+						color:#455760;
+						display:block;
+						text-decoration:none;a
+						}
+						
+.nav ul li a:hover		{
+						display:block;
+						text-decoration:none;	
+						}
+					
+.nav ul li a.selected	{
+						padding:0px 43px 0px 43px;
+						font-weight:bold;
+						color:#fff;
+						text-decoration:none;
+						display:block;
+						height:48px;
+						line-height:48px;
+						background: url(../images/bg-nav-hover.png) top left repeat-x #6eaee1;
+						}									
+					
+.homePgBanner			{
+						background: url(../images/switch-to-splenda.png) top left no-repeat; height:426px;
+						margin-bottom:10px;
+						}			
+.homePgBanner img		{
+						margin:328px 0px 0px 828px;
+						}						
+						
+
+.homePgBx1				{
+						background: url(../images/bg-box1.png) top left no-repeat;
+						width:334px;
+						height:215px;
+						float:left;
+						}
+						
+.homePgBx2				{
+						background: url(../images/bg-box2.png) top left no-repeat;
+						width:334px;
+						height:215px;
+						float:left;	
+						}
+						
+.homePgBx3				{
+						background: url(../images/bg-box3.png) top left no-repeat;
+						width:321px;
+						height:215px;
+						float:left;	
+						}		
+																							
+.homepgBxsHeadings		{ 
+						width:225px; 
+						padding:20px 0px 30px 87px; 
+						font-family:Arial, Helvetica, sans-serif; 
+						font-size:18px; 
+						font-weight:bold; 
+						color:#fff; 
+						clear:both;
+						}
+						
+.homePgBxsData			{
+						clear:both;
+						width:250px;
+						height:93px;
+						padding:0px 10px 0px 20px;
+						font-size:12px;
+						line-height:14px;
+						}
+											
+.homePgBxsBtns			{
+						clear:both;
+						padding-left:20px;
+						}	
+						
+				
+				
+						
+						
+
+.containerWhite			{
+						width:990px;
+						clear:both;
+						margin:30px auto 30px auto;
+						background:#fff;
+						border-top:7px solid #cb2f44;
+						-moz-box-shadow: 0 0 1px 1px #b6b6b6;
+						-webkit-box-shadow: 0 0 1px 1px #b6b6b6;
+						box-shadow: 0 0 1px 1px #b6b6b6;											
+						}	
+						
+.containerInr			{
+						width:925px; 
+						clear:both;
+						margin:20px auto 30px auto;
+						}						
+						
+.bannerShadow img		{
+						box-shadow: 0 0 1px 1px #b6b6b6;
+						-moz-box-shadow: 0 0 1px 1px #b6b6b6;
+						-webkit-box-shadow: 0 0 1px 1px #b6b6b6;
+						border-radius:10px;
+						-moz-border-radius:10px;
+						-webkit-border-radius:10px; 
+						margin-bottom:20px;						
+						}						
+
+.deviderLine			{
+						border-top:1px solid #e7a0a9;
+						padding-bottom:50px;
+						}
+						
+.proLRBoxesGap			{ padding-bottom:50px;}													
+									
+.productLeftBar			{
+						width:400px;
+						float:left;
+						padding-left:30px;
+						}
+						
+.productRightBar		{
+						width:450px;
+						float:left;
+						}
+						
+.productSmallPic		{
+						position:absolute;
+						margin:-10px 0px 0px 300px;
+						width:100px;
+						}						
+						
+.productRightBar h3		{
+						margin:0px; 
+						padding:0px;
+						font-size:16px;
+						font-weight:bold; 
+						}			
+
+.productRightBar p		{
+						margin-bottom:30px;
+						}	
+											
+.productPrices img		{
+						float:left;
+						margin-right:30px;
+						}						
+									
+						
+												
+.buyNowBtns				{
+						margin:20px 0px 20px 0px;
+						text-align:center;
+						}
+							
+						
+						
+						
+
+
+						
+.leftBarTastePage		{		
+						width:550px;
+						float:left;
+						}
+						
+.leftBarTastePage ul	{
+						margin:0px;
+						padding:20px 0px 10px 20px;
+						list-style:none;
+						}
+.leftBarTastePage ul li	{
+						line-height:16px;
+						padding:0px 0px 10px 20px;
+						background:url(../images/bullet-blue1.png) 0px 3px no-repeat;
+						}
+
+.tastePgHeadingBar		{
+						background:#0076c1;
+						height:34px;
+						line-height:34px;
+						margin-bottom:12px;
+						}
+														
+.tastePgHeadingBar	h1	{
+						margin:0px;
+						padding:0px 0px 0px 15px;
+						font-size:16px;
+						color:#fff;
+						font-weight:bold;
+						}
+						
+.deviderLine2			{
+						margin:20px 0px 0px 0px;
+						border-top:1px solid #e7a0a9;
+						}	
+						
+.greyTxt1				{
+						color:#717476;
+						}						
+							
+						
+.rightBarTastePage		{
+						width:375px;
+						float:left;
+						}
+						
+.tastePgPic				{
+						margin-top:150px;
+						}
+						
+						
+						
+						
+						
+						
+.compromisePgHeadingBar	{
+						background:url(../images/bullet-white1.png) 520px 10px no-repeat #0076c1;
+						height:34px;
+						line-height:34px;
+						margin:15px 0px 0px 0px;
+						}
+														
+.compromisePgHeadingBar	h1	{
+						margin:0px;
+						padding:0px 0px 0px 15px;
+						font-size:16px;
+						color:#fff;
+						font-weight:bold;
+						}
+						
+.compromisePgLeftBxsBg	{
+						background:#fffceb;
+						padding:10px;
+						border:1px solid #ece6c6;
+						}						
+						
+						
+.compromisePgPic		{
+						margin-top:150px;
+						}
+						
+						
+h1.blueHeading			{
+						margin:0px;
+						padding:0px 0px 10px 0px;
+						font-size:18px;
+						font-weight:bold;
+						color:#1782c4;
+						}												
+					
+.tblOuterBrdr			{
+						border:1px solid #a0b4c5;
+						border-bottom:none;
+						margin-bottom:30px;
+						}	
+
+.tblOuterBrdr td		{
+						padding-top:5px;
+						padding-bottom:5px;
+						}						
+						
+										
+						
+
+.tblHeads				{
+						background:#0076c1;
+						line-height:25px;
+						color:#fff;
+						font-size:15px;	
+						font-weight:bold;
+						text-align:center;
+						border-right:1px solid #a0b4c5;
+						}
+						
+.tblHeadsNoBrdr			{ 
+						background:#0076c1;
+						color:#fff;
+						font-size:15px;	
+						font-weight:bold;
+						text-align:center;
+						border:none;
+						}						
+						
+						
+.tblCell1				{
+						background:#e3f0ff;
+						font-size:12px;
+						color:#50504e;
+						text-align:left;
+						border-right:1px solid #a0b4c5;
+						border-bottom:1px solid #a0b4c5;
+						padding-left:30px;
+						}
+						
+.tblCell1 ul			{
+						list-style-type:none;
+						margin:5px 0px 10px 10px;
+						padding:0px;
+						}						
+																		
+.tblCell2				{
+						text-align:center;
+						color:#50504e;
+						border-right:1px solid #a0b4c5;
+						border-bottom:1px solid #a0b4c5;
+	
+						}				
+							
+.tblCell2NoBrdr			{
+						text-align:center;
+						border:none;
+						border-bottom:1px solid #a0b4c5;
+						}
+						
+.tblCell3NoBrdr			{
+						text-align:left;
+						padding-left:70px;
+						color:#50504e;
+						border:none;
+						border-bottom:1px solid #a0b4c5;
+						}						
+													
+							
+								
+												
+						
+.footer					{ 
+						background:#0076c1;
+						margin-bottom:30px;
+						}
+						
+.footerData				{
+						width:990px; 
+						clear:both; 
+						margin:0 auto;
+						font-size:15px;
+						color:#fff;
+						line-height:38px;
+						}
+						
+.footerData a			{
+						color:#fff;
+						text-decoration:none;
+						}	
+						
+.footerData a:hover		{
+						color:#fff;
+						text-decoration:none;
+						}		
+			

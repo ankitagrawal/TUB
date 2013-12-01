@@ -1,0 +1,45 @@
+<project name="HK Rejuvenate" basedir="." default="build">
+
+  <property file="build.properties"/>
+  <property file="${project.healthkart.dir}/environmentLocator.properties" />
+  <property file="${project.common.dir}/resources/${project.env}/setup/setup.properties" />
+
+  <property environment="env"/>
+  <property name="solr.home" value="${env.SOLR_HOME}"/>
+  <!--<echo message="SOLR_HOME = ${solr.home}"/>-->
+
+
+    <path id="compile.classpath">
+    <fileset dir="${project.common.dir}/${lib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${project.common.dir}/${dependencies.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <taskdef resource="liquibasetasks.properties">
+		<classpath refid="compile.classpath" />
+	</taskdef>
+	<!-- Specify exact path to included jar files -->
+
+  <target name="clean">
+    <ant dir="${project.healthkart.dir}" target="clean" inheritall="false" />
+  </target>
+  <target name="web">
+    <ant dir="${project.healthkart.dir}" target="web" inheritall="false" />
+  </target>
+  <target name="build">
+    <ant dir="${project.healthkart.dir}" target="build" inheritall="false" />
+  </target>
+	<target name="dev-clean" depends="clean, build"/>
+	<target name="db">
+		<updateDatabase changelogfile="${project.healthkart.dir}/db/changelog.xml" driver="${database.driver}" url="jdbc:mysql://${DB_SERVER}:${DB_PORT}/${DB_NAME}" username="${DB_USERID}" password="${DB_PASSWD}" classpathref="compile.classpath" />
+	    </target>
+
+	<target name="db-diff" description="Does a diff of the current db with the workbench db. adds to changelog.xml any changes to db">
+		<diffDatabaseToChangeLog driver="${database.driver}" url="jdbc:mysql://${DB_SERVER}:${DB_PORT}/${DB_NAME}" username="${DB_USERID}" password="${DB_PASSWD}" changelogfile="${project.healthkart.dir}/db/changelog.xml" referencedriver="${database.driver}" referenceurl="${database.url.workbench}" referenceusername="${DB_USERID}" referencepassword="${DB_PASSWD}" classpathref="compile.classpath">
+		</diffDatabaseToChangeLog>
+	</target>
+
+</project>

@@ -1,0 +1,73 @@
+/* line 204, ../sass/main.scss */
+.menuBar ul.lvl1 li.lvl1 div.lvl2 .categories {
+        float:left;
+    width:auto;
+}
+
+.menuBar ul.lvl1 li.lvl1 div.lvl2 .categories a {  
+    display: block;
+}
+
+/* Setup for child navigation kuki */
+.lvl2Bar li.lvl2 {
+    text-align: left;
+    display: inline;
+    min-width: 128px;
+    /*float: left;*/
+    vertical-align: middle;
+    margin: 0 10px;
+    padding:0;
+
+}
+
+/* line 385, ../sass/main.scss Kuki */
+.lvl2Bar li.lvl2 .head2 {
+    margin: 0;
+    padding: 7px 0px;
+    display:inline;
+    /*width: 140px;*/
+    /*float:left;*/
+    cursor: pointer;
+}
+
+/* line 157, ../sass/main.scss */
+.menuBar ul.lvl1 li.lvl1:hover {
+    background: #f2f7fb;
+    border-color: #ff9d45;
+    display:block;
+    }
+
+/* line 165, ../sass/main.scss */
+.menuBar ul.lvl1 li.lvl1:hover div.lvl2 {
+    display: block;
+}
+.menuBar ul.lvl1 li.lvl1:hover div.lvl2:active { display:block; overflow:visible; }
+
+/* line 186, ../sass/main.scss */
+.menuBar ul.lvl1 li.lvl1 div.lvl2 {
+    width: 958px;
+    display: none;
+    position: absolute;
+    top: 28px;
+    left: 0px;
+
+}
+.menuBar ul.lvl1 li.lvl1 div.lvl2:active {  }
+
+.lvl2Bar li.lvl2 .lvl3Container {
+ 
+    left:0;
+
+}
+
+.footer {
+    margin:0 auto;
+    position:absolute;
+   left:auto;
+    right:auto;
+}
+
+/* line 135, ../sass/main.scss */
+.menuBar ul.lvl1 {
+   display:block;
+}

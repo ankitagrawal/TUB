@@ -1,0 +1,46 @@
+<project name="HK Mooga" basedir="." default="build">
+
+    <property file="build.properties" />
+
+    <path id="compile.classpath">
+        <fileset file="${lib.root.dir}/mooga/axis.jar" />
+        <fileset file="${lib.root.dir}/mooga/commons-discovery-0.2.jar" />
+        <fileset file="${lib.root.dir}/mooga/commons-logging-1.0.4.jar" />
+        <fileset file="${lib.root.dir}/mooga/jaxrpc.jar" />
+        <fileset file="${lib.root.dir}/mooga/log4j-1.2.8.jar" />
+        <fileset file="${lib.root.dir}/mooga/saaj.jar" />
+        <fileset file="${lib.root.dir}/mooga/wsdl4j-1.5.1.jar" />
+
+    </path>
+
+    <target name="compile" depends="prepare">
+        <javac srcdir="src" destdir="${package.target.dir}" debug="true" debuglevel="lines,vars,source" source="1.6" deprecation="false" nowarn="true">
+            <classpath refid="compile.classpath" />
+            <compilerarg value="-Xlint">
+            </compilerarg>
+        </javac>
+    </target>
+    <target name="build.env.check">
+        <condition property="build.env.prod">
+            <equals arg1="${build.env}" arg2="prod" />
+        </condition>
+    </target>
+
+    <target name="build" depends="compile" description="build mooga jar">
+        <mkdir dir="${project.dist.dir}" />
+        <jar destfile="${project.dist.dir}/${package.jar.name}">
+            <zipfileset dir="${package.target.dir}" includes="**/**" excludes="test/**/**" />
+        </jar>
+    </target>
+
+
+    <!-- Check timestamp on files -->
+    <target name="prepare">
+        <mkdir dir="${project.dist.dir}" />
+        <mkdir dir="${package.target.dir}" />
+        <tstamp />
+    </target>
+
+
+</project>
+

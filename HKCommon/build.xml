@@ -1,0 +1,87 @@
+<project name="HK Common" basedir="." default="build">
+
+	<property file="build.properties" />
+
+	<!-- Specify exact path to included jar files -->
+	<path id="compile.classpath">
+		<fileset dir="${lib.root.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${lib.dependencies.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement path="${classpath}" />
+	</path>
+
+	<target name="compile" depends="prepare">
+		<mkdir dir="${package.target.dir}" />
+		<javac srcdir="src" destdir="${package.target.dir}" debug="true" debuglevel="lines,vars,source" source="1.6" deprecation="false" nowarn="true">
+			<classpath refid="compile.classpath" />
+			<compilerarg value="-Xlint" />
+		</javac>
+	</target>
+
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="compile.classpath" />
+
+	<target name="compile.groovy" description="Compile Java classes for project">
+		<groovyc srcdir="src" destdir="${package.target.dir}" fork="false" listfiles="true">
+			<classpath refid="compile.classpath" />
+			<javac debug="${compiler.debug}">
+			</javac>
+		</groovyc>
+
+	</target>
+
+
+
+	<!-- Specify exact path to included jar files
+	<path id="test.classpath">
+		<path refid="compile.classpath" />
+		<fileset file="${lib.root.dir}/test/testng-5.1-jdk15.jar" />
+	</path>
+ -->
+
+
+	<target name="build.env.check">
+		<condition property="build.env.prod">
+			<equals arg1="${build.env}" arg2="prod" />
+		</condition>
+	</target>
+
+
+	<!-- Create binary distribution for dev environment -->
+	<target name="build" depends="compile,compile.groovy" description="Create jar for dev">
+		<mkdir dir="${project.dist.dir}" />
+		<jar destfile="${project.dist.dir}/${package.jar.name}">
+			<zipfileset dir="${package.target.dir}" includes="**/**" excludes="test/**/**" />
+		</jar>
+	</target>
+
+	<!-- Remove classes directory for clean build -->
+	<target name="clean" description="Prepare for clean build">
+		<delete dir="${package.target.dir}" />
+		<delete dir="${project.dist.dir}" />
+	</target>
+
+
+	<!-- Check timestamp on files -->
+	<target name="prepare">
+		<mkdir dir="${project.dist.dir}" />
+		<mkdir dir="${package.target.dir}" />
+		<tstamp />
+	</target>
+
+	<taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="compile.classpath" />
+	<target name="hibernateGeneration">
+    <hibernatetool destdir="${project.root.dir}/out" templatepath="${lib.dependencies.dir}/hibernate-tools">
+      <jdbcconfiguration
+          configurationfile="${project.resources.dir}/dev/hbm/hibernate.master.cfg.xml"
+          revengfile="${project.resources.dir}/dev/hbm//hibernate.reveng.xml"
+          packagename="com.hk.domain"
+          />
+      <hbm2java jdk5="true" ejb3="true" destdir="${project.root.dir}/out/generated"/>
+    </hibernatetool>
+  </target>
+
+
+</project>

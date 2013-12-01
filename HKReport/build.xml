@@ -1,0 +1,110 @@
+<project name="HK Report" basedir="." default="build">
+
+	<property file="build.properties" />
+
+	<path id="compile.classpath">
+		<fileset file="${lib.root.dir}/commons/commons-lang-2.1.jar" />
+		<fileset file="${lib.root.dir}/spring/org.springframework.transaction-3.0.2.RELEASE.jar" />
+		<fileset file="${lib.root.dir}/spring/org.springframework.core-3.0.2.RELEASE.jar" />
+		<fileset file="${lib.root.dir}/spring/org.springframework.beans-3.0.2.RELEASE.jar" />
+		<fileset file="${lib.root.dir}/spring/org.springframework.context-3.0.2.RELEASE.jar" />
+		<fileset file="${lib.root.dir}/spring/org.springframework.orm-3.0.2.RELEASE.jar" />
+		<fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar" />
+		<fileset file="${lib.root.dir}/logger/slf4j-api-1.5.10.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/joda-time-1.6.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/quartz-all-1.6.6.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/poi-3.6-20091214.jar" />
+		<fileset file="${project.common.dir}/dependencies/javaee.jar" />
+		<fileset file="${lib.root.dir}/hibernate/hibernate-annotations-3.4.0.GA.jar" />
+		<fileset file="${lib.root.dir}/hibernate/hibernate-core-3.3.1.GA.jar" />
+		<fileset file="${project.common.dir}/dist/hk-common.jar" />
+		<fileset file="${project.core.dir}/dist/hk-core.jar" />
+        <fileset file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
+
+	</path>
+
+
+	<!-- Copy any resource or configuration files 
+	<target name="copyresources">
+		<copy todir="${package.target.dir}" includeEmptyDirs="no">
+			<fileset dir="${project.src.dir}">
+				<patternset>
+					<include name="**/*.conf" />
+					<include name="**/*.properties" />
+					<include name="**/*.xml" />
+					<exclude name="**/*.java" />
+				</patternset>
+			</fileset>
+		</copy>
+
+	</target>
+	-->
+
+	<target name="build.dependencies" depends="dependencies.check,build.core,build.admin.core" />
+	<target name="dependencies.check">
+		<condition property="build.core.available">
+			<available file="${project.core.dir}/dist/hk-core.jar" />
+		</condition>
+	</target>
+
+	<target name="build.core" unless="build.core.available">
+		<ant dir="${project.core.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
+	</target>
+
+    <target name="build.admin.core" unless="build.common.available">
+		<ant dir="${project.admin.core.dir}" target="build" inheritall="false">
+			<property name="build.env" value="${build.env}" />
+		</ant>
+	</target>
+
+	<target name="compile" depends="prepare, build.dependencies">
+		<mkdir dir="${package.target.dir}" />
+		<javac srcdir="src" destdir="${package.target.dir}" debug="true" debuglevel="lines,vars,source" source="1.5" deprecation="false" nowarn="true">
+			<classpath refid="compile.classpath" />
+			<compilerarg value="-Xlint">
+			</compilerarg>
+		</javac>
+	</target>
+	<target name="build.env.check">
+		<condition property="build.env.prod">
+			<equals arg1="${build.env}" arg2="prod" />
+		</condition>
+	</target>
+
+
+	<!--<target name="build" depends="compile,build.exploded" description="build production WAR">
+		<jar destfile="${project.dist.dir}/${package.jar.name}">
+			<zipfileset dir="${package.target.dir}" includes="**/**" excludes="test/**/**" />
+		</jar>
+	</target>-->
+
+
+
+	<target name="build" depends="compile" description="build report jar">
+		<mkdir dir="${project.dist.dir}" />
+		<jar destfile="${project.dist.dir}/${package.jar.name}">
+			<zipfileset dir="${package.target.dir}" includes="**/**" excludes="test/**/**" />
+		</jar>
+	</target>
+
+
+	<!-- Remove classes directory for clean build -->
+	<target name="clean" description="Prepare for clean build">
+		<delete dir="${project.dist.dir}" />
+		<delete dir="${package.target.dir}" />
+
+		
+	</target>
+
+	<!-- Check timestamp on files -->
+	<target name="prepare">
+		<mkdir dir="${project.dist.dir}" />
+		<mkdir dir="${package.target.dir}" />
+		<tstamp />
+	</target>
+
+
+</project>
+

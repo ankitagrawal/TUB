@@ -1,0 +1,185 @@
+<?xml version="1.0" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="lobHandler"
+		class="org.springframework.jdbc.support.lob.DefaultLobHandler" />
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+
+		<property name="lobHandler">
+			<ref bean="lobHandler" />
+		</property>
+
+		<!--<property name="mappingDirectoryLocations">
+			<ref bean="mappingDirectoryList" />
+			</property> -->
+
+		<property name="packagesToScan">
+			<list>
+				<value>com.hk.domain</value>
+			</list>
+		</property>
+
+
+
+		<!--<property name="typeDefinitions">
+			<ref bean="typeDefinitionList" />
+			</property>-->
+
+		<property name="entityInterceptor">
+			<ref local="defaultHibernateInterceptor" />
+		</property>
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQL5InnoDBDialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.connection.release_mode">
+					on_close
+				</prop>
+				<prop key="hibernate.connection.isolation">1</prop>
+				<prop
+					key="hibernate.bytecode.use_reflection_optimizer">
+					true
+				</prop>
+			</props>
+		</property>
+	</bean>
+
+    <bean id="newSessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+
+		<property name="lobHandler">
+			<ref bean="lobHandler" />
+		</property>
+
+		<property name="packagesToScan">
+			<list>
+				<value>com.hk.domain</value>
+			</list>
+		</property>
+
+		<property name="entityInterceptor">
+			<ref local="defaultHibernateInterceptor" />
+		</property>
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQL5InnoDBDialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.connection.release_mode">
+					on_close
+				</prop>
+				<prop key="hibernate.connection.isolation">1</prop>
+				<prop
+					key="hibernate.bytecode.use_reflection_optimizer">
+					true
+				</prop>
+			</props>
+		</property>
+	</bean>
+    
+	<bean id="hibernateTemplate"
+		class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+
+	<!--<bean id="mappingDirectoryList" class="java.util.ArrayList">
+		<constructor-arg>
+		<list>
+		<value>classpath:hibernate</value>
+		</list>
+		</constructor-arg>
+		</bean>-->
+
+
+
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://DB_SERVER:DB_PORT/DB_NAME</value>
+		</property>
+		<property name="username">
+			<value>DB_USERID</value>
+		</property>
+		<property name="password">
+			<value>DB_PASSWD</value>
+		</property>
+		<property name="maxActive">
+			<value>50</value>
+		</property>
+		<property name="maxWait">
+			<value>15000</value>
+		</property>
+		<property name="removeAbandoned">
+			<value>true</value>
+		</property>
+		<property name="removeAbandonedTimeout">
+			<value>30</value>
+		</property>
+		<property name="validationQuery">
+			<value>SELECT 1</value>
+		</property>
+		<property name="testOnBorrow">
+			<value>true</value>
+		</property>
+		<property name="maxIdle">
+			<value>20</value>
+		</property>
+		<property name="initialSize">
+			<value>50</value>
+		</property>
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxOpenPreparedStatements" value="30" />
+		<property name="timeBetweenEvictionRunsMillis" value="-1" />
+		<property name="defaultTransactionIsolation" value="1"/>
+	</bean>
+
+
+	<!--  bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass">
+		<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="jdbcUrl">
+		<value>jdbc:mysql://DB_SERVER:DB_PORT/DB_NAME</value>
+		</property>
+		<property name="properties">
+		<props>
+		<prop key="c3p0.acquire_increment">1</prop>
+		<prop key="c3p0.idle_test_period">100</prop>
+		<prop key="c3p0.max_size">100</prop>
+		<prop key="c3p0.max_statements">0</prop>
+		<prop key="c3p0.min_size">1</prop>
+		<prop key="user">DB_USERID</prop>
+		<prop key="password">DB_PASSWD</prop>
+		</props>
+		</property>
+		</bean>  -->
+
+
+	<bean id="defaultHibernateInterceptor"
+		class="org.hibernate.EmptyInterceptor" />
+
+</beans>

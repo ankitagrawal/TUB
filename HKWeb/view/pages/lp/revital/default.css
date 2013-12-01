@@ -1,0 +1,66 @@
+body {
+margin:0;
+padding:0;
+font-family: Arial, Helvetica, sans-serif;
+background-color: #931f15;
+}
+
+table {
+border-collapse:collapse;
+border-spacing:0;}
+
+a {text-decoration:none;}
+a img{
+border:none;
+}
+
+div, h1, h2, h3, h4, span, ul, ol, p {margin:0; padding:0;}
+
+.cl {
+clear:both;}
+
+.floatl {float:left;}
+
+.floatr {float:right;}
+
+p {font-size:12px; text-align:center;}
+
+#wraper {width:958px; margin:0 auto;
+}
+
+
+/*-------------- header class ---------------*/
+
+#header_top {background-color:#ebebeb; margin:0 auto;}
+
+.header {
+height:100px; width:958px; margin:0 auto; position:relative; background-color:#ebebeb; border-bottom:1px solid #cdcdcd;}
+
+.logo { margin:35px 20px 0 20px; float:left;}
+
+.slogen { float:left; margin-top:25px; border-left:solid 1px #cdcdcd; font-size:15px; color:#666666; padding:15px; vertical-align:middle; }
+
+.customer { float:right; margin:0px 0 0 105px; font-size:15px; font-weight:bold; color:#1e91cc;}
+
+.main_banner {margin-top:20px;}
+
+.txt_banner {height:97px; font-family:"Arial Black", Arial, Helvetica, sans-serif; color:#FFFFFF; font-weight:900; font-size:40px; padding-top:8px; text-shadow:2px 2px #a03429; background-color:#e7392f; text-align:center; font-style:italic; margin-top:2px; line-height:1.1em;}
+
+.product {height:470px; background:url(images/product_bg.jpg) no-repeat; padding-top:45px; margin-bottom:10px; }
+
+
+.product01 {width:202px; float:left; margin-left:30px;}
+
+.heading01 {text-align:center; font-size:12px; font-weight:bold; margin:5px 0 8px 0; font-style:normal; border-top:1px solid #916207; padding-top:5px; }
+
+.buy_online { float:left; width:730px; margin-top:20px; text-align:right; color:#e7392f; font-size:21px; font-family:"Arial Black", Arial, Helvetica, sans-serif; font-weight:900; font-style:normal;}
+
+.click_here { float:left; width:203px; margin-top:20px; text-align:right; color:#FFFFFF; font-size:21px; font-family:"Arial Black", Arial, Helvetica, sans-serif; font-weight:900; font-style:normal;}
+
+.click_here a{ color:#FFFFFF; text-decoration:none; display:block;}
+
+.footer { background:url(images/bottom_bg.jpg) no-repeat; height:68px; margin-top:15px; padding-top:70px; }
+
+.footer p{ font-size:14px; color:#FFFFFF; float:left; width:auto; margin-left:30px; line-height:1.4em;}
+
+.footer p a{color:#FFFFFF; text-decoration:none;}

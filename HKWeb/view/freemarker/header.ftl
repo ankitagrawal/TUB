@@ -1,0 +1,1 @@
+<div style="font-family:'Segoe UI', 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:13px; width:600px; border-top:10px solid #66ccff; border-bottom:10px solid #6699ff; padding:10px 10px; color:#333;">

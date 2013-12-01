@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- This xml will contain the common bean configurations -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jms="http://www.springframework.org/schema/jms"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd 
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.hk" />
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="serviceLocatorFactory"
+		class="com.hk.service.ServiceLocatorFactory" />
+	<bean id="transactionProxyFactoryBean"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+	</bean>
+	<bean id="transactionTemplate"
+		class="org.springframework.transaction.support.TransactionTemplate"
+		lazy-init="true">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+		<property name="nestedTransactionAllowed" value="true" />
+	</bean>
+
+
+
+
+	<!-- =========================================================
+		Shiro Core Components - Not Spring Specific
+		========================================================= -->
+	<!-- Shiro's main business-tier object for web-enabled applications
+		(use DefaultSecurityManager instead when there is no web environment)-->
+
+
+
+	<!-- Used by the SecurityManager to access security data (users, roles, etc).
+		Many other realm implementations can be used too (PropertiesRealm,
+		LdapRealm, etc. -->
+	<!-- <bean id="jdbcRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
+		<property name="dataSource" ref="dataSource"/>
+		</bean>-->
+
+	<bean id="jdbcRealm"
+		class="com.akube.framework.shiro.realm.HibernateSecurityRealm">
+	</bean>
+
+	<bean id="securityManager"
+		class="com.akube.framework.shiro.manager.ShiroSecurityManager">
+		<!--<bean id="securityManager" class="com.springbook.shiro.SecurityManager">-->
+
+		<!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
+		<property name="realm" ref="jdbcRealm" />
+		<property name="sessionMode" value="http" />
+
+		<!--property name="sessionMode" value="http"/-->
+
+	</bean>
+
+
+
+	<!-- =========================================================
+		Shiro Spring-specific integration
+		========================================================= -->
+	<!-- Post processor that automatically invokes init() and destroy() methods
+		for Spring-configured Shiro objects so you don't have to
+		1) specify an init-method and destroy-method attributes for every bean
+		definition and
+		2) even know which Shiro objects require these methods to be
+		called. -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+	<bean id="lifecycleBeanPostProcessor"
+		class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<!-- Enable Shiro Annotations for Spring-configured beans.  Only run after
+		the lifecycleBeanProcessor has run: -->
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor" />
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+
+    <bean id="solr" class="org.apache.solr.client.solrj.impl.CommonsHttpSolrServer">
+        <constructor-arg value="http://localhost:8983/solr"/>
+        <property name="connectionTimeout" value="2000"/>
+        <property name="defaultMaxConnectionsPerHost" value="10"/>
+        <property name="maxTotalConnections" value="50"/>
+    </bean>
+
+	<!--  <bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="/WEB-INF/environment.properties" />
+		</bean> -->
+
+    <bean id="connectionFactory"
+          class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+    </bean>
+
+    <bean  id="producerFactory" class="com.hk.hkjunction.producer.ProducerFactory">
+        <constructor-arg name="address" value="localhost">
+        </constructor-arg>
+    </bean>
+
+	<util:properties id="hkEnvProps"
+		location="/WEB-INF/environment.properties" />
+
+    <!-- A POJO that implements the JMS message listener -->
+    <bean id="userCodResponseListener" class="com.hk.impl.service.codbridge.UserCallResponseObserverImpl" />
+
+    <!-- A JMS namespace aware Spring configuration for the message listener container -->
+    <jms:listener-container
+            container-type="default"
+            connection-factory="connectionFactory"
+            acknowledge="auto"
+            cache="consumer">
+        <jms:listener destination="order.cod.response" ref="userCodResponseListener"/>
+    </jms:listener-container>
+
+
+</beans>
