@@ -24,7 +24,6 @@
       } else {
         gatewayUrl = paymentGateway.getGatewayUrl();
       }
-        gatewayUrl = "http://stag.securepay.healthkart.com/gateway/request";
     %>
     <p class="notify" style="font-size:1.4em;">Proceeding to payment gateway....</p>
     <c:set var="paymentGateway" value="<%=paymentGateway%>"/>
