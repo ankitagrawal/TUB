@@ -12851,15 +12851,15 @@
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_order_karma_profile" constraintName="fk_ukarma_user" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Ankit Chhabra" id="1369032364175-16">
-		<sql>
-			insert into badge (badge_name,min_score,max_score,loyalty_percentage) values
-			('NORMAL', 0, 1500, 0.0),
-			('BRONZE', 1501, 3000, 1.0),
-			('SILVER', 3001, 6000, 1.5),
-			('GOLD', 6001, 12000, 1.75),
-			('PLATINUM', 12001, -1, 2.0);
-		</sql>
-	</changeSet>
+        <sql>
+            insert into badge (badge_name,min_score,max_score,loyalty_percentage) values
+            ('NORMAL', 0, 1500, 0.0),
+            ('BRONZE', 1501, 3000, 1.0),
+            ('SILVER', 3001, 6000, 1.5),
+            ('GOLD', 6001, 12000, 1.75),
+            ('PLATINUM', 12001, -1, 2.0);
+        </sql>
+    </changeSet>
     <changeSet author="Ankit Chhabra" id="1369032364175-17">
     	<sql>
     		insert into reward_point_mode (id,name) values ('80','HK Loyalty Points');
