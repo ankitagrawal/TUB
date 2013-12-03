@@ -221,7 +221,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
 
         /*List<Long> userIds = getSession().createQuery(query).setParameterList("categoryList", Arrays.asList(category)).setParameterList("roleList",
                 Arrays.asList(getRoleDao().getRoleByName(EnumRole.HK_USER), getRoleDao().getRoleByName(EnumRole.HK_UNVERIFIED))).list();*/
-        
+
         List<Long> userIds = getSession().createQuery(query).setParameterList("categoryList", Arrays.asList(category)).setParameterList("roleList",
                 applicableRoles).list();
 
