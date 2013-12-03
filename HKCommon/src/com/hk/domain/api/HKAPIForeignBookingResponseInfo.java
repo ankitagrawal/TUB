@@ -22,6 +22,7 @@ public class HKAPIForeignBookingResponseInfo {
   private Long fboId;
   private Long unitNum;
   private Long whId;
+  private Long bkTyId;
 
   public Long getFsiCLIId() {
     return fsiCLIId;
@@ -133,5 +134,13 @@ public class HKAPIForeignBookingResponseInfo {
 
   public void setWhId(Long whId) {
     this.whId = whId;
+  }
+
+  public Long getBkTyId() {
+    return bkTyId;
+  }
+
+  public void setBkTyId(Long bkTyId) {
+    this.bkTyId = bkTyId;
   }
 }

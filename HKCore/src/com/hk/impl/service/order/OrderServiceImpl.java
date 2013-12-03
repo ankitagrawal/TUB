@@ -712,6 +712,9 @@ public class OrderServiceImpl implements OrderService {
                 Long   warehousIdForAqua = lineItem.getSku().getWarehouse().getId();
                 Warehouse warehouse = warehouseService.getWarehouseById(warehousIdForAqua);
 
+                // writing code for booking type
+
+
                 List<HKAPIForeignBookingResponseInfo>  infos =   updateBookedInventoryOnBright(lineItem,warehouse.getFulfilmentCenterCode());
                 List<ForeignSkuItemCLI> ForeignSkuItemCLIs =skuItemLineItemService.updateSkuItemForABJit(infos);
                 skuItemLineItemService.populateSILIForABJit(ForeignSkuItemCLIs, lineItem) ;
@@ -790,6 +793,8 @@ public class OrderServiceImpl implements OrderService {
     User loggedOnUser = userService.getLoggedInUser();
     List<HKAPIForeignBookingResponseInfo> infos = null;
     List<HKAPIForeignBookingResponseInfo> infos1 = new ArrayList<HKAPIForeignBookingResponseInfo>();
+    // getOrderBooking Type
+    Long bookingTypeId = getShippingOrderService().getShippingOrderBookingType(lineItem.getShippingOrder());
     try {
       List<ForeignSkuItemCLI> foreignSkuItemCLIs = lineItem.getCartLineItem().getForeignSkuItemCLIs();
       for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
@@ -802,6 +807,10 @@ public class OrderServiceImpl implements OrderService {
         hkapiBookingInfo.setCliId(lineItem.getCartLineItem().getId());
         hkapiBookingInfo.setFsiCLIId(foreignSkuItemCLI.getId());
         hkapiBookingInfo.setFcCode(fulfilmentCenterCode);
+        hkapiBookingInfo.setBkTyId(bookingTypeId);
+
+        foreignSkuItemCLI.setShippingOrderBookingTypeId(bookingTypeId);
+        getBaseDao().save(foreignSkuItemCLI);
 
         Gson gson = new Gson();
         String json = gson.toJson(Arrays.asList(hkapiBookingInfo));

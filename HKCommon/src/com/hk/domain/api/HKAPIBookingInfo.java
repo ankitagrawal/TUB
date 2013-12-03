@@ -20,6 +20,7 @@ public class HKAPIBookingInfo {
   private Long unitNum;
   private Long fsiCLIId;
   private String fcCode;
+  private Long bkTyId;
 
   public Double getMrp() {
     return mrp;
@@ -107,5 +108,13 @@ public class HKAPIBookingInfo {
 
   public void setFcCode(String fcCode) {
     this.fcCode = fcCode;
+  }
+
+  public Long getBkTyId() {
+    return bkTyId;
+  }
+
+  public void setBkTyId(Long bkTyId) {
+    this.bkTyId = bkTyId;
   }
 }

@@ -76,4 +76,6 @@ public interface ShippingOrderService {
   public void  bookSo(ShippingOrder shippingOrder);
   
 
+  public Long getShippingOrderBookingType(ShippingOrder shippingOrder);
+
 }
