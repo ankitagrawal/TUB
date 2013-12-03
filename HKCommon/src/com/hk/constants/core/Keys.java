@@ -132,6 +132,7 @@ public class Keys {
         public static final String eyeTryOnXmls                    = "eyeTryOnXmls";
 
         public static final String maxReturnPolicyDays             = "maxReturnPolicyDays";
+        public static final String mailBoltUrl                     = "mailBoltUrl";
 
         public static final String hkBridgeRestUrl                 = "hkBridgeRestUrl";
         public static final String userEmailLinksRedirected        = "userEmailLinksRedirected";

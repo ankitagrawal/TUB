@@ -24,7 +24,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class SelectWHAction extends BaseAction {
 
-  
+
   @Autowired
   UserDao userDao;
   @Autowired
@@ -65,7 +65,7 @@ public class SelectWHAction extends BaseAction {
     this.setWarehouse = setWarehouse;
   }
 
-  
+
   public void setUserService(UserService userService) {
     this.userService = userService;
   }
