@@ -8,6 +8,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -61,21 +62,41 @@
   <s:layout-component name="heading">
     <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
     <div>
-      <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
+        <c:set var="eventStart" value="12"/>
+        <c:set var="eventEnd" value="22"/>
+        <c:set var="hr">
+            <fmt:formatDate value="<%=new Date()%>" pattern="HH"/>
+        </c:set>
+        <c:set var="dt">
+            <fmt:formatDate value="<%=new Date()%>" pattern="yyyyddMM"/>
+        </c:set>
+
         <c:choose>
-          <c:when test="${city == 'DELHI' || city == 'NEW DELHI'  || city == 'GURGAON' || city == 'NOIDA'}">
-            <img src="${pageContext.request.contextPath}/images/banners/banner01A.png"
-                 alt="HealthKartPlus 15% Off"/>
-          </c:when>
-          <c:when test="${city == 'BANGALORE' || city == 'BENGALURU'  || city == 'BANGALURU'}">
-            <img src="${pageContext.request.contextPath}/images/banners/banner02B.png"
-                 alt="HealthKartPlus 25% Off"/>
-          </c:when>
-          <c:otherwise>
-            <img src="${pageContext.request.contextPath}/images/banners/hkplus-app2.jpg" alt="HealthKartPlus App"/>
-          </c:otherwise>
+            <c:when test="${dt == '20130412' && hr >= eventStart && hr <eventEnd}">
+                <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
+                    <img src="${pageContext.request.contextPath}/images/banners/killbill.png"
+                         alt="Get your shopping cart for free"/>
+                </a>
+
+            </c:when>
+            <c:otherwise>
+              <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
+                <c:choose>
+                  <c:when test="${city == 'DELHI' || city == 'NEW DELHI'  || city == 'GURGAON' || city == 'NOIDA'}">
+                    <img src="${pageContext.request.contextPath}/images/banners/banner01A.png"
+                         alt="HealthKartPlus 15% Off"/>
+                  </c:when>
+                  <c:when test="${city == 'BANGALORE' || city == 'BENGALURU'  || city == 'BANGALURU'}">
+                    <img src="${pageContext.request.contextPath}/images/banners/banner02B.png"
+                         alt="HealthKartPlus 25% Off"/>
+                  </c:when>
+                  <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/images/banners/hkplus-app2.jpg" alt="HealthKartPlus App"/>
+                  </c:otherwise>
+                </c:choose>
+              </a>
+            </c:otherwise>
         </c:choose>
-      </a>
     </div>
   </s:layout-component>
 
