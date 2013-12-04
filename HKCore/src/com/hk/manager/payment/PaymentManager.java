@@ -26,6 +26,9 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.util.TokenUtils;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +84,8 @@ public class PaymentManager {
     private Long                   defaultGateway;
     @Value("#{hkEnvProps['" + Keys.Env.codRoute + "']}")
     private String                 codRoute;
+    @Value("#{hkEnvProps['" + Keys.Env.hkpayUrl + "']}")
+    private String hkPayUrl;
 
     @Autowired
     private PaymentDao             paymentDao;
@@ -538,6 +543,18 @@ public class PaymentManager {
      * if(gateway!= null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())){ hkPaymentService =
      * ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class); } return hkPaymentService; }
      */
+
+
+    public boolean isHKPayWorking() throws Exception {
+        boolean isWorking = false;
+        HttpClient httpClient = new HttpClient();
+        GetMethod getMethod = new GetMethod(hkPayUrl);
+        int status = httpClient.executeMethod(getMethod);
+        if (HttpStatus.SC_OK == status) {
+            isWorking = true;
+        }
+        return isWorking;
+    }
 
     public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus) {
         return oldStatus.getId().equals(changedStatus.getId());

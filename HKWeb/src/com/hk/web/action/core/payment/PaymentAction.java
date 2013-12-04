@@ -93,33 +93,43 @@ public class PaymentAction extends BaseAction {
             String issuerCode = null;
             if (issuer != null) {
                 try {
-                    List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
-                    Long total = 0L;
 
-                    for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-                        total += gatewayIssuerMapping.getPriority();
-                    }
+                    boolean isWorking = paymentManager.isHKPayWorking();
 
-                    Integer random = (new Random()).nextInt(total.intValue());
-                    long oldValue = 0L;
-                    long priority = 0L;
-                    long gatewayRangeValue = 0L;
+                    if (isWorking) {
+                        List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
+                        Long total = 0L;
 
-                    for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-                        priority = gatewayIssuerMapping.getPriority();
-                        gatewayRangeValue = oldValue + priority;
-                        if (random < gatewayRangeValue) {
-                            gateway = gatewayIssuerMapping.getGateway();
-                            issuerCode = gatewayIssuerMapping.getIssuerCode();
-                            break;
+                        for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
+                            total += gatewayIssuerMapping.getPriority();
                         }
-                        oldValue += priority;
+
+                        Integer random = (new Random()).nextInt(total.intValue());
+                        long oldValue = 0L;
+                        long priority = 0L;
+                        long gatewayRangeValue = 0L;
+
+                        for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
+                            priority = gatewayIssuerMapping.getPriority();
+                            gatewayRangeValue = oldValue + priority;
+                            if (random < gatewayRangeValue) {
+                                gateway = gatewayIssuerMapping.getGateway();
+                                issuerCode = gatewayIssuerMapping.getIssuerCode();
+                                break;
+                            }
+                            oldValue += priority;
+                        }
+                    } else {
+                        gateway = EnumGateway.EBS.asGateway();
+
                     }
+
+
                 } catch (Exception e) {
                     //todo pratham, remove this piece of code
                     //this is a very crude away, although this code should not fail, but as a worse case scenario, redirecting customer to icici no matter what since it gives max option
                     logger.error("Routing Multiple gateways failed due to some exception" + e);
-                    gateway = EnumGateway.ICICI.asGateway();
+                    gateway = EnumGateway.EBS.asGateway();
 
                 }
             }

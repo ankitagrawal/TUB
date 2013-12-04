@@ -157,6 +157,8 @@ public class Keys {
 
         public static final String dbBusyName = "dbBusyName";
 
+        public static final String hkpayUrl = "hkpayUrl";
+
 
   }
 
