@@ -50,6 +50,7 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
     public static String accountId = "10258";
     public static String secretKey = "10703078";
     public static String description = "Live transaction";
+    public static String merchantTransactionId = "1";
 
     protected HKPayPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
         HKPayPaymentGatewayWrapper hkPaymentGatewayWrapper = new HKPayPaymentGatewayWrapper();
@@ -84,7 +85,7 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
             hkPaymentGatewayWrapper.addParameter("payment_option", issuerCode);
         }
 
-        hkPaymentGatewayWrapper.setGatewayUrl("http://stag.securepay.healthkart.com/gateway/request");
+        hkPaymentGatewayWrapper.setGatewayUrl("http://localhost:9090/payment/gateway/request");
 
         return hkPaymentGatewayWrapper;
     }
@@ -97,11 +98,12 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
         Double amount = NumberUtils.toDouble(amountStr);
         String authDesc = getContext().getRequest().getParameter("transactionStatus");
         String gatewayChecksum = getContext().getRequest().getParameter("checksum");
+        String orderId = getContext().getRequest().getParameter("orderId");
 
         Resolution resolution = null;
         try {
             // gateway specific validation
-            verifyChecksum(secretKey, accountId, amountStr, gatewayOrderId, authDesc,  gatewayChecksum);
+            verifyChecksum(secretKey, accountId, amountStr, gatewayOrderId,orderId, authDesc,gatewayChecksum);
             // our own validations
             paymentManager.verifyPayment(gatewayOrderId, amount, null);
 
@@ -125,8 +127,9 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
         return resolution;
     }
 
-    private static void verifyChecksum(String secretKey, String accountId, String Amount, String gatewayOrderId, String authDesc, String checkSum) throws HealthkartPaymentGatewayException {
-        String newChecksum = generateResponseCheckSum(secretKey, accountId, Amount, gatewayOrderId, gatewayOrderId, authDesc);
+    private static void verifyChecksum(String secretKey, String accountId, String Amount,
+                                       String gatewayOrderId,String orderId,String authStatus ,String checkSum) throws HealthkartPaymentGatewayException {
+        String newChecksum = getResponseChecksum(secretKey, accountId, Amount, gatewayOrderId,orderId,authStatus);
         if (!newChecksum.equals(checkSum)) {
             throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.CHECKSUM_MISMATCH);
         }
@@ -147,15 +150,14 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
         return String.format("%1$032X", i);
     }
 
-    public static String  generateResponseCheckSum(String secret_key, String account_id, String amountStr, String reference_no, String merchantTransactionId, String status){
+    private static String getResponseChecksum(String secretKey, String accountId, String amount, String gatewayOrderId, String merchantTransactionId, String status) {
+        String pass = secretKey + "|" + accountId + "|" + amount + "|" + gatewayOrderId + "|" +merchantTransactionId + "|"+ status;
         MessageDigest m = null;
         try {
             m = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            logger.debug("NoSuchAlgorithmException occurred while generating MD5 hash" + e);
+            //
         }
-        //secretKey + "|" + accountId + "|" + amount + "|" + gatewayOrderId + "|" + merchantTransactionId + "|" + status;
-        String pass = secret_key + "|" + account_id + "|" + amountStr + "|" + reference_no + "|" + merchantTransactionId + "|" + status;
         byte[] dataBytes = pass.getBytes();
         assert m != null;
         m.update(dataBytes, 0, dataBytes.length);
