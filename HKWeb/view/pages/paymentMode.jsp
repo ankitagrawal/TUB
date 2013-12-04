@@ -182,9 +182,8 @@
 </div>
 <div class='right_content'>
 <div id="tabs_content1" class="tab_content"><s:form
-        beanclass="com.hk.web.action.core.payment.MakePaymentAction" method="post">
+        beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}" />
-    <s:hidden name="issuerCode" value="PG100" />
 
     <table><c:forEach items="${paymentModeBean.cardIssuers}" var="cardIssuer">
         <tr>
@@ -207,9 +206,8 @@
     </div>
 </s:form></div>
 <div id="tabs_content9" class="tab_content"><s:form
-        beanclass="com.hk.web.action.core.payment.MakePaymentAction" method="post">
+        beanclass="com.hk.web.action.core.payment.PaymentAction" method="post">
     <s:hidden name="order" value="${orderSummary.order.id}" />
-    <s:hidden name="issuerCode" value="PG300" />
 
     <table><c:forEach items="${paymentModeBean.debitCardIssuers}" var="cardIssuer">
 
