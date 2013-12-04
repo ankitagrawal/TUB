@@ -61,7 +61,7 @@ public class GatewayIssuerMappingDaoImpl extends BaseDaoImpl implements GatewayI
         }
 
         DetachedCriteria courierCriteria = gatewayIssuerMappingCriteria.createCriteria("gateway");
-        courierCriteria.add(Restrictions.eq("active", 1));
+        courierCriteria.add(Restrictions.eq("active", true));
 
         //remember this order by is pretty important, please be careful if any changes are made to this, since I am using a sorted priority list to find the random number generated
         gatewayIssuerMappingCriteria.addOrder(Order.asc("priority"));
