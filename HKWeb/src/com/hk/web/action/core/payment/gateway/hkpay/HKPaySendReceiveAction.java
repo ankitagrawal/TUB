@@ -5,6 +5,7 @@ import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.Address;
 import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.manager.HKPayPaymentGatewayWrapper;
 import com.hk.manager.LinkManager;
 import com.hk.manager.payment.EbsPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
@@ -31,7 +32,7 @@ import java.security.NoSuchAlgorithmException;
 */
 
 @Component
-public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<EbsPaymentGatewayWrapper> {
+public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<HKPayPaymentGatewayWrapper> {
 
     private static Logger logger = LoggerFactory.getLogger(HKPaySendReceiveAction.class);
 
@@ -50,8 +51,8 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
     public static String secretKey = "10703078";
     public static String description = "Live transaction";
 
-    protected EbsPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
-        EbsPaymentGatewayWrapper hkPaymentGatewayWrapper = new EbsPaymentGatewayWrapper();
+    protected HKPayPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
+        HKPayPaymentGatewayWrapper hkPaymentGatewayWrapper = new HKPayPaymentGatewayWrapper();
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
 
         String orderId = String.valueOf(data.getOrderId());
