@@ -5,10 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -77,4 +74,8 @@ public class HKCollectionUtils {
     }
     return null;
   }
+
+    public static boolean isNotBlank(Collection collection) {
+        return (collection != null && !collection.isEmpty());
+    }
 }
