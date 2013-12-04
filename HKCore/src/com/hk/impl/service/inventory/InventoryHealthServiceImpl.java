@@ -1510,7 +1510,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     public boolean isBookingRequireAtBright(CartLineItem cartLineItem) {
         Product product = cartLineItem.getProductVariant().getProduct();
-        if (product.isJit() || product.isDropShipping() || product.isService()) {
+        if ( product.isService()) {
             return false;
         }
         Long countOfAvailableUnBookedSkuItemsInBright = getUnbookedInventoryOfBrightForMrp(cartLineItem.getProductVariant(),

@@ -165,7 +165,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         // finding line items with inventory mismatch
         logger.debug("Going to call autoProcessInventoryMismatch for shippping Order --" + shippingOrder.getId() );
         shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
-        if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
+        if (shippingOrder == null || shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Cancelled.getId())) {
           logger.debug("Got shipping order null or with cancelled status");
           return false;
         }
@@ -698,10 +698,17 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
         shippingOrderService.logShippingOrderActivity(cancelledSO, user,
             shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue),
-            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "So canvceeled has  JIt  products -- " + cancelledSO.getId());
+            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "So cancelled has  JIt  products -- " + cancelledSO.getId());
 
       }else {
-        cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
+      //  cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
+        Payment payment = cancelledSO.getBaseOrder().getPayment();
+        Store store = cancelledSO.getBaseOrder().getStore();
+        if (paymentService.isValidReconciliation(payment, store)) {
+          this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,EnumReconciliationActionType.RefundAmount.getId(), false);
+        } else {
+          this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null, null, false);
+        }
         if (cancelledSO.getBaseOrder().getShippingOrders().size() > 1) {
           emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
         } else {
@@ -718,15 +725,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     }
     /*
 
-      Payment payment = cancelledSO.getBaseOrder().getPayment();
-     Store store = cancelledSO.getBaseOrder().getStore();
 
-    if (paymentService.isValidReconciliation(payment, store)) {
-      this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,
-                                                        EnumReconciliationActionType.RefundAmount.getId(), false);
-    } else {
-      this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null, null, false);
-    }
     // send mail
     if (cancelledSO.getBaseOrder().getShippingOrders().size() > 1) {
       emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
