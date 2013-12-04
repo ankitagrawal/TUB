@@ -64,6 +64,7 @@
     <div>
         <c:set var="eventStart" value="12"/>
         <c:set var="eventEnd" value="22"/>
+        <c:set var="eventDate" value="20130512"/>
         <c:set var="hr">
             <fmt:formatDate value="<%=new Date()%>" pattern="HH"/>
         </c:set>
@@ -72,7 +73,7 @@
         </c:set>
 
         <c:choose>
-            <c:when test="${dt == '20130412' && hr >= eventStart && hr <eventEnd}">
+            <c:when test="${dt == eventDate && hr >= eventStart && hr <eventEnd}">
                 <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
                     <img src="${pageContext.request.contextPath}/images/banners/killbill.png"
                          alt="Get your shopping cart for free"/>
