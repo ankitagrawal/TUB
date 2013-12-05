@@ -74,7 +74,7 @@
 
         <c:choose>
             <c:when test="${dt == eventDate && hr >= eventStart && hr <eventEnd}">
-                <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
+                <a href="http://www.healthkart.com/lp/12ordersContest.jsp" target="_blank" style="text-decoration:none;">
                     <img src="${pageContext.request.contextPath}/images/banners/killbill.png"
                          alt="Get your shopping cart for free"/>
                 </a>
