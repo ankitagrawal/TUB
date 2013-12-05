@@ -293,6 +293,28 @@ public class PaymentManager {
         return order;
     }
 
+    public Order success(String gatewayOrderId,String hkPayRefId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode) {
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+
+        Order order = null;
+        // if payment type is full, then send order to processing also, else just accept and update payment status
+        if (payment != null) {
+            payment.setGatewayOrderId(hkPayRefId);
+            if (payment.getPaymentDate() == null) {
+                payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            }
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.SUCCESS));
+            payment.setResponseMessage(responseMessage);
+            payment.setAuthIdCode(authIdCode);
+            payment.setRrn(rrn);
+            order = processOrder(payment);
+        }
+        orderEventPublisher.publishOrderPlacedEvent(order);
+        return order;
+
+    }
+
     public Order success(String gatewayOrderId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
 
@@ -447,6 +469,22 @@ public class PaymentManager {
         return order;
     }
 
+    public Order pendingApproval(String gatewayOrderId,String hkPayRefId, String gatewayReferenceId) {
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+        Order order = null;
+        if (payment != null) {
+            if (StringUtils.isBlank(gatewayReferenceId)) {
+                gatewayReferenceId = hkPayRefId;
+            }
+            // setting the new gatewayOrderId
+            payment.setGatewayOrderId(hkPayRefId);
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+            order = authPending(gatewayOrderId, gatewayReferenceId, null, null, null, null, null);
+        }
+        return order;
+    }
+
     public Payment fail(String gatewayOrderId) {
         return fail(gatewayOrderId, null, null);
     }
@@ -457,6 +495,22 @@ public class PaymentManager {
         if (payment != null) {
             initiatePaymentFailureCall(payment.getOrder());
             payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setResponseMessage(responseMessage);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.FAILURE));
+            payment = getPaymentService().save(payment);
+        }
+        return payment;
+    }
+
+    @Transactional
+    public Payment fail(String gatewayOrderId, String hkpayRefId, String gatewayReferenceId, String responseMessage) {
+        Payment payment = getPaymentService().findByGatewayOrderId(gatewayOrderId);
+        if (payment != null) {
+            initiatePaymentFailureCall(payment.getOrder());
+            payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            // setting the new gatewayOrderId
+            payment.setGatewayOrderId(hkpayRefId);
             payment.setGatewayReferenceId(gatewayReferenceId);
             payment.setResponseMessage(responseMessage);
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.FAILURE));

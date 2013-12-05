@@ -113,14 +113,14 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
 
             // payment callback has been verified. now see if it is successful or failed from the gateway response
             if ("Y".equals(authDesc)) {
-                paymentManager.success(hkpayRefId/*new gatewayReferenceId coming from HKPay*/,gatewayRefId,rrn,null,authIdCode);
-                resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+                paymentManager.success(gatewayOrderId, hkpayRefId,gatewayRefId,rrn,null,authIdCode);
+                resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", hkpayRefId);
             } else if ("AP".equals(authDesc)) {
-                paymentManager.pendingApproval(gatewayOrderId);
-                resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+                paymentManager.pendingApproval(gatewayOrderId,hkpayRefId,gatewayRefId);
+                resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", hkpayRefId);
             } else if ("F".equals(authDesc)) {
-                paymentManager.fail(gatewayOrderId);
-                resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+                paymentManager.fail(gatewayOrderId,hkpayRefId,gatewayRefId,null);
+                resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", hkpayRefId);
             } else {
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
             }
