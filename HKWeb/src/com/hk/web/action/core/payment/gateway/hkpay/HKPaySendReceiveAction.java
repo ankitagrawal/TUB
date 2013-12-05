@@ -85,7 +85,7 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
             hkPaymentGatewayWrapper.addParameter("payment_option", issuerCode);
         }
 
-        hkPaymentGatewayWrapper.setGatewayUrl("http://localhost:9090/payment/gateway/request");
+        hkPaymentGatewayWrapper.setGatewayUrl("http://stag.securepay.healthkart.com/gateway/request");
 
         return hkPaymentGatewayWrapper;
     }
