@@ -2,12 +2,13 @@ package com.hk.web.action.core.payment.gateway.hkpay;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
+import com.hk.constants.payment.EnumGateway;
+import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.Address;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.HKPayPaymentGatewayWrapper;
 import com.hk.manager.LinkManager;
-import com.hk.manager.payment.EbsPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.web.action.core.payment.PaymentFailAction;
@@ -102,7 +103,8 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
         String authDesc = getContext().getRequest().getParameter("transactionStatus");
         String gatewayOrderId = getContext().getRequest().getParameter("gatewayOrderId");
         String orderId = getContext().getRequest().getParameter("orderId");
-        String merchantId = getContext().getRequest().getParameter("accountId");
+        String issuerId = getContext().getRequest().getParameter("issuerId");
+        Gateway gateway = getGateway(getContext().getRequest().getParameter("gatewayId"));
 
         Resolution resolution = null;
         try {
@@ -113,7 +115,7 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
 
             // payment callback has been verified. now see if it is successful or failed from the gateway response
             if ("Y".equals(authDesc)) {
-                paymentManager.success(gatewayOrderId, hkpayRefId,gatewayRefId,rrn,null,authIdCode);
+                paymentManager.success(gatewayOrderId, hkpayRefId,gatewayRefId,rrn,null,authIdCode,gateway);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", hkpayRefId);
             } else if ("AP".equals(authDesc)) {
                 paymentManager.pendingApproval(gatewayOrderId,hkpayRefId,gatewayRefId);
@@ -129,6 +131,17 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
             resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
         }
         return resolution;
+    }
+
+    private Gateway getGateway(String gatewayId) {
+        Gateway gateway = null;
+        try {
+            gateway = EnumGateway.getGatewayFromId(Long.parseLong(gatewayId)).asGateway();
+        } catch (Exception e) {
+            logger.info("Exception parsing gateway id in HKPaySendReceiveAction", e);
+            gateway = null;
+        }
+        return gateway;
     }
 
     private static void verifyChecksum(String secretKey, String accountId, String Amount,

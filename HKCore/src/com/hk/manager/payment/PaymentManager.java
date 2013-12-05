@@ -293,13 +293,16 @@ public class PaymentManager {
         return order;
     }
 
-    public Order success(String gatewayOrderId,String hkPayRefId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode) {
+    public Order success(String gatewayOrderId,String hkPayRefId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode,Gateway gateway) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
 
         Order order = null;
         // if payment type is full, then send order to processing also, else just accept and update payment status
         if (payment != null) {
             payment.setGatewayOrderId(hkPayRefId);
+            if (gateway != null) {
+                payment.setGateway(gateway);
+            }
             if (payment.getPaymentDate() == null) {
                 payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
             }
