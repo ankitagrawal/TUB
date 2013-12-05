@@ -1,5 +1,8 @@
 package com.akube.framework.util;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Marut
@@ -30,5 +33,24 @@ public class StringUtils {
         String strPh = userPhone.substring(start, userPhone.length());
         long phoneNumber = Long.parseLong(strPh);
         return phoneNumber;
+    }
+
+    /**
+     * @param s         delimiter separated string
+     * @param delimiter default delimiter value is ','
+     * @return the values are trimmed and the empty values are removed
+     */
+    public static List<String> getListFromString(String s, String delimiter) {
+        if (s == null) return null;
+        delimiter = (delimiter == null || delimiter.isEmpty()) ? "," : delimiter;
+        List<String> retList = new LinkedList<String>();
+        String[] ss = s.split(delimiter);
+        for (String str : ss) {
+            if (str != null && !str.isEmpty()) {
+                str = str.trim();
+                retList.add(str);
+            }
+        }
+        return retList;
     }
 }
