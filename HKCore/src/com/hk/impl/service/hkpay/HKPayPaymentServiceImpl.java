@@ -1,6 +1,7 @@
 package com.hk.impl.service.hkpay;
 
 import com.hk.domain.payment.Payment;
+import com.hk.dto.payment.PaymentEnquiry;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pojo.HkPaymentResponse;
@@ -41,7 +42,8 @@ public class HKPayPaymentServiceImpl implements HkPaymentService {
             logger.info("response status " + status);
 
             if (status == 200) {
-//               PaymentEnquiry paymentEnquiry =  (PaymentEnquiry) response.getEntity();
+                //parse using gson
+               PaymentEnquiry paymentEnquiry =  (PaymentEnquiry) response.getEntity();
             }
 
         } catch (Exception e) {
