@@ -157,7 +157,10 @@ public class Keys {
 
         public static final String dbBusyName = "dbBusyName";
 
-    }
+        public static final String hkpayUrl = "hkpayUrl";
+
+
+  }
 
     /*
      * public static class App { public static final String contextPath = "contextPath"; public static final String
