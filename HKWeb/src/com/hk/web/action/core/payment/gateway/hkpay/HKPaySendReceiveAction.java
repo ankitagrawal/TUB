@@ -92,13 +92,17 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
 
     @DefaultHandler
     public Resolution callback() {
-        String gatewayOrderId = getContext().getRequest().getParameter("gatewayOrderId");
-        String merchantId = getContext().getRequest().getParameter("accountId");
+        String gatewayRefId = getContext().getRequest().getParameter("gatewayReferenceId");
+        String hkpayRefId = getContext().getRequest().getParameter("hkpayReferenceId");
+        String gatewayChecksum = getContext().getRequest().getParameter("checksum");
+        String rrn = getContext().getRequest().getParameter("rootReferenceNumber");
+        String authIdCode = getContext().getRequest().getParameter("authIdCode");
         String amountStr = getContext().getRequest().getParameter("amount");
         Double amount = NumberUtils.toDouble(amountStr);
         String authDesc = getContext().getRequest().getParameter("transactionStatus");
-        String gatewayChecksum = getContext().getRequest().getParameter("checksum");
+        String gatewayOrderId = getContext().getRequest().getParameter("gatewayOrderId");
         String orderId = getContext().getRequest().getParameter("orderId");
+        String merchantId = getContext().getRequest().getParameter("accountId");
 
         Resolution resolution = null;
         try {
@@ -109,7 +113,7 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
 
             // payment callback has been verified. now see if it is successful or failed from the gateway response
             if ("Y".equals(authDesc)) {
-                paymentManager.success(gatewayOrderId);
+                paymentManager.success(hkpayRefId/*new gatewayReferenceId coming from HKPay*/,gatewayRefId,rrn,null,authIdCode);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if ("AP".equals(authDesc)) {
                 paymentManager.pendingApproval(gatewayOrderId);
