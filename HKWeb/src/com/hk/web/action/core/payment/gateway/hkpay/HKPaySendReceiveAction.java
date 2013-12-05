@@ -37,7 +37,6 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
 
     private static Logger logger = LoggerFactory.getLogger(HKPaySendReceiveAction.class);
 
-    @Value("#{hkEnvProps['" + Keys.Env.secureHKPay + "']}")
     private String secureHKPay;
 
     @Autowired
@@ -87,44 +86,26 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
             hkPaymentGatewayWrapper.addParameter("payment_option", issuerCode);
         }
 
-        hkPaymentGatewayWrapper.setGatewayUrl(secureHKPay);
+        hkPaymentGatewayWrapper.setGatewayUrl("http://stag.securepay.healthkart.com/gateway/request");
 
         return hkPaymentGatewayWrapper;
     }
 
     @DefaultHandler
     public Resolution callback() {
-        /*
-        *         hkPaymentGatewayWrapper.addParameter("address", address.getLine1());
-        hkPaymentGatewayWrapper.addParameter("city", address.getCity());
-        hkPaymentGatewayWrapper.addParameter("state", address.getState());
-        hkPaymentGatewayWrapper.addParameter("phone", address.getPhone());
-        hkPaymentGatewayWrapper.addParameter("postal_code", address.getPincode().getPincode());
-        hkPaymentGatewayWrapper.addParameter("name", address.getName());
-        hkPaymentGatewayWrapper.addParameter("email", address.getUser().getEmail());
-        hkPaymentGatewayWrapper.addParameter("return_url", return_url);
-        hkPaymentGatewayWrapper.addParameter("account_id", accountId);
-        hkPaymentGatewayWrapper.addParameter("reference_no", data.getGatewayOrderId());
-        hkPaymentGatewayWrapper.addParameter("merchantTransactionId", data.getOrderId());
-        hkPaymentGatewayWrapper.addParameter("reference_no", data.getGatewayOrderId());
-        hkPaymentGatewayWrapper.addParameter("description", description);
-        hkPaymentGatewayWrapper.addParameter("secure_hash", server_secure_hash);
-        hkPaymentGatewayWrapper.addParameter("amount", amountStr);
-        hkPaymentGatewayWrapper.addParameter("country", country);
-        String issuerCode = data.getPaymentMethod();
-        if (issuerCode != null && StringUtils.isNotBlank(issuerCode)) {
-            hkPaymentGatewayWrapper.addParameter("payment_option", issuerCode);
-        }
-*/
-        String gatewayRefId = getContext().getRequest().getParameter();
-        String hkpayRefId = getContext().getRequest().getParameter("gatewayOrderId");
-        String gatewayOrderId = getContext().getRequest().getParameter("gatewayOrderId");
-
-        String merchantId = getContext().getRequest().getParameter("accountId");
+        String gatewayRefId = getContext().getRequest().getParameter("gatewayReferenceId");
+        String hkpayRefId = getContext().getRequest().getParameter("hkpayReferenceId");
+        String gatewayChecksum = getContext().getRequest().getParameter("checksum");
+        String rrn = getContext().getRequest().getParameter("rootReferenceNumber");
+        String authIdCode = getContext().getRequest().getParameter("authIdCode");
         String amountStr = getContext().getRequest().getParameter("amount");
         Double amount = NumberUtils.toDouble(amountStr);
         String authDesc = getContext().getRequest().getParameter("transactionStatus");
-        String gatewayChecksum = getContext().getRequest().getParameter("checksum");
+        String gatewayOrderId = getContext().getRequest().getParameter("gatewayOrderId");
+
+/*
+        String merchantId = getContext().getRequest().getParameter("accountId");
+*/
 
         Resolution resolution = null;
         try {

@@ -287,6 +287,19 @@ public class PaymentManager {
         }
         return order;
     }
+    public Order success(String gatewayOrderId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode) {
+/*
+*       String gatewayRefId = getContext().getRequest().getParameter("gatewayReferenceId");
+        String hkpayRefId = getContext().getRequest().getParameter("hkpayReferenceId");
+        String gatewayChecksum = getContext().getRequest().getParameter("checksum");
+        String rrn = getContext().getRequest().getParameter("rootReferenceNumber");
+        String authIdCode = getContext().getRequest().getParameter("authIdCode");
+        String amountStr = getContext().getRequest().getParameter("amount");
+        Double amount = NumberUtils.toDouble(amountStr);
+        String authDesc = getContext().getRequest().getParameter("transactionStatus");
+        String gatewayOrderId = getContext().getRequest().getParameter("gatewayOrderId");
+*/
+    }
 
     public Order success(String gatewayOrderId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
