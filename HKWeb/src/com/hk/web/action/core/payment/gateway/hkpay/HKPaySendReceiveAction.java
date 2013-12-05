@@ -2,12 +2,12 @@ package com.hk.web.action.core.payment.gateway.hkpay;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
+import com.hk.constants.core.Keys;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.Address;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.HKPayPaymentGatewayWrapper;
 import com.hk.manager.LinkManager;
-import com.hk.manager.payment.EbsPaymentGatewayWrapper;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.web.action.core.payment.PaymentFailAction;
@@ -20,6 +20,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
@@ -36,6 +37,8 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
 
     private static Logger logger = LoggerFactory.getLogger(HKPaySendReceiveAction.class);
 
+    @Value("#{hkEnvProps['" + Keys.Env.secureHKPay + "']}")
+    private String secureHKPay;
 
     @Autowired
     PaymentManager paymentManager;
@@ -84,14 +87,39 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
             hkPaymentGatewayWrapper.addParameter("payment_option", issuerCode);
         }
 
-        hkPaymentGatewayWrapper.setGatewayUrl("http://stag.securepay.healthkart.com/gateway/request");
+        hkPaymentGatewayWrapper.setGatewayUrl(secureHKPay);
 
         return hkPaymentGatewayWrapper;
     }
 
     @DefaultHandler
     public Resolution callback() {
+        /*
+        *         hkPaymentGatewayWrapper.addParameter("address", address.getLine1());
+        hkPaymentGatewayWrapper.addParameter("city", address.getCity());
+        hkPaymentGatewayWrapper.addParameter("state", address.getState());
+        hkPaymentGatewayWrapper.addParameter("phone", address.getPhone());
+        hkPaymentGatewayWrapper.addParameter("postal_code", address.getPincode().getPincode());
+        hkPaymentGatewayWrapper.addParameter("name", address.getName());
+        hkPaymentGatewayWrapper.addParameter("email", address.getUser().getEmail());
+        hkPaymentGatewayWrapper.addParameter("return_url", return_url);
+        hkPaymentGatewayWrapper.addParameter("account_id", accountId);
+        hkPaymentGatewayWrapper.addParameter("reference_no", data.getGatewayOrderId());
+        hkPaymentGatewayWrapper.addParameter("merchantTransactionId", data.getOrderId());
+        hkPaymentGatewayWrapper.addParameter("reference_no", data.getGatewayOrderId());
+        hkPaymentGatewayWrapper.addParameter("description", description);
+        hkPaymentGatewayWrapper.addParameter("secure_hash", server_secure_hash);
+        hkPaymentGatewayWrapper.addParameter("amount", amountStr);
+        hkPaymentGatewayWrapper.addParameter("country", country);
+        String issuerCode = data.getPaymentMethod();
+        if (issuerCode != null && StringUtils.isNotBlank(issuerCode)) {
+            hkPaymentGatewayWrapper.addParameter("payment_option", issuerCode);
+        }
+*/
+        String gatewayRefId = getContext().getRequest().getParameter();
+        String hkpayRefId = getContext().getRequest().getParameter("gatewayOrderId");
         String gatewayOrderId = getContext().getRequest().getParameter("gatewayOrderId");
+
         String merchantId = getContext().getRequest().getParameter("accountId");
         String amountStr = getContext().getRequest().getParameter("amount");
         Double amount = NumberUtils.toDouble(amountStr);
@@ -107,6 +135,7 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
 
             // payment callback has been verified. now see if it is successful or failed from the gateway response
             if ("Y".equals(authDesc)) {
+                // TODO: pass all params not just garteway order id
                 paymentManager.success(gatewayOrderId);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if ("AP".equals(authDesc)) {
