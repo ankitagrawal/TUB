@@ -69,7 +69,7 @@ public class BusyPopulateItemData {
                               left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))= in_view_pv_po_option.pv_options_concat,NULL, \
                                     trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))),40)as item_description_3,                     \
                               left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))= in_view_pv_po_option.pv_options_concat,NULL, \
-                                    trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))),40) as item_description_4,                     \
+                                    trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))),40) as item_description_4                     \
                        FROM   sku sk INNER JOIN product_variant pv ON sk.product_variant_id=pv.id                 \
                               INNER JOIN product p ON pv.product_id=p.id                                \
                               INNER JOIN tax t   ON sk.tax_id=t.id                                      \
