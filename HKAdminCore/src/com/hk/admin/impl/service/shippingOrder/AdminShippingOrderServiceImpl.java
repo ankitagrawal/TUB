@@ -175,7 +175,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 			logger.warn("Cancelling Shipping order gateway id:::" + shippingOrder.getGatewayOrderId());
 			shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
 			skuItemLineItemService.freeInventoryForSOCancellation(shippingOrder);
-			//shippingOrder = getShippingOrderService().save(shippingOrder);
+			//shippingOrder = getShippingOrderService().save(shippingOrder);IHS
 //            getAdminInventoryService().reCheckInInventory(shippingOrder);
 			getAdminInventoryService().reCheckInInventory(shippingOrder, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF,
           EnumInvTxnType.CANCEL_CHECKIN, 1L);
