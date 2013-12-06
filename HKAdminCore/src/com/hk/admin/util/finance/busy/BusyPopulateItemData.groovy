@@ -98,9 +98,25 @@ public class BusyPopulateItemData {
         Double taxRateLocal = itemData.tax_rate_local;
         Double taxRateCentral = itemData.tax_rate_central;
         String itemDescription1 = itemData.item_description_1;
+        if(itemDescription1.contains(","))
+        {
+            itemDescription1.replaceAll(","," ");
+        }
         String itemDescription2 = itemData.item_description_2;
+        if(itemDescription2.contains(","))
+        {
+                    itemDescription2.replaceAll(","," ");
+        }
         String itemDescription3 = itemData.item_description_3;
+        if(itemDescription3.contains(","))
+        {
+                    itemDescription3.replaceAll(","," ");
+                }
         String itemDescription4 = itemData.item_description_4;
+                if(itemDescription4.contains(","))
+                {
+                    itemDescription4.replaceAll(","," ");
+                }
 
 
         def busyQuery =  "INSERT INTO " + dbBusyName + "." +"item_detail(item_code ,item_name ,print_name ,parent_group ,unit,sale_price ,purchase_price ,mrp ,\
