@@ -4,6 +4,8 @@ import groovy.sql.Sql
 import org.slf4j.LoggerFactory
 import org.slf4j.Logger
 
+import java.sql.SQLException
+
 /**
  * Created by IntelliJ IDEA.
  * User: Tarun
@@ -39,94 +41,100 @@ public class BusyPopulateItemData {
 
 
   public void populateItemData() {
-    String lastUpdateDate;
-    busySql.eachRow("""
+        String lastUpdateDate;
+        busySql.eachRow("""
                     select max(create_date) as max_date
                     from item_detail;
                       """){
-          lastDate ->
-          lastUpdateDate = lastDate.max_date;
-      }
-    if(lastUpdateDate == null){
-      lastUpdateDate = "2009-01-01";
+            lastDate ->
+                lastUpdateDate = lastDate.max_date;
+        }
+        if(lastUpdateDate == null){
+            lastUpdateDate = "2009-01-01";
+        }
+
+        def query =  "SELECT  sk.id  as item_code,                                                           \
+                              substring(concat(p.name,ifnull(pv.variant_name,'')),1,40) as item_name,        \
+                              substring(concat(p.name,ifnull(pv.variant_name,'')),41,40) as print_name,      \
+                              p.primary_category as parent_group,                                            \
+                              pv.hk_price as sale_price,                                                     \
+                              pv.cost_price as purchase_price,                                               \
+                              pv.marked_price as mrp,                                                        \
+                              t.value as tax_rate_local,                                                     \
+                              t.value as tax_rate_central,                                                   \
+                              left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))= in_view_pv_po_option.pv_options_concat,NULL, \
+                                    trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))),40)as item_description_1,    \
+                              left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3))= in_view_pv_po_option.pv_options_concat,NULL, \
+                                    trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3))),40)as item_description_2,                     \
+                              left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))= in_view_pv_po_option.pv_options_concat,NULL, \
+                                    trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))),40)as item_description_3,                     \
+                              left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))= in_view_pv_po_option.pv_options_concat,NULL, \
+                                    trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))),40) as item_description_4,                     \
+                       FROM   sku sk INNER JOIN product_variant pv ON sk.product_variant_id=pv.id                 \
+                              INNER JOIN product p ON pv.product_id=p.id                                \
+                              INNER JOIN tax t   ON sk.tax_id=t.id                                      \
+                              INNER JOIN                                                                \
+                                    (select pv.id AS product_variant_id,                                \
+                                     group_concat(concat( po.name ,':',po.value ) )as pv_options_concat               \
+                                     from ((product_variant pv LEFT JOIN                                              \
+                                     product_variant_has_product_option pvpo                                          \
+                                     on((pv.id = pvpo.product_variant_id))) LEFT JOIN                                 \
+                                     product_option po on((po.id = pvpo.product_option_id)))                          \
+                                     group by pv.id)in_view_pv_po_option                                              \
+                                     on in_view_pv_po_option.product_variant_id = pv.id                               \
+                       WHERE  sk.update_date >${lastUpdateDate} ";
+
+        sql.eachRow(query){
+            itemData ->
+
+
+        Long  itemCode = itemData.item_code;
+        String itemName = itemData.item_name;
+        String printName = itemData.print_name;
+        String parentGroup = itemData.parent_group;
+        Double salePrice = itemData.sale_price;
+        Double purchasePrice = itemData.purchase_price;
+        Double mrp = itemData.mrp;
+        Double taxRateLocal = itemData.tax_rate_local;
+        Double taxRateCentral = itemData.tax_rate_central;
+        String itemDescription1 = itemData.item_description_1;
+        String itemDescription2 = itemData.item_description_2;
+        String itemDescription3 = itemData.item_description_3;
+        String itemDescription4 = itemData.item_description_4;
+
+
+        def busyQuery =  "INSERT INTO " + dbBusyName + "." +"item_detail(item_code ,item_name ,print_name ,parent_group ,unit,sale_price ,purchase_price ,mrp ,\
+                                tax_rate_local,tax_rate_central ,item_description_1 , item_description_2 ,item_description_3 ,item_description_4 ,                 \
+                                imported,create_date) \
+                          VALUES ( ${itemCode},${itemName},${printName},${parentGroup},'Pcs',${salePrice},${purchasePrice},${mrp},${taxRateLocal},    \
+                          ${taxRateCentral},${itemDescription1},${itemDescription2},${itemDescription3},${itemDescription4},0,NOW() ) \
+                        \
+                          ON DUPLICATE KEY UPDATE                                \
+                          item_code = ${itemCode} ,                            \
+                          item_name = ${itemName} ,                            \
+                          print_name = ${printName},                           \
+                          parent_group = ${parentGroup},                       \
+                          unit = 'Pcs',                                        \
+                          sale_price = ${salePrice} ,                          \
+                          purchase_price= ${purchasePrice} ,                   \
+                          mrp = ${mrp} ,                                       \
+                          tax_rate_local = ${taxRateLocal},                    \
+                          tax_rate_central = ${taxRateCentral} ,               \
+                          create_date = NOW() ,                                \
+                          item_description_1 = ${itemDescription1},            \
+                          item_description_2 = ${itemDescription2},            \
+                          item_description_3 = ${itemDescription3},            \
+                          item_description_4 = ${itemDescription4},            \
+                          imported=0 ";
+
+        try {
+            busySql.executeInsert(busyQuery);
+        }
+        catch (SQLException e) {
+            logger.info("Unable to insert : "+e);
+        }
+
+       }
+
     }
-
-      def query = "INSERT INTO " + dbBusyName + "." +"item_detail(item_code ,item_name ,print_name ,parent_group ,unit,sale_price ,purchase_price ,mrp ,\
-              tax_rate_local,tax_rate_central ,item_description_1 , item_description_2 ,item_description_3 ,item_description_4 ,                 \
-              imported,create_date)                                                                                                              \
-                                                                                                                                                 \
-                                                                                                                                                 \
-      SELECT  sk.id  as item_code,                                                                                                               \
-      substring(concat(p.name,ifnull(pv.variant_name,'')),1,40) as item_name,                                                                    \
-      substring(concat(p.name,ifnull(pv.variant_name,'')),41,40) as print_name,                                                                  \
-      p.primary_category as parent_group,                                                                                                        \
-      'Pcs' as unit,                                                                                                                             \
-      pv.hk_price as sale_price,                                                                                                                 \
-      pv.cost_price as purchase_price,                                                                                                           \
-      pv.marked_price as mrp,                                                                                                                    \
-      t.value as tax_rate_local,                                                                                                                 \
-      t.value as tax_rate_central,                                                                                                               \
-      left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))= in_view_pv_po_option.pv_options_concat,NULL, \
-              trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))),40)as item_description_1,                     \
-                                                                                                                                                                                                                        \
-      left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3))= in_view_pv_po_option.pv_options_concat,NULL, \
-              trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3))),40)as item_description_2,                     \
-      left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))= in_view_pv_po_option.pv_options_concat,NULL, \
-              trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))),40)as item_description_3,                     \
-      left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))= in_view_pv_po_option.pv_options_concat,NULL, \
-              trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))),40) as item_description_4                     \
-      ,                                                                                                                                                                                                                 \
-      0,                                                                                                                                                                                                                \
-      NOW()                                                                                                                                                                                                             \
-                                                                                                                                                                                                                        \
-                                                                                                                                                                                                                        \
-      FROM sku sk INNER JOIN product_variant pv ON sk.product_variant_id=pv.id                                                                                                                                          \
-      INNER JOIN product p ON pv.product_id=p.id                                                                                                                                                                        \
-      INNER JOIN tax t   ON sk.tax_id=t.id                                                                                                                                                                              \
-      INNER JOIN                                                                                                                                                                                                        \
-      (select pv.id AS product_variant_id,                                                                                                                                                                              \
-              group_concat(concat( po.name ,':',po.value ) )as pv_options_concat                                                                                                                                        \
-              from ((product_variant pv LEFT JOIN                                                                                                                                                                       \
-                      product_variant_has_product_option pvpo                                                                                                                                                           \
-                      on((pv.id = pvpo.product_variant_id))) LEFT JOIN                                                                                                                                                  \
-              product_option po on((po.id = pvpo.product_option_id)))                                                                                                                                                   \
-      group by pv.id)in_view_pv_po_option                                                                                                                                                                               \
-                                                                                                                                                                                                                        \
-      on in_view_pv_po_option.product_variant_id = pv.id                                                                                                                                                                 \
-                                                                                                                                                                                                                        \
-      WHERE sk.update_date >${lastUpdateDate}                                                                                                                                                                          \
-                                                                                                                                                                                                                       \
-      ON DUPLICATE KEY UPDATE                                                                                                                                                                                          \
-      item_code=item_code ,                                                                                                                                                                                            \
-      item_name=substring(concat(p.name,ifnull(pv.variant_name,'')),1,40) ,                                                                                                                                            \
-      print_name=substring(concat(p.name,ifnull(pv.variant_name,'')),41,40),                                                                                                                                           \
-      parent_group=p.primary_category ,                                                                                                                                                                                \
-      unit='Pcs',                                                                                                                                                                                                      \
-      sale_price=pv.hk_price ,                                                                                                                                                                                         \
-      purchase_price=pv.cost_price ,                                                                                                                                                                                   \
-      mrp=pv.marked_price ,                                                                                                                                                                                            \
-      tax_rate_local=t.value,                                                                                                                                                                                          \
-      tax_rate_central=t.value ,                                                                                                                                                                                       \
-      create_date=NOW() ,                                                                                                                                                                                              \
-      item_description_1=left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))= in_view_pv_po_option.pv_options_concat,NULL, \
-              trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',1),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',2))),40) ,                                                            \
-                                                                                                                                                                                                                                           \
-      item_description_2=left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3))= in_view_pv_po_option.pv_options_concat,NULL, \
-              trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',2),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',3))),40) ,                                                            \
-                                                                                                                                                                                                                                           \
-      item_description_3=left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))= in_view_pv_po_option.pv_options_concat,NULL, \
-              trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',3),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',4))),40) ,                                                            \
-                                                                                                                                                                                                                                           \
-      item_description_4=left(if (trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))= in_view_pv_po_option.pv_options_concat,NULL, \
-              trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))),40)  ,   \
-      imported=0";
-
-     try{
-      sql.executeInsert(query);
-    }
-      catch (Exception e) {
-
-        Logger.info("Unable to insert in  item: ",e);
-          }
-  }
 }
