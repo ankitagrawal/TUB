@@ -122,7 +122,7 @@ public class BusyPopulateItemData {
       imported=0";
 
      try{
-      sql.executeInsert("""query""");
+      sql.executeInsert(query);
     }
       catch (Exception e) {
 

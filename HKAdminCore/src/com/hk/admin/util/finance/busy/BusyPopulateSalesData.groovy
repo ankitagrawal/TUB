@@ -313,7 +313,7 @@ public class BusyPopulateSalesData {
 
         def tableName = 'transaction_header';
 
-        lastUpdateDate = "2013-04-01";                                                                    \
+        lastUpdateDate = "2013-04-01";
 
         def query = "select     so.id as shipping_order_id,                                                   \
                                 ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) as order_date,                \
