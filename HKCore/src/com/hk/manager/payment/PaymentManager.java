@@ -512,6 +512,7 @@ public class PaymentManager {
             payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
             // setting the new gatewayOrderId
             payment.setGatewayOrderId(hkpayRefId);
+            payment.setGateway(gateway);
             payment.setGatewayReferenceId(gatewayReferenceId);
             payment.setResponseMessage(responseMessage);
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.FAILURE));

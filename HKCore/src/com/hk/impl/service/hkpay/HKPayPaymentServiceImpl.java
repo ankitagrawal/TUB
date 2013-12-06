@@ -43,7 +43,7 @@ public class HKPayPaymentServiceImpl implements HkPaymentService {
 
             if (status == 200) {
                 //parse using gson
-               PaymentEnquiry paymentEnquiry =  (PaymentEnquiry) response.getEntity();
+//               PaymentEnquiry paymentEnquiry =  (PaymentEnquiry) response.getEntity();
             }
 
         } catch (Exception e) {

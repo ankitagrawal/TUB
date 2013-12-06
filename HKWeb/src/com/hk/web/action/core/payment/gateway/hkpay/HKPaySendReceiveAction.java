@@ -2,6 +2,7 @@ package com.hk.web.action.core.payment.gateway.hkpay;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BasePaymentGatewaySendReceiveAction;
+import com.akube.framework.util.BaseUtils;
 import com.hk.constants.payment.EnumGateway;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
@@ -11,6 +12,7 @@ import com.hk.manager.HKPayPaymentGatewayWrapper;
 import com.hk.manager.LinkManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.web.AppConstants;
 import com.hk.web.action.core.payment.PaymentFailAction;
 import com.hk.web.action.core.payment.PaymentSuccessAction;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
 
 /*
  * User: Pratham
@@ -36,8 +39,6 @@ import java.security.NoSuchAlgorithmException;
 public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<HKPayPaymentGatewayWrapper> {
 
     private static Logger logger = LoggerFactory.getLogger(HKPaySendReceiveAction.class);
-
-
     @Autowired
     PaymentManager paymentManager;
 
@@ -48,12 +49,18 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
     LinkManager linkManager;
 
     public static String country = "IND";
-    public static String accountId = "10258";
-    public static String secretKey = "10703078";
     public static String description = "Live transaction";
     public static String merchantTransactionId = "1";
 
+//    public static String accountId = "10258";
+//    public static String secretKey = "10703078";
+
     protected HKPayPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
+        Properties properties = BaseUtils.getPropertyFile(AppConstants.getAppClasspathRootPath() + "/hkPay.live.properties");
+        String accountId = properties.getProperty("accountId");
+        String secretKey = properties.getProperty("secret_key");
+
+
         HKPayPaymentGatewayWrapper hkPaymentGatewayWrapper = new HKPayPaymentGatewayWrapper();
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
 
@@ -86,13 +93,20 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
             hkPaymentGatewayWrapper.addParameter("payment_option", issuerCode);
         }
 
-        hkPaymentGatewayWrapper.setGatewayUrl("http://stag.securepay.healthkart.com/gateway/request");
+        String url = properties.getProperty("secureHKPay");
+//        String url = "http://stag.securepay.healthkart.com/gateway/request";
+
+
+        hkPaymentGatewayWrapper.setGatewayUrl(url);
 
         return hkPaymentGatewayWrapper;
     }
 
     @DefaultHandler
     public Resolution callback() {
+        Properties properties = BaseUtils.getPropertyFile(AppConstants.getAppClasspathRootPath() + "/hkPay.live.properties");
+        String accountId = properties.getProperty("accountId");
+        String secretKey = properties.getProperty("secret_key");
         String gatewayRefId = getContext().getRequest().getParameter("gatewayReferenceId");
         String hkpayRefId = getContext().getRequest().getParameter("hkpayReferenceId");
         String gatewayChecksum = getContext().getRequest().getParameter("checksum");
@@ -109,19 +123,19 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
         Resolution resolution = null;
         try {
             // gateway specific validation
-            verifyChecksum(secretKey, accountId, amountStr, gatewayOrderId,orderId, authDesc,gatewayChecksum);
+            verifyChecksum(secretKey, accountId, amountStr, gatewayOrderId, orderId, authDesc, gatewayChecksum);
             // our own validations
             paymentManager.verifyPayment(gatewayOrderId, amount, null);
 
             // payment callback has been verified. now see if it is successful or failed from the gateway response
             if ("Y".equals(authDesc)) {
-                paymentManager.success(gatewayOrderId, hkpayRefId,gatewayRefId,rrn,null,authIdCode,gateway);
+                paymentManager.success(gatewayOrderId, hkpayRefId, gatewayRefId, rrn, null, authIdCode, gateway);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", hkpayRefId);
             } else if ("AP".equals(authDesc)) {
-                paymentManager.pendingApproval(gatewayOrderId,hkpayRefId,gatewayRefId, gateway);
+                paymentManager.pendingApproval(gatewayOrderId, hkpayRefId, gatewayRefId, gateway);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", hkpayRefId);
             } else if ("F".equals(authDesc)) {
-                paymentManager.fail(gatewayOrderId,hkpayRefId,gatewayRefId,null,gateway);
+                paymentManager.fail(gatewayOrderId, hkpayRefId, gatewayRefId, null, gateway);
                 resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", hkpayRefId);
             } else {
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
@@ -145,8 +159,8 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
     }
 
     private static void verifyChecksum(String secretKey, String accountId, String Amount,
-                                       String gatewayOrderId,String orderId,String authStatus ,String checkSum) throws HealthkartPaymentGatewayException {
-        String newChecksum = getResponseChecksum(secretKey, accountId, Amount, gatewayOrderId,orderId,authStatus);
+                                       String gatewayOrderId, String orderId, String authStatus, String checkSum) throws HealthkartPaymentGatewayException {
+        String newChecksum = getResponseChecksum(secretKey, accountId, Amount, gatewayOrderId, orderId, authStatus);
         if (!newChecksum.equals(checkSum)) {
             throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.CHECKSUM_MISMATCH);
         }
@@ -168,7 +182,7 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
     }
 
     private static String getResponseChecksum(String secretKey, String accountId, String amount, String gatewayOrderId, String merchantTransactionId, String status) {
-        String pass = secretKey + "|" + accountId + "|" + amount + "|" + gatewayOrderId + "|" +merchantTransactionId + "|"+ status;
+        String pass = secretKey + "|" + accountId + "|" + amount + "|" + gatewayOrderId + "|" + merchantTransactionId + "|" + status;
         MessageDigest m = null;
         try {
             m = MessageDigest.getInstance("MD5");
