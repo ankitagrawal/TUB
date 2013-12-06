@@ -11,6 +11,7 @@ import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
+import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.pricing.PricingEngine;
@@ -33,6 +34,8 @@ public class PaymentModeAction extends BaseAction {
     List<Issuer>                bankIssuers;
     List<Issuer>                cardIssuers;
     List<Issuer>                debitCardIssuers;
+    Issuer                      codIssuer;
+    Boolean isHKPayWorking;
 
     Map<String, String>         codFailureMap      = new HashMap<String, String>();
     private PricingDto          pricingDto;
@@ -50,6 +53,8 @@ public class PaymentModeAction extends BaseAction {
     PricingEngine               pricingEngine;
     @Autowired
     private OrderService        orderService;
+    @Autowired
+    private PaymentManager paymentManager;
 
     Order                       order;
 
@@ -75,6 +80,7 @@ public class PaymentModeAction extends BaseAction {
         bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(), true);
         cardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Card.getId(), true);
         debitCardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Debit.getId(), true);
+        codIssuer = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.COD.getId(),true).get(0);
 
         if (isHybridRelease()) {
             return new ForwardResolution("/pages/paymentModeBeta.jsp");
@@ -82,6 +88,7 @@ public class PaymentModeAction extends BaseAction {
             return new ForwardResolution("/pages/paymentMode.jsp");
         }
     }
+
 
     public List<Issuer> getBankIssuers() {
         return bankIssuers;
@@ -137,5 +144,21 @@ public class PaymentModeAction extends BaseAction {
 
     public void setDebitCardIssuers(List<Issuer> debitCardIssuers) {
         this.debitCardIssuers = debitCardIssuers;
+    }
+
+    public Issuer getCodIssuer() {
+        return codIssuer;
+    }
+
+    public void setCodIssuer(Issuer codIssuer) {
+        this.codIssuer = codIssuer;
+    }
+
+    public Boolean getHKPayWorking() throws Exception {
+        return paymentManager.isHKPayWorking();
+    }
+
+    public void setHKPayWorking(Boolean HKPayWorking) {
+        isHKPayWorking = HKPayWorking;
     }
 }

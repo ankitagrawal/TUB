@@ -10,6 +10,7 @@
 <%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>
+<%@ page import="com.hk.constants.payment.EnumIssuer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -324,59 +325,121 @@
                     </div>
                     <h4 class="codContact">Contact Details</h4>
 
+                    <c:choose>
 
-                    <s:form
-                            beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
-                            method="post" >
-                        <s:hidden name="order" value="${orderSummary.order}"/>
-                        <c:set var="order" value="${orderSummary.order}"/>
+                        <c:when test="${paymentModeBean.HKPayWorking}">
+                            <s:form
+                                    beanclass="com.hk.web.action.core.payment.PaymentAction"
+                                    method="post" >
+                                <s:hidden name="order" value="${orderSummary.order}"/>
+                                <s:hidden name="issuer" value="${paymentModeBean.codIssuer.id}"/>
+                                <c:set var="order" value="${orderSummary.order}"/>
 
-                        <div style="margin-bottom: 15px;">
-                            <div class="label newLabel" style="width: 100px !important;">Contact Name</div>
-                            <s:text class="signUpInputNew2" name="codContactName"
-                                    value="${orderSummary.order.address.name}"/>
-                        </div>
-                        <div>
-                            <div class="label newLabel" style="width: 100px !important;">Mobile Number</div>
-                            <s:text class="signUpInputNew2" name="codContactPhone"
-                                    value="${orderSummary.order.address.phone}" id="phoneNo"/>
-                        </div>
+                                <div style="margin-bottom: 15px;">
+                                    <div class="label newLabel" style="width: 100px !important;">Contact Name</div>
+                                    <s:text class="signUpInputNew2" name="codContactName"
+                                            value="${orderSummary.order.address.name}"/>
+                                </div>
+                                <div>
+                                    <div class="label newLabel" style="width: 100px !important;">Mobile Number</div>
+                                    <s:text class="signUpInputNew2" name="codContactPhone"
+                                            value="${orderSummary.order.address.phone}" id="phoneNo"/>
+                                </div>
 
-                        <p style="margin-left: 100px"><strong class="orangeBold">Please ensure that you enter the correct mobile number</strong></p>
+                                <p style="margin-left: 100px"><strong class="orangeBold">Please ensure that you enter the correct mobile number</strong></p>
 
-                            <c:if test="${not hk:isAutoConfirmedCod(order, deliveredOrderStatus)}">
-                                <c:choose>
+                                <c:if test="${not hk:isAutoConfirmedCod(order, deliveredOrderStatus)}">
+                                    <c:choose>
 
-                                    <c:when test="${orderConfirmRoute == 'smsCountry'}">
-                                        <p style="font-weight: 500">
-                                            After placing your order, please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
-                                            You will receive an SMS with same details. In case you are unable to give the missed call, our customer care will call you to verify.
-                                            Once verified, your order will go into processing.</p>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <p>You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
-                                            your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:if>
+                                        <c:when test="${orderConfirmRoute == 'smsCountry'}">
+                                            <p style="font-weight: 500">
+                                                After placing your order, please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
+                                                You will receive an SMS with same details. In case you are unable to give the missed call, our customer care will call you to verify.
+                                                Once verified, your order will go into processing.</p>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <p>You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
+                                                your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:if>
 
 
-                        <div class="buttons" style="font-size: 1.3em;">
-                            <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="pre" value="PLACE ORDER"
-                                      class="positive phoneValidation placeOrderButtonNew"/></div>
-                        <br/>
-                        <br/>
+                                <div class="buttons" style="font-size: 1.3em;">
+                                    <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="proc" value="PLACE ORDER"
+                                               class="positive phoneValidation placeOrderButtonNew"/></div>
+                                <br/>
+                                <br/>
 
-                        <div class="clear"></div>
-                        <hr/>
-                        <br/>
+                                <div class="clear"></div>
+                                <hr/>
+                                <br/>
 
-                        <h4>Terms and Conditions for Cash on Delivery</h4>
+                                <h4>Terms and Conditions for Cash on Delivery</h4>
 
-                        <p>Please note that COD order will be processed and shipped only after verification. <br/>
-                            Also please ensure that the above person is available at the given location at all times.
-                        </p>
-                    </s:form>
+                                <p>Please note that COD order will be processed and shipped only after verification. <br/>
+                                    Also please ensure that the above person is available at the given location at all times.
+                                </p>
+                            </s:form>
+                        </c:when>
+                        <c:otherwise>
+                            <s:form
+                                    beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
+                                    method="post" >
+                                <s:hidden name="order" value="${orderSummary.order}"/>
+                                <c:set var="order" value="${orderSummary.order}"/>
+
+                                <div style="margin-bottom: 15px;">
+                                    <div class="label newLabel" style="width: 100px !important;">Contact Name</div>
+                                    <s:text class="signUpInputNew2" name="codContactName"
+                                            value="${orderSummary.order.address.name}"/>
+                                </div>
+                                <div>
+                                    <div class="label newLabel" style="width: 100px !important;">Mobile Number</div>
+                                    <s:text class="signUpInputNew2" name="codContactPhone"
+                                            value="${orderSummary.order.address.phone}" id="phoneNo"/>
+                                </div>
+
+                                <p style="margin-left: 100px"><strong class="orangeBold">Please ensure that you enter the correct mobile number</strong></p>
+
+                                <c:if test="${not hk:isAutoConfirmedCod(order, deliveredOrderStatus)}">
+                                    <c:choose>
+
+                                        <c:when test="${orderConfirmRoute == 'smsCountry'}">
+                                            <p style="font-weight: 500">
+                                                After placing your order, please give a missed call on 0124-4616414 to verify the order from the number you have entered above.
+                                                You will receive an SMS with same details. In case you are unable to give the missed call, our customer care will call you to verify.
+                                                Once verified, your order will go into processing.</p>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <p>You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
+                                                your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:if>
+
+
+                                <div class="buttons" style="font-size: 1.3em;">
+                                    <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="proc" value="PLACE ORDER"
+                                               class="positive phoneValidation placeOrderButtonNew"/></div>
+                                <br/>
+                                <br/>
+
+                                <div class="clear"></div>
+                                <hr/>
+                                <br/>
+
+                                <h4>Terms and Conditions for Cash on Delivery</h4>
+
+                                <p>Please note that COD order will be processed and shipped only after verification. <br/>
+                                    Also please ensure that the above person is available at the given location at all times.
+                                </p>
+                            </s:form>
+                        </c:otherwise>
+
+                    </c:choose>
+
+
                 </c:otherwise>
             </c:choose>
 

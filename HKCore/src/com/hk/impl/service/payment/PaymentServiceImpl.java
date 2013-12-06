@@ -123,8 +123,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (basePayment != null) {
             Gateway gateway = basePayment.getGateway();
             if (gateway != null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())) {
-//                HkPaymentService hkPaymentService = getHkPaymentService(gateway);
-                HkPaymentService hkPaymentService = ServiceLocatorFactory.getBean("HKPayService",HkPaymentService.class);
+                HkPaymentService hkPaymentService = getHkPaymentService(gateway);
                 if (hkPaymentService != null) {
                     try {
 

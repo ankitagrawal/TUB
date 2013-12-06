@@ -11,7 +11,8 @@ public enum EnumIssuerType {
 
     Bank("Bank", "Bank"),
     Card("Card", "Card"),
-    Debit("Debit","Debit");
+    Debit("Debit","Debit"),
+    COD("Cash On Delivery", "COD");
     private java.lang.String name;
     private String id;
 

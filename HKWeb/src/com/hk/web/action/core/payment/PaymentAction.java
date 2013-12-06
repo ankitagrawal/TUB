@@ -49,6 +49,8 @@ public class PaymentAction extends BaseAction {
 //    private Set<CartLineItem> trimCartLineItems = new HashSet<CartLineItem>();
 //    private Integer               sizeOfCLI;
 
+    Boolean isHKPayWorking = false;
+
     @Validate(required = true)
     Issuer issuer;
 
@@ -189,5 +191,13 @@ public class PaymentAction extends BaseAction {
 
     public void setBillingAddressId(Long billingAddressId) {
         this.billingAddressId = billingAddressId;
+    }
+
+    public Boolean isHKPayWorking() throws Exception {
+        return paymentManager.isHKPayWorking();
+    }
+
+    public void setHKPayWorking(boolean HKPayWorking) {
+        isHKPayWorking = HKPayWorking;
     }
 }
