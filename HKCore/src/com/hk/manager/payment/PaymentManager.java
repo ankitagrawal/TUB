@@ -472,16 +472,14 @@ public class PaymentManager {
         return order;
     }
 
-    public Order pendingApproval(String gatewayOrderId,String hkPayRefId, String gatewayReferenceId) {
+    public Order pendingApproval(String gatewayOrderId,String hkPayRefId, String gatewayReferenceId, Gateway gateway) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         Order order = null;
         if (payment != null) {
-            if (StringUtils.isBlank(gatewayReferenceId)) {
-                gatewayReferenceId = hkPayRefId;
-            }
             // setting the new gatewayOrderId
             payment.setGatewayOrderId(hkPayRefId);
             payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setGateway(gateway);
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
             order = authPending(gatewayOrderId, gatewayReferenceId, null, null, null, null, null);
         }
@@ -507,7 +505,7 @@ public class PaymentManager {
     }
 
     @Transactional
-    public Payment fail(String gatewayOrderId, String hkpayRefId, String gatewayReferenceId, String responseMessage) {
+    public Payment fail(String gatewayOrderId, String hkpayRefId, String gatewayReferenceId, String responseMessage, Gateway gateway) {
         Payment payment = getPaymentService().findByGatewayOrderId(gatewayOrderId);
         if (payment != null) {
             initiatePaymentFailureCall(payment.getOrder());

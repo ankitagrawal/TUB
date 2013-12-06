@@ -118,10 +118,10 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
                 paymentManager.success(gatewayOrderId, hkpayRefId,gatewayRefId,rrn,null,authIdCode,gateway);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", hkpayRefId);
             } else if ("AP".equals(authDesc)) {
-                paymentManager.pendingApproval(gatewayOrderId,hkpayRefId,gatewayRefId);
+                paymentManager.pendingApproval(gatewayOrderId,hkpayRefId,gatewayRefId, gateway);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", hkpayRefId);
             } else if ("F".equals(authDesc)) {
-                paymentManager.fail(gatewayOrderId,hkpayRefId,gatewayRefId,null);
+                paymentManager.fail(gatewayOrderId,hkpayRefId,gatewayRefId,null,gateway);
                 resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", hkpayRefId);
             } else {
                 throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
