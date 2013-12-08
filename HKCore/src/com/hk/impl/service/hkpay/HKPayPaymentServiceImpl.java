@@ -7,10 +7,14 @@ import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pojo.HkPaymentResponse;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
+import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -32,16 +36,44 @@ public class HKPayPaymentServiceImpl implements HkPaymentService {
         try {
 
             ClientRequest request = new ClientRequest(postUrl);
-//            request.getQueryParameters().add("authToken", "US3jbSEN5EKVVzlabDl95loyWf_hloCZ");
-            request.getQueryParameters().add("gatewayOrderId", basePayment.getGatewayOrderId());
-            request.getQueryParameters().add("accountId", accountId);
             request.setHttpMethod("POST");
-            ClientResponse<String> response = request.post();
+
+            //Things to try
+
+            //1
+            request.body(MediaType.APPLICATION_FORM_URLENCODED_TYPE, "gatewayOrderId=2554-1&accountId=31188");
+
+            //2
+            request.getFormParameters().add("gatewayOrderId", "2554-1");
+            request.getFormParameters().add("accountId", "31188");
+
+            //3
+            MultivaluedMap<String,String> formData= new MultivaluedMapImpl<String,String>();
+            formData.put("gatewayOrderId", Arrays.asList("2554-1"));
+            formData.put("accountId", Arrays.asList("31188"));
+
+//            request.header("content-type",MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+
+            request.getFormParameters().add("gatewayOrderId", "2554-1");
+            request.getFormParameters().add("accountId", "31188");
+//            request.body(MediaType.APPLICATION_FORM_URLENCODED_TYPE, "gatewayOrderId=2554-1&accountId=31188");
+//            request.getFormParameters().add("gatewayOrderId", basePayment.getGatewayOrderId());
+//            request.getFormParameters().add("accountId", accountId);
+//            request.body(MediaType.APPLICATION_FORM_URLENCODED,formData);
+
+//            ClientResponse<PaymentEnquiry> response = request.post(PaymentEnquiry.class);
+//            request.getQueryParameters().add("authToken", "US3jbSEN5EKVVzlabDl95loyWf_hloCZ");
+
+
+
+            ClientResponse<String> response = request.post(String.class);
             int status = response.getStatus();
 
             logger.info("response status " + status);
 
             if (status == 200) {
+//                PaymentEnquiry output = response.getEntity();
+                int i = 0;
                 //parse using gson
 //               PaymentEnquiry paymentEnquiry =  (PaymentEnquiry) response.getEntity();
             }
