@@ -81,7 +81,7 @@ public enum EnumGateway {
     }
 
     public static List<Long> getHKServiceEnabledGateways(){
-        return Arrays.asList(CITRUS.asGateway().getId(), EBS.asGateway().getId(), ICICI.asGateway().getId(),HKPay.asGateway().getId());
+        return Arrays.asList(CITRUS.asGateway().getId(), EBS.asGateway().getId(), ICICI.asGateway().getId()/*,HKPay.asGateway().getId()*/);
     }
 
     public static List<Gateway> getSeekGateways(){

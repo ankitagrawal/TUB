@@ -34,21 +34,23 @@ public class HKPayPaymentServiceImpl implements HkPaymentService {
 //
 //    @Value("#{hkPayProps['" + GatewayResponseKeys.HKPayConstants.accountId + "']}")
 //    String accountId;
-    private static final String HKPAY_LIVE_PROPERTIES = "/hkPay.live.properties";
+//    private static final String HKPAY_LIVE_PROPERTIES = "/hkPay.live.properties";
 
     private static Logger logger = LoggerFactory.getLogger(HKPayPaymentServiceImpl.class);
 
     @Override
     public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException {
-        String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + HKPAY_LIVE_PROPERTIES;
-        Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
+//        String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + HKPAY_LIVE_PROPERTIES;
+//        Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
 
         try {
-            String postUrl = (String) properties.get(properties.get(GatewayResponseKeys.HKPayConstants.secureHKPay));
+//            String postUrl = (String) properties.get(properties.get(GatewayResponseKeys.HKPayConstants.secureHKPay));
+            String postUrl = "http://stag.securepay.healthkart.com/rest/api/payment/search";
             ClientRequest request = new ClientRequest(postUrl);
             request.setHttpMethod("POST");
             request.getFormParameters().add("gatewayOrderId", basePayment.getGatewayOrderId());
-            String accountId = (String) properties.get(properties.get(GatewayResponseKeys.HKPayConstants.accountId));
+//            String accountId = (String) properties.get(properties.get(GatewayResponseKeys.HKPayConstants.accountId));
+            String accountId = "10258";
             request.getFormParameters().add("accountId", accountId);
 
             ClientResponse<String> response = request.post(String.class);

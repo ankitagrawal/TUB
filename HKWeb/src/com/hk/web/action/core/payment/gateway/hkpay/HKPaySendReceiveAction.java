@@ -48,9 +48,9 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
     @Autowired
     LinkManager linkManager;
 
-    public static String country = "IND";
-    public static String description = "Live transaction";
-    public static String merchantTransactionId = "1";
+//    public static String country = "IND";
+//    public static String description = "Live transaction";
+//    public static String merchantTransactionId = "1";
 
 //    public static String accountId = "10258";
 //    public static String secretKey = "10703078";
@@ -59,7 +59,8 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
         Properties properties = BaseUtils.getPropertyFile(AppConstants.getAppClasspathRootPath() + "/hkPay.live.properties");
         String accountId = properties.getProperty("accountId");
         String secretKey = properties.getProperty("secret_key");
-
+        String description = properties.getProperty("description");
+        String country = properties.getProperty("country");
 
         HKPayPaymentGatewayWrapper hkPaymentGatewayWrapper = new HKPayPaymentGatewayWrapper();
         String amountStr = BasePaymentGatewayWrapper.TransactionData.decimalFormat.format(data.getAmount());
@@ -72,25 +73,25 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
         Payment payment = paymentService.findByGatewayOrderId(data.getGatewayOrderId());
         Address address = payment.getOrder().getAddress();
 
-        hkPaymentGatewayWrapper.addParameter("address", address.getLine1());
-        hkPaymentGatewayWrapper.addParameter("city", address.getCity());
-        hkPaymentGatewayWrapper.addParameter("state", address.getState());
-        hkPaymentGatewayWrapper.addParameter("phone", address.getPhone());
-        hkPaymentGatewayWrapper.addParameter("postal_code", address.getPincode().getPincode());
-        hkPaymentGatewayWrapper.addParameter("name", address.getName());
-        hkPaymentGatewayWrapper.addParameter("email", address.getUser().getEmail());
-        hkPaymentGatewayWrapper.addParameter("return_url", return_url);
-        hkPaymentGatewayWrapper.addParameter("account_id", accountId);
-        hkPaymentGatewayWrapper.addParameter("reference_no", data.getGatewayOrderId());
-        hkPaymentGatewayWrapper.addParameter("merchantTransactionId", data.getOrderId());
-        hkPaymentGatewayWrapper.addParameter("reference_no", data.getGatewayOrderId());
-        hkPaymentGatewayWrapper.addParameter("description", description);
-        hkPaymentGatewayWrapper.addParameter("secure_hash", server_secure_hash);
-        hkPaymentGatewayWrapper.addParameter("amount", amountStr);
-        hkPaymentGatewayWrapper.addParameter("country", country);
+
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.address, address.getLine1());
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.city, address.getCity());
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.state, address.getState());
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.phone, address.getPhone());
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.postal_code, address.getPincode().getPincode());
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.name, address.getName());
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.email, address.getUser().getEmail());
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.return_url, return_url);
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.account_id, accountId);
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.merchantTransactionId, data.getOrderId());
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.reference_no, data.getGatewayOrderId());
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.description, description);
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.secure_hash, server_secure_hash);
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.amount, amountStr);
+        hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.country, country);
         String issuerCode = data.getPaymentMethod();
         if (issuerCode != null && StringUtils.isNotBlank(issuerCode)) {
-            hkPaymentGatewayWrapper.addParameter("payment_option", issuerCode);
+            hkPaymentGatewayWrapper.addParameter(HKPayPaymentGatewayWrapper.payment_option, issuerCode);
         }
 
         String url = properties.getProperty("secureHKPay");
