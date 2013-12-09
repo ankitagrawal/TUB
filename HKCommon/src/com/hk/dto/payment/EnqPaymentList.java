@@ -10,9 +10,16 @@ package com.hk.dto.payment;
 public class EnqPaymentList {
 
     String responseCode;
+    String issuerName;
     String responseMessage;
     Double amount;
-    Long gatewayOrderId;
+    String gatewayOrderId;
     String transactionType;
+    String gateway;
+    String hkPayReferenceId;
+    String gatewayName;
+    Long issuerId;
+
+
 
 }

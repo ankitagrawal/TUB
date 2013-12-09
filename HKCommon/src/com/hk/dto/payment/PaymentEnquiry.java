@@ -1,5 +1,8 @@
 package com.hk.dto.payment;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,7 +13,32 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class PaymentEnquiry {
-    Long enqCode;
-    String enqMessage;
-    List<EnqPaymentList> list;
+    private Long enqCode;
+    private String enqMessage;
+    @SerializedName("enqPaymentList")
+    private List<EnqPaymentList> list = new ArrayList<EnqPaymentList>();
+
+    public List<EnqPaymentList> getList() {
+        return list;
+    }
+
+    public void setList(List<EnqPaymentList> list) {
+        this.list = list;
+    }
+
+    public String getEnqMessage() {
+        return enqMessage;
+    }
+
+    public void setEnqMessage(String enqMessage) {
+        this.enqMessage = enqMessage;
+    }
+
+    public Long getEnqCode() {
+        return enqCode;
+    }
+
+    public void setEnqCode(Long enqCode) {
+        this.enqCode = enqCode;
+    }
 }
