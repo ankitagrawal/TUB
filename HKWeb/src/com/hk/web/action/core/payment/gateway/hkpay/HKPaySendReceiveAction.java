@@ -48,13 +48,6 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
     @Autowired
     LinkManager linkManager;
 
-//    public static String country = "IND";
-//    public static String description = "Live transaction";
-//    public static String merchantTransactionId = "1";
-
-//    public static String accountId = "10258";
-//    public static String secretKey = "10703078";
-
     protected HKPayPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
         Properties properties = BaseUtils.getPropertyFile(AppConstants.getAppClasspathRootPath() + "/hkPay.live.properties");
         String accountId = properties.getProperty("accountId");

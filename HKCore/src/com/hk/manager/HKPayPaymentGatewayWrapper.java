@@ -22,8 +22,9 @@ import java.util.StringTokenizer;
 public class HKPayPaymentGatewayWrapper extends BasePaymentGatewayWrapper<HKPayPaymentGatewayWrapper> implements PaymentGatewayWrapper {
 
     private static Logger logger = LoggerFactory.getLogger(HKPayPaymentGatewayWrapper.class);
-
     String url;
+
+    // Make Payment constants
     public static final String address = "address";
     public static final String city = "city";
     public static final String state = "state";
@@ -41,7 +42,6 @@ public class HKPayPaymentGatewayWrapper extends BasePaymentGatewayWrapper<HKPayP
     public static final String country = "country";
     public static final String payment_option = "payment_option";
 
-
     public String getGatewayUrl() {
         return url;
     }
@@ -50,5 +50,4 @@ public class HKPayPaymentGatewayWrapper extends BasePaymentGatewayWrapper<HKPayP
     public void setGatewayUrl(String url) {
         this.url = url;
     }
-
 }
