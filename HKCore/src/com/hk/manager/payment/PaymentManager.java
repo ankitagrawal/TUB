@@ -606,6 +606,7 @@ public class PaymentManager {
         GetMethod getMethod = new GetMethod(hkPayUrl);
         int status = httpClient.executeMethod(getMethod);
         if (HttpStatus.SC_OK == status) {
+            logger.info("HKPay is live");
             isWorking = true;
         }
         return isWorking;
