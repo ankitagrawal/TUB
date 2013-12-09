@@ -57,7 +57,9 @@ public class BusyPopulateSupplierData {
          WHERE su.update_date >${lastUpdateDate}                                                                                                                                                                \
          ON DUPLICATE KEY UPDATE id=su.id, name=su.name, line1=su.line1, line2=su.line2, city=su.city, state=su.state, pincode=su.pincode, contact_person=su.contact_person,                                    \
          contact_number=su.contact_number, tin_number=su.tin_number, create_date=NOW(), imported=0, credit_days=su.credit_days";
-      sql.executeInsert("""query""");
+
+         logger.debug("query formed = "+query);
+      sql.executeInsert(query);
     }
       catch (Exception e) {
             logger.info("Unable to insert in  supplier: ", e);
