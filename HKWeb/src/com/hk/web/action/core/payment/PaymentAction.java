@@ -122,8 +122,9 @@ public class PaymentAction extends BaseAction {
                             oldValue += priority;
                         }
                     } else {
+                        logger.error("Routing to EBS since HKPay is down");
+                        issuerCode = null;
                         gateway = EnumGateway.EBS.asGateway();
-
                     }
 
 
@@ -131,6 +132,7 @@ public class PaymentAction extends BaseAction {
                     //todo pratham, remove this piece of code
                     //this is a very crude away, although this code should not fail, but as a worse case scenario, redirecting customer to icici no matter what since it gives max option
                     logger.error("Routing Multiple gateways failed due to some exception" + e);
+                    issuerCode = null;
                     gateway = EnumGateway.EBS.asGateway();
 
                 }
