@@ -4,6 +4,8 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumIssuer;
+import com.hk.constants.payment.EnumIssuerType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
@@ -165,6 +167,11 @@ public class PaymentManager {
         if (EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
             payment.setGateway(gateway);
             payment.setIssuer(issuer);
+
+            // set COD mode if issuer is issuer
+            if (EnumIssuerType.COD.getId().equalsIgnoreCase(issuer.getIssuerType())) {
+                payment.setPaymentMode(EnumPaymentMode.COD.asPaymenMode());
+            }
         }
 
         payment.setBillingAddress(billingAddress);
