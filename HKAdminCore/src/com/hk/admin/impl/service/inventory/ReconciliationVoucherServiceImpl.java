@@ -410,6 +410,8 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 			} else {
 				// when there was no sibling for this skuitem, the entries need
 				// to be deleted. SO moved back to action awaiting.
+        LineItem lineItem =  skuItemLineItem.getLineItem();
+        lineItem.getSkuItemLineItems().remove(skuItemLineItem);
 				baseDao.delete(skuItemLineItem);
 				baseDao.delete(cli);
 				item.getShippingOrder().setReason(EnumReason.PROD_INV_MISMATCH.asReason());
