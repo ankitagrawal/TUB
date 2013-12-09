@@ -49,6 +49,8 @@ public class PaymentAction extends BaseAction {
 //    private Set<CartLineItem> trimCartLineItems = new HashSet<CartLineItem>();
 //    private Integer               sizeOfCLI;
 
+    Boolean isHKPayWorking = false;
+
     @Validate(required = true)
     Issuer issuer;
 
@@ -75,15 +77,6 @@ public class PaymentAction extends BaseAction {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
-//            trimCartLineItems = orderManager.trimEmptyLineItems(order);
-//            sizeOfCLI = trimCartLineItems.size();
-//            if(trimCartLineItems!=null && trimCartLineItems.size()>0){
-//                if(order.getCartLineItems()==null || order.getCartLineItems().size()==0){
-//                    return new RedirectResolution(CartAction.class);
-//                }
-//                return new ForwardResolution(OrderSummaryAction.class).addParameter("trim",true).addParameter("sizeOfCLI",sizeOfCLI);
-//            }
-
 
             BillingAddress billingAddress = null;
             if (billingAddressId != null) {
@@ -94,9 +87,6 @@ public class PaymentAction extends BaseAction {
             if (issuer != null) {
                 try {
 
-                    boolean isWorking = paymentManager.isHKPayWorking();
-
-                    if (isWorking) {
                         List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
                         Long total = 0L;
 
@@ -119,16 +109,22 @@ public class PaymentAction extends BaseAction {
                             }
                             oldValue += priority;
                         }
-                    } else {
-                        gateway = EnumGateway.EBS.asGateway();
 
-                    }
-
+                        if(EnumGateway.HKPay.getId().equals(gateway.getId())){
+                            boolean isWorking = paymentManager.isHKPayWorking();
+                            if(!isWorking){
+                                gateway = EnumGateway.EBS.asGateway();
+                                logger.error("Routing to EBS since HKPay is down");
+                                issuerCode = null;
+                                gateway = EnumGateway.EBS.asGateway();
+                            }
+                        }
 
                 } catch (Exception e) {
                     //todo pratham, remove this piece of code
                     //this is a very crude away, although this code should not fail, but as a worse case scenario, redirecting customer to icici no matter what since it gives max option
                     logger.error("Routing Multiple gateways failed due to some exception" + e);
+                    issuerCode = null;
                     gateway = EnumGateway.EBS.asGateway();
 
                 }
@@ -189,5 +185,13 @@ public class PaymentAction extends BaseAction {
 
     public void setBillingAddressId(Long billingAddressId) {
         this.billingAddressId = billingAddressId;
+    }
+
+    public Boolean isHKPayWorking() throws Exception {
+        return paymentManager.isHKPayWorking();
+    }
+
+    public void setHKPayWorking(boolean HKPayWorking) {
+        isHKPayWorking = HKPayWorking;
     }
 }
