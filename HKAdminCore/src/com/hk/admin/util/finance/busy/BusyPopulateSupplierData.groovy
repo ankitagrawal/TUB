@@ -59,7 +59,7 @@ public class BusyPopulateSupplierData {
          contact_number=su.contact_number, tin_number=su.tin_number, create_date=NOW(), imported=0, credit_days=su.credit_days";
 
          logger.debug("query formed = "+query);
-      sql.executeInsert(query);
+      //sql.executeInsert(query);
     }
       catch (Exception e) {
             logger.info("Unable to insert in  supplier: ", e);
