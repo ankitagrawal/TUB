@@ -125,7 +125,7 @@ public class BusyPopulateItemData {
 
      try{
          logger.debug("query formed = "+query);
-      //sql.executeInsert(query);
+      sql.executeInsert(query);
     }
       catch (Exception e) {
             logger.info("Unable to insert : "+e);
