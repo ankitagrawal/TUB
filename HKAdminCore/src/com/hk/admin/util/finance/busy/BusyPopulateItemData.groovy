@@ -130,8 +130,7 @@ public class BusyPopulateItemData {
             logger.info("Unable to insert : "+e);
         }
 
-        Logger.info("Unable to insert in  item: ",e);
-          }
 
   }
-}
+
+ }
