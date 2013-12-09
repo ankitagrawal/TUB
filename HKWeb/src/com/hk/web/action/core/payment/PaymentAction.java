@@ -77,15 +77,6 @@ public class PaymentAction extends BaseAction {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
-//            trimCartLineItems = orderManager.trimEmptyLineItems(order);
-//            sizeOfCLI = trimCartLineItems.size();
-//            if(trimCartLineItems!=null && trimCartLineItems.size()>0){
-//                if(order.getCartLineItems()==null || order.getCartLineItems().size()==0){
-//                    return new RedirectResolution(CartAction.class);
-//                }
-//                return new ForwardResolution(OrderSummaryAction.class).addParameter("trim",true).addParameter("sizeOfCLI",sizeOfCLI);
-//            }
-
 
             BillingAddress billingAddress = null;
             if (billingAddressId != null) {
@@ -96,9 +87,6 @@ public class PaymentAction extends BaseAction {
             if (issuer != null) {
                 try {
 
-                    boolean isWorking = paymentManager.isHKPayWorking();
-
-                    if (isWorking) {
                         List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
                         Long total = 0L;
 
@@ -121,12 +109,16 @@ public class PaymentAction extends BaseAction {
                             }
                             oldValue += priority;
                         }
-                    } else {
-                        logger.error("Routing to EBS since HKPay is down");
-                        issuerCode = null;
-                        gateway = EnumGateway.EBS.asGateway();
-                    }
 
+                        if(EnumGateway.HKPay.getId().equals(gateway.getId())){
+                            boolean isWorking = paymentManager.isHKPayWorking();
+                            if(!isWorking){
+                                gateway = EnumGateway.EBS.asGateway();
+                                logger.error("Routing to EBS since HKPay is down");
+                                issuerCode = null;
+                                gateway = EnumGateway.EBS.asGateway();
+                            }
+                        }
 
                 } catch (Exception e) {
                     //todo pratham, remove this piece of code
