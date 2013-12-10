@@ -48,13 +48,6 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
     @Autowired
     LinkManager linkManager;
 
-//    public static String country = "IND";
-//    public static String description = "Live transaction";
-//    public static String merchantTransactionId = "1";
-
-//    public static String accountId = "10258";
-//    public static String secretKey = "10703078";
-
     protected HKPayPaymentGatewayWrapper getPaymentGatewayWrapperFromTransactionData(BasePaymentGatewayWrapper.TransactionData data) {
         Properties properties = BaseUtils.getPropertyFile(AppConstants.getAppClasspathRootPath() + "/hkPay.live.properties");
         String accountId = properties.getProperty("accountId");
@@ -99,7 +92,7 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
 
 
         hkPaymentGatewayWrapper.setGatewayUrl(url);
-        logger.info("Hitting payment gateway at url" + url);
+        logger.info("Hitting payment gateway at url: " + url);
         logger.info("Payment request parameters are: " + hkPaymentGatewayWrapper.toString());
 
         return hkPaymentGatewayWrapper;
@@ -124,21 +117,10 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
         Gateway gateway = getGateway(getContext().getRequest().getParameter("gatewayId"));
 
         StringBuffer paramsSB = new StringBuffer();
-        paramsSB.append("accountId: " + accountId).append("\n")
-                .append("secretKey: " + secretKey).append("\n")
-                .append("gatewayRefId: " + gatewayRefId).append("\n")
-                .append("hkpayRefId: " + hkpayRefId).append("\n")
-                .append("gatewayChecksum: " + gatewayChecksum).append("\n")
-                .append("rrn: " + rrn).append("\n")
-                .append("authIdCode: " + authIdCode).append("\n")
-                .append("amountStr: " + amountStr).append("\n")
-                .append("amount: " + amount).append("\n")
-                .append("authDesc: " + authDesc).append("\n")
-                .append("gatewayOrderId: " + gatewayOrderId).append("\n")
-                .append("orderId: " + orderId).append("\n")
-                .append("issuerId: " + issuerId).append("\n")
-                .append("gateway: " + gateway).append("\n");
-        logger.info("Response from the gateway " + gateway.getName() +" is: \n"+paramsSB.toString());
+        paramsSB.append("secretKey: " + secretKey).append("\n")
+                .append(getContext().getRequest().getParameterMap().toString());
+        logger.info("Response from the gateway " + gateway.getName() + " is: \n" + paramsSB.toString());
+
 
         Resolution resolution = null;
         try {
