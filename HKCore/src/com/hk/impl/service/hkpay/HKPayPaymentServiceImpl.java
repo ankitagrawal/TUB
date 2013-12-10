@@ -22,7 +22,7 @@ import java.util.Properties;
 */
 @Service("HKPayService")
 public class HKPayPaymentServiceImpl implements HkPaymentService {
-    private Properties properties = BaseUtils.getPropertyFile(AppConstants.getAppClasspathRootPath() + "/hkPay.live.properties");
+//    private Properties properties = BaseUtils.getPropertyFile(AppConstants.getAppClasspathRootPath() + "/hkPay.live.properties");
     private static Logger logger = LoggerFactory.getLogger(HKPayPaymentServiceImpl.class);
 
     // Seek Payment constants
@@ -31,7 +31,7 @@ public class HKPayPaymentServiceImpl implements HkPaymentService {
 
     @Override
     public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException {
-        try {
+        /*try {
             String postUrl = properties.getProperty("secureHKPaySearch");
             ClientRequest request = new ClientRequest(postUrl);
             request.setHttpMethod("POST");
@@ -53,7 +53,7 @@ public class HKPayPaymentServiceImpl implements HkPaymentService {
         } catch (Exception e) {
             logger.error("Catching Exception in hkpay", e);
             return null;
-        }
+        }*/
 
         return null;
     }
