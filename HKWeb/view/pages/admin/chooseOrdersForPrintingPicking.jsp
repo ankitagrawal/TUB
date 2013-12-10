@@ -86,7 +86,7 @@
     </div>
     <s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" method="get">
         <div align="center">
-            <label>Variant ID (GOSF; for 1 qty only)</label>
+            <label>Variant ID <span style="font-size:.8em">(for GOSF; 1 qty only)</span></label>
             <s:text name="variantId"/>
             <s:submit name="searchOrdersForPrinting" value="Search"
                       style="font-size:0.9em"/>
@@ -118,7 +118,7 @@
             <s:submit name="searchOrdersForPrinting" value="Search"
                       style="font-size:0.9em"/>
         </div>
-        <div align="right" style="padding-bottom:2px;">
+        <div align="right" style="margin-bottom:20px;margin-right:50px;">
             <span style="font-size:.9em;">More Filters</span>
             <span onclick="javacript: $('#dateFilters').show()" style="cursor:pointer;font-size:1.1em;font-weight:bold;"
                   title="Expand">+</span>
