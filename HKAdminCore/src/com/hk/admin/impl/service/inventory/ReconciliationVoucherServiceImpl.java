@@ -413,6 +413,8 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         LineItem lineItem =  skuItemLineItem.getLineItem();
         lineItem.getSkuItemLineItems().remove(skuItemLineItem);
 				baseDao.delete(skuItemLineItem);
+        CartLineItem cartLineItem = lineItem.getCartLineItem();
+        cartLineItem.getSkuItemCLIs().remove(cli);
 				baseDao.delete(cli);
 				item.getShippingOrder().setReason(EnumReason.PROD_INV_MISMATCH.asReason());
 				shippingOrderService.logShippingOrderActivity(item.getShippingOrder(), loggedOnUser,
