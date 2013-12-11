@@ -636,7 +636,7 @@ public class PaymentManager {
         boolean isCodMappingExists=false;
         Gateway gateway = EnumGateway.HKPay.asGateway();
         GatewayIssuerMapping gatewayIssuerMapping= gatewayIssuerMappingService.getGatewayIssuerMapping(issuer, gateway, true);
-        if (gatewayIssuerMapping.getPriority() > 0) {
+        if (gatewayIssuerMapping != null && gatewayIssuerMapping.getPriority() > 0) {
             isCodMappingExists = true;
         }
         return isCodMappingExists;
