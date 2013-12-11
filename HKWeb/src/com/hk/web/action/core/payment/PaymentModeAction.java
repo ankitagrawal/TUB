@@ -36,6 +36,7 @@ public class PaymentModeAction extends BaseAction {
     List<Issuer>                debitCardIssuers;
     Issuer                      codIssuer;
     Boolean isHKPayWorking;
+    Boolean isCodMappingExists;
 
     Map<String, String>         codFailureMap      = new HashMap<String, String>();
     private PricingDto          pricingDto;
@@ -160,5 +161,13 @@ public class PaymentModeAction extends BaseAction {
 
     public void setHKPayWorking(Boolean HKPayWorking) {
         isHKPayWorking = HKPayWorking;
+    }
+
+    public Boolean getCodMappingExists() {
+        return paymentManager.isCodMappingExists(codIssuer);
+    }
+
+    public void setCodMappingExists(Boolean codMappingExists) {
+        isCodMappingExists = codMappingExists;
     }
 }

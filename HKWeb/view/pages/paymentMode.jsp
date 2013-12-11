@@ -327,7 +327,7 @@
 
                     <c:choose>
 
-                        <c:when test="${paymentModeBean.HKPayWorking}">
+                        <c:when test="${paymentModeBean.HKPayWorking and paymentModeBean.codMappingExists}">
                             <s:form
                                     beanclass="com.hk.web.action.core.payment.PaymentAction"
                                     method="post" >

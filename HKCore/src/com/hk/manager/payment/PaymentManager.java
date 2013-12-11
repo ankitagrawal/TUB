@@ -4,15 +4,13 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.payment.EnumIssuer;
-import com.hk.constants.payment.EnumIssuerType;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.payment.*;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
+import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.BillingAddress;
@@ -26,6 +24,7 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.util.TokenUtils;
 import org.apache.commons.httpclient.HttpClient;
@@ -40,6 +39,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -74,6 +74,8 @@ public class PaymentManager {
     EmailManager                   emailManager;
     @Autowired
     InventoryHealthService         inventoryHealthService;
+    @Autowired
+    GatewayIssuerMappingService gatewayIssuerMappingService;
 
     @Value("#{hkEnvProps['" + Keys.Env.hybridRelease + "']}")
     private boolean                hybridRelease;
@@ -618,6 +620,16 @@ public class PaymentManager {
             isWorking = true;
         }
         return isWorking;
+    }
+
+    public boolean isCodMappingExists(Issuer issuer) {
+        boolean isCodMappingExists=false;
+        Gateway gateway = EnumGateway.HKPay.asGateway();
+        GatewayIssuerMapping gatewayIssuerMapping= gatewayIssuerMappingService.getGatewayIssuerMapping(issuer, gateway, true);
+        if (gatewayIssuerMapping.getPriority() > 0) {
+            isCodMappingExists = true;
+        }
+        return isCodMappingExists;
     }
 
     public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus) {
