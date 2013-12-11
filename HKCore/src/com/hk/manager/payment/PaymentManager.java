@@ -159,7 +159,8 @@ public class PaymentManager {
      * @return
      * @param billingAddress
      */
-    public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, Gateway gateway, Issuer issuer, BillingAddress billingAddress) {
+    public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr,
+                                    Gateway gateway, Issuer issuer, BillingAddress billingAddress) {
         Payment payment = new Payment();
         payment.setAmount(order.getAmount());
         payment.setOrder(order);
@@ -169,11 +170,6 @@ public class PaymentManager {
         if (EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
             payment.setGateway(gateway);
             payment.setIssuer(issuer);
-
-            // set COD mode if issuer is issuer
-            if (EnumIssuerType.COD.getId().equalsIgnoreCase(issuer.getIssuerType())) {
-                payment.setPaymentMode(EnumPaymentMode.COD.asPaymenMode());
-            }
         }
 
         payment.setBillingAddress(billingAddress);
@@ -302,7 +298,9 @@ public class PaymentManager {
         return order;
     }
 
-    public Order success(String gatewayOrderId,String hkPayRefId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode,Gateway gateway) {
+    public Order success(String gatewayOrderId,String hkPayRefId, String gatewayReferenceId,
+                         String rrn, String responseMessage, String authIdCode,Gateway gateway, Boolean shouldCodCall) {
+
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
 
         Order order = null;
@@ -322,6 +320,18 @@ public class PaymentManager {
             payment.setRrn(rrn);
             order = processOrder(payment);
         }
+
+        Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
+        if (orderCount != null && orderCount >= 2) {
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
+        } else {
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+        }
+        order = authPending(gatewayOrderId, codContactName, codContactPhone, null, null, null, null);
+        createUserCodCall(order);
+        pushCODToThirdParty(shouldCodCall, order.getPayment());
+        orderEventPublisher.publishOrderPlacedEvent(order);
+
         orderEventPublisher.publishOrderPlacedEvent(order);
         return order;
 
@@ -630,6 +640,18 @@ public class PaymentManager {
             isCodMappingExists = true;
         }
         return isCodMappingExists;
+    }
+
+    /*
+    * utility is made to make HKPAY work for COD
+    * */
+    public void updateCodPayment(Payment payment, String codContactName, String codContactNumber) {
+        if (payment != null) {
+            payment.setPaymentMode(EnumPaymentMode.COD.asPaymenMode());
+            payment.setContactName(codContactName);
+            payment.setContactNumber(codContactNumber);
+            paymentDao.save(payment);
+        }
     }
 
     public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus) {

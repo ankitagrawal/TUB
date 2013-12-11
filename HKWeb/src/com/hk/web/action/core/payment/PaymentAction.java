@@ -6,6 +6,7 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumGateway;
+import com.hk.constants.payment.EnumIssuerType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
@@ -25,6 +26,7 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,13 @@ public class PaymentAction extends BaseAction {
 
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
+
+    @Validate(required = false)
+    private String codContactName;
+
+    @Validate(required = false)
+    private String codContactPhone;
+
     /*
    algorithm to route multiple gateways, first let the customer choose the issuer now based on the issuer, get all the damn gateways that serve it, alongwith the priority assigned by admin
    then you iterate over your faddu logic, to decide which gateway won then call the action corresponding to that gateway along with the issuer if needed
@@ -75,6 +84,17 @@ public class PaymentAction extends BaseAction {
     @SuppressWarnings("unchecked")
     public Resolution proceed() {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+
+            if (EnumIssuerType.COD.getId().equalsIgnoreCase(issuer.getIssuerType())) {
+                if (StringUtils.isBlank(codContactName)) {
+                    addRedirectAlertMessage(new SimpleMessage("Cod Contact Name cannot be blank"));
+                    return new RedirectResolution(PaymentModeAction.class);
+                } else if (StringUtils.isBlank(codContactPhone)) {
+                    addRedirectAlertMessage(new SimpleMessage("Cod Contact Phone cannot be blank"));
+                    return new RedirectResolution(PaymentModeAction.class);
+                }
+            }
+
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
 
@@ -135,7 +155,9 @@ public class PaymentAction extends BaseAction {
 
             // first create a payment row, this will also contain the payment checksum
             Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), gateway, issuer, billingAddress);
-
+            if (EnumIssuerType.COD.getId().equalsIgnoreCase(issuer.getIssuerType())) {
+                paymentManager.updateCodPayment(payment, codContactName,codContactPhone);
+            }
             if (gateway != null) {
                 Class actionClass = PaymentModeActionFactory.getActionClassForPayment(gateway, issuer.getIssuerType());
                 redirectResolution = new RedirectResolution(actionClass, "proceed");
