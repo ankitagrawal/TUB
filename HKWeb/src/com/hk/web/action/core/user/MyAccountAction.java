@@ -67,9 +67,6 @@ public class MyAccountAction extends BaseAction {
   @Value("#{hkEnvProps['" + Keys.Env.mailBoltUrl + "']}")
   private String mailBoltUrl;
 
-  private static Logger logger = LoggerFactory.getLogger(MyAccountAction.class);
-
-
   @DefaultHandler
   public Resolution pre() {
     if (getPrincipal() != null) {
@@ -173,21 +170,22 @@ public class MyAccountAction extends BaseAction {
 
     String unsubscribeToken = user.getUnsubscribeToken();
 
-    String postUrl = mailBoltUrl + "HKDataStore/subscribes/" + unsubscribeToken;
-
-    ClientRequest request = new ClientRequest(postUrl);
-    request.setHttpMethod("POST");
-    ClientResponse<String> response = null;
-    try {
-        response = request.post();
-        int status = response.getStatus();
-        logger.info("Calling Post API " + postUrl);
-        if (status == 200) {
-            logger.debug("Post API returned correct status");
+    if (unsubscribeToken != null) {
+        String postUrl = mailBoltUrl + "HKDataStore/subscribes/" + unsubscribeToken;
+        try {
+            ClientRequest request = new ClientRequest(postUrl);
+            request.setHttpMethod("POST");
+            ClientResponse<String> response = null;
+            response = request.post();
+            int status = response.getStatus();
+            logger.info("Calling Post API " + postUrl);
+            if (status == 200) {
+                logger.debug("Post API returned correct status");
+            }
+        } catch (Exception e) {
+            logger.error("Something bad happened " + postUrl);
         }
-    } catch (Exception e) {
-        logger.error("Something bad happened " + postUrl);
-      }
+    }
 
     addRedirectAlertMessage(new SimpleMessage("You have successfully subscribed to HealthKart Mails"));
     return new RedirectResolution(MyAccountAction.class);
