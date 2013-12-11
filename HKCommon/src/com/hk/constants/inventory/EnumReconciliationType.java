@@ -90,7 +90,7 @@ public enum EnumReconciliationType {
 
   public static ReconciliationType getSubtractReconciliationTypeByName(String reconReason) {
     List<EnumReconciliationType> reconciliationTypeList = Arrays.asList(Subtract, SubtractDamage, SubtractExpired, Lost,
-        SubtractBatchMismatch, NonMoving, SubtractFreeVariant, SubtractIncorrectCounting, DamagedLogistics,NearExpirySubstract,AuditSubstract );
+        SubtractBatchMismatch, NonMoving, SubtractFreeVariant, SubtractIncorrectCounting, DamagedLogistics, NearExpirySubstract, AuditSubstract );
     for (EnumReconciliationType enumReconciliationType : reconciliationTypeList) {
       if (enumReconciliationType.getName().equalsIgnoreCase(reconReason.trim())) {
         return enumReconciliationType.asReconciliationType();
