@@ -319,19 +319,18 @@ public class PaymentManager {
             payment.setAuthIdCode(authIdCode);
             payment.setRrn(rrn);
             order = processOrder(payment);
-        }
 
-        Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
-        if (orderCount != null && orderCount >= 2) {
-            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
-        } else {
-            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+            if (EnumIssuerType.COD.getId().equalsIgnoreCase(payment.getIssuer().getIssuerType())) {
+                Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
+                if (orderCount != null && orderCount >= 2) {
+                    payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
+                } else {
+                    payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+                }
+                createUserCodCall(order);
+                pushCODToThirdParty(shouldCodCall, order.getPayment());
+            }
         }
-        order = authPending(gatewayOrderId, codContactName, codContactPhone, null, null, null, null);
-        createUserCodCall(order);
-        pushCODToThirdParty(shouldCodCall, order.getPayment());
-        orderEventPublisher.publishOrderPlacedEvent(order);
-
         orderEventPublisher.publishOrderPlacedEvent(order);
         return order;
 
