@@ -132,7 +132,11 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
 
             // payment callback has been verified. now see if it is successful or failed from the gateway response
             if ("Y".equals(authDesc)) {
-                paymentManager.success(gatewayOrderId, hkpayRefId, gatewayRefId, rrn, null, authIdCode, gateway);
+                boolean shouldMakeCodCall = true;
+                if (getPrincipal() != null && getPrincipal().isAssumed()) {
+                    shouldMakeCodCall = false;
+                }
+                paymentManager.success(gatewayOrderId, hkpayRefId, gatewayRefId, rrn, null, authIdCode, gateway,shouldMakeCodCall);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", hkpayRefId);
             } else if ("AP".equals(authDesc)) {
                 paymentManager.pendingApproval(gatewayOrderId, hkpayRefId, gatewayRefId, gateway);

@@ -216,4 +216,20 @@ public class PaymentAction extends BaseAction {
     public void setHKPayWorking(boolean HKPayWorking) {
         isHKPayWorking = HKPayWorking;
     }
+
+    public String getCodContactName() {
+        return codContactName;
+    }
+
+    public void setCodContactName(String codContactName) {
+        this.codContactName = codContactName;
+    }
+
+    public String getCodContactPhone() {
+        return codContactPhone;
+    }
+
+    public void setCodContactPhone(String codContactPhone) {
+        this.codContactPhone = codContactPhone;
+    }
 }

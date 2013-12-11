@@ -321,6 +321,7 @@ public class PaymentManager {
             order = processOrder(payment);
 
             if (EnumIssuerType.COD.getId().equalsIgnoreCase(payment.getIssuer().getIssuerType())) {
+
                 Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
                 if (orderCount != null && orderCount >= 2) {
                     payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
