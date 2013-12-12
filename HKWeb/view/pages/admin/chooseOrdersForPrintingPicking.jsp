@@ -1,3 +1,4 @@
+<%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ page import="com.hk.constants.order.EnumCartLineItemType" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
@@ -158,6 +159,12 @@
                 <s:submit name="searchOrdersForPrinting" value="Search By Bright So Id"
                           style="font-size:0.9em"/>
                 </div>
+            <br>
+            <div align="center">
+                <label>Bright Gateway Id</label><s:text name="brightGatewayId"/>
+                <s:submit name="searchOrdersForPrinting" value="Search By Bright Gateway Id"
+                          style="font-size:0.9em"/>
+            </div>
 		</s:form>
 
 		<s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" autocomplete="off">

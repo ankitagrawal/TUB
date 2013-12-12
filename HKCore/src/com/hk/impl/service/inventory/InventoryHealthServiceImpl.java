@@ -959,6 +959,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 if (info.getFsoId() != null) {
                     foreignSkuItemCLI.setForeignShippingOrderId(info.getFsoId());
                 }
+                if (info.getFsogwId() != null) {
+                    foreignSkuItemCLI.setForeignShippingOrderGatewayId(info.getFsogwId());
+                }
                 foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
                 logger.debug(" FSICLI has been updated for id -- " + fsiliId);
             }
