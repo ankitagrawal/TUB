@@ -18,19 +18,21 @@ public class BusyPopulatePurchaseReturn {
     private String dbName;
     private String serverUser;
     private String serverPassword;
+    private String dbBusyName;
     Sql sql;
     Sql busySql;
 
-    BusyPopulatePurchaseReturn(String hostName, String dbName, String serverUser, String serverPassword){
+    BusyPopulatePurchaseReturn(String hostName, String dbName, String serverUser, String serverPassword, String dbBusyName){
         this.hostName = hostName;
         this.dbName = dbName;
         this.serverUser = serverUser;
         this.serverPassword = serverPassword;
+        this.dbBusyName = dbBusyName;
 
         sql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
                 serverPassword, "com.mysql.jdbc.Driver");
 
-        busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/healthkart_busy", serverUser,
+        busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbBusyName, serverUser,
                 serverPassword, "com.mysql.jdbc.Driver");
     }
 
@@ -65,7 +67,7 @@ public class BusyPopulatePurchaseReturn {
       sql.eachRow(""" SELECT dn.debit_note_number as vch_no, dn.create_date as date, s.name as account_name,
                             s.line1 as address_1, s.line2 as address_2, s.state as address_3, s.pincode as address_4,
                             s.tin_number as tin_number, dn.id as hk_ref_no, w.id as warehouseId, w.state as warehouseState, s.id as supplierId,
-                            dn.final_debit_amount as net_amount, pi.invoice_number as supplier_invoice
+                            dn.final_debit_amount as net_amount, pi.invoice_number as supplier_invoice, w.prefix_invoice_generation series
                             FROM debit_note dn
                             INNER JOIN supplier s on s.id=dn.supplier_id
                             INNER JOIN warehouse w on w.id=dn.warehouse_id
@@ -104,10 +106,10 @@ public class BusyPopulatePurchaseReturn {
               warehouseName = "Greater Kailash Aqua Store";
           }
 
-        String series = '';
+        String series = debitNote.series;
 
 
-	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+	   /* if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
           series = "HR";
 	      }
 	      else if(warehouseId == 2 || warehouseId == 20){
@@ -127,7 +129,7 @@ public class BusyPopulatePurchaseReturn {
         }
         else if(warehouseId == 1001){
             series = "GK";
-        }
+        }*/
 
         if (supplierState.equalsIgnoreCase(warehouseState)) {
           out_of_state = 0;

@@ -19,13 +19,17 @@
   <%
     PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
     if (principal != null) {
-      pageContext.setAttribute(TagConstants.TagVars.USER_HASH, principal.getUserHash());
-      pageContext.setAttribute(TagConstants.TagVars.USER_GENDER, principal.getGender());
+      pageContext.setAttribute(TagConstants.TagVars.USER_HASH, principal.getId());
+      String gender = principal.getGender();
+      if (gender == null) {
+        gender = "n.a.";
+      }
+      pageContext.setAttribute(TagConstants.TagVars.USER_GENDER, gender);
       pageContext.setAttribute(TagConstants.TagVars.ORDER_COUNT, principal.getOrderCount());
     } else {
       pageContext.setAttribute(TagConstants.TagVars.USER_HASH, "guest");
       pageContext.setAttribute(TagConstants.TagVars.USER_GENDER, "n.a.");
-      pageContext.setAttribute(TagConstants.TagVars.ORDER_COUNT, "0");
+      pageContext.setAttribute(TagConstants.TagVars.ORDER_COUNT, "n.a.");
     }
     String projectEnvTagManager = (String) ServiceLocatorFactory.getProperty(Keys.Env.projectEnv);
     CartAction cartAction = (CartAction) pageContext.getAttribute("cartAction");
@@ -100,8 +104,10 @@
       List<String> variantIdList = new ArrayList<String>();
       for (CartLineItem cartLineItem : cartAction.getOrder().getExclusivelyProductCartLineItems()) {
         StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
-        productIdList.add("'"+storeVariantBasicDetails.getStoreProductId()+"'");
-        variantIdList.add("'"+storeVariantBasicDetails.getId()+"'");
+        if (storeVariantBasicDetails != null) {
+          productIdList.add("'"+storeVariantBasicDetails.getStoreProductId()+"'");
+          variantIdList.add("'"+storeVariantBasicDetails.getId()+"'");
+        }
       }
       String cartProductIds = StringUtils.join(productIdList.iterator(), ",");
       String cartVariantIds = StringUtils.join(variantIdList.iterator(), ",");
@@ -119,6 +125,7 @@
   <%
     }
     if (paymentSuccessBean != null) {
+      List<String> tmVariantIds = new ArrayList<String>();
   %>
   <script type="text/javascript">
     dataLayer.push({
@@ -135,6 +142,8 @@
             <%
             CartLineItem cartLineItem = (CartLineItem) pageContext.getAttribute("productLineItem");
             StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
+            if (storeVariantBasicDetails != null && storeVariantBasicDetails.getId() !=null) {
+            tmVariantIds.add(storeVariantBasicDetails.getId().toString());
             %>
             {
               'sku' : '<%=storeVariantBasicDetails.getId()%>',
@@ -143,6 +152,9 @@
               'price' : ${hk:decimal2(productLineItem.hkPrice)},
               'quantity' : ${productLineItem.qty}
             }
+            <%
+            }
+            %>
             <c:if test="${idx.last eq false}">,</c:if>
             </c:forEach>
             <c:if test="${paymentSuccessBean.pricingDto.codSubTotal > 0}">
@@ -160,7 +172,8 @@
       'couponAmount' : '<%=Math.round(paymentSuccessBean.getCouponAmount())%>',
       'transactionDate' : '${paymentSuccessBean.purchaseDate}',
       'transactionMode' : '${paymentSuccessBean.paymentMode.name}',
-      'transactionAmount' : '<%=Math.round(paymentSuccessBean.getPayment().getAmount())%>'
+      'transactionAmount' : '<%=Math.round(paymentSuccessBean.getPayment().getAmount())%>',
+      'tmVariantIds' : '<%=StringUtils.join(tmVariantIds.iterator(), ",")%>'
     });
   </script>
   <%

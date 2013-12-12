@@ -78,6 +78,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     private Date startTargetDispatchDate;
 
     private String brand;
+    private String variantId;
 
     private String getActionMessage(int action) {
         switch (action) {
@@ -155,6 +156,10 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             shippingOrderSearchCriteria.setStartTargetDispatchDate(DateUtils.getStartOfPreviousYear(new Date())).setEndTargetDispatchDate(DateUtils.getEndOfDay(new Date()));
         }
         if (custom) {
+            if (variantId != null) {
+                shippingOrderSearchCriteria.setVariantId(variantId);
+                return shippingOrderSearchCriteria;
+            }
             if (baseGatewayOrderId != null) {
                 shippingOrderSearchCriteria.setBaseGatewayOrderId(baseGatewayOrderId);
             } 
@@ -441,4 +446,12 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     public void setStartTargetDispatchDate(Date startTargetDispatchDate) {
         this.startTargetDispatchDate = startTargetDispatchDate;
     }
+
+  public String getVariantId() {
+    return variantId;
+  }
+
+  public void setVariantId(String variantId) {
+    this.variantId = variantId;
+  }
 }

@@ -79,7 +79,7 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
             }
         }
         return new ForwardResolution(ActionItemResolutionQueueAction.class, "search");
-//                .addParameters(bucketParameters);
+//               .addParameters(bucketParameters);
     }
 
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)

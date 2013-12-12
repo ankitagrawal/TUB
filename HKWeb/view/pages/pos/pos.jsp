@@ -491,7 +491,7 @@
 						<s:option value="">-Select</s:option>
 						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="discountsForPOS" />
 					</s:select></td>--%>
-					<td><s:text name="discount" value="${pos.discount}" id="discount" maxlength="3"/> </td>
+					<td><s:text name="discount" value="${pos.discount}" id="discount" maxlength="4"/> </td>
 				</tr>
 				<tr id="rewardPointsRow">
 					<td align="right"><b>Reward Points available</b></td>

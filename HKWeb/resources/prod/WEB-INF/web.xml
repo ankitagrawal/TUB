@@ -13,7 +13,7 @@
     <welcome-file-list>
         <welcome-file>/pages/home.jsp</welcome-file>
     </welcome-file-list>
-
+    
     <error-page>
         <error-code>401</error-code>
         <location>/pages/error/404.jsp</location>
@@ -31,6 +31,7 @@
         <location>/pages/error/500.jsp</location>
     </error-page>
 
+    
     <!--  Listeners Start -->
     <listener>
         <listener-class>
@@ -60,8 +61,7 @@
 
     <!--  Listeners End -->
 
-<!--
-    <filter>
+   <!-- <filter>
         <filter-name>httpSchemeFilter</filter-name>
         <filter-class>
             com.hk.web.filter.HttpSchemeFilter
@@ -84,7 +84,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 -->
-
 
     <filter>
         <filter-name>StripesFilter</filter-name>

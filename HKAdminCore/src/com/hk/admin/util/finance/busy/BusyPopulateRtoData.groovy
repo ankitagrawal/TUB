@@ -18,19 +18,21 @@ public class BusyPopulateRtoData {
   private String dbName;
   private String serverUser;
   private String serverPassword;
+  private String dbBusyName;
   Sql sql;
   Sql busySql;
 
-  BusyPopulateRtoData(String hostName, String dbName, String serverUser, String serverPassword){
+  BusyPopulateRtoData(String hostName, String dbName, String serverUser, String serverPassword, String dbBusyName){
     this.hostName = hostName;
     this.dbName = dbName;
     this.serverUser = serverUser;
     this.serverPassword = serverPassword;
+    this.dbBusyName = dbBusyName;
 
     sql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
             serverPassword, "com.mysql.jdbc.Driver");
 
-    busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/healthkart_busy", serverUser,
+    busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbBusyName, serverUser,
             serverPassword, "com.mysql.jdbc.Driver");
   }
   private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyPopulateRtoData.class);
@@ -59,7 +61,8 @@ public class BusyPopulateRtoData {
                                     a.line1 as address_1, a.line2 as address_2, a.city, a.state,
                                     w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
                                     c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
-                                    so.shipping_order_status_id , ifnull(ship.return_date, pvi.txn_date) as return_date, bo.gateway_order_id, aw.awb_number
+                                    so.shipping_order_status_id , ifnull(ship.return_date, pvi.txn_date) as return_date, bo.gateway_order_id, aw.awb_number, w.prefix_invoice_generation series,
+                                    bo.amount as base_order_amount
                                     from line_item li
                                     join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
                                     from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
@@ -76,8 +79,7 @@ public class BusyPopulateRtoData {
                                     left join gateway pay_gate on p.gateway_id = pay_gate.id
                                     inner join warehouse w on w.id = so.warehouse_id
                                     where so.shipping_order_status_id between 180 and 280
-                                    and ifnull(ship.return_date, pvi.txn_date)>= {lastUpdateDate}
-                                    and ifnull(ship.return_date, pvi.txn_date) > '2011-11-08 19:59:36'
+                                    and ifnull(ship.return_date, pvi.txn_date) >= ${lastUpdateDate}
                                     GROUP BY so.id
                                     ORDER BY pvi.txn_date ASC
                  """) {
@@ -102,14 +104,18 @@ public class BusyPopulateRtoData {
       byte out_of_state;
       String against_form;
       Double net_amount;
+      Double base_order_amount;
       byte imported_flag;
 
 	  String gateway_order_id;
 	  String awb_number;
 	    
       shippingOrderId = accountingInvoice.shipping_order_id
-	     Long warehouseId =  accountingInvoice.warehouse_id;
-	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+	  Long warehouseId =  accountingInvoice.warehouse_id;
+      base_order_amount = accountingInvoice.base_order_amount;
+
+      series = accountingInvoice.series;
+	    /*if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
           series = "HR";
 	      }
 	      else if(warehouseId == 2 || warehouseId == 20){
@@ -129,7 +135,7 @@ public class BusyPopulateRtoData {
         }
         else if(warehouseId == 1001){
             series = "GK";
-        }
+        }*/
 
       date = accountingInvoice.return_date;	    
 
@@ -162,7 +168,11 @@ public class BusyPopulateRtoData {
 	    else{
         sale_type = "VAT TAX INC";
 	    }
+
       account_name = accountingInvoice.account_name;
+      if(account_name.length() > 40){
+          account_name = account_name.substring(0,39);
+      }
 
       if(accountingInvoice.payment_mode_id == 40){
 			debtors  = "COD_"+accountingInvoice.courier_name;
@@ -243,10 +253,10 @@ public class BusyPopulateRtoData {
     INSERT INTO transaction_header
       (
         series, date, vch_no, vch_type, sale_type, account_name, debtors, address_1, address_2, address_3, address_4, tin_number, material_centre,
-        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number)
+        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no, gateway_order_id, awb_number, base_order_amount)
 
         VALUES (${series}, ${date}, ${vch_no}, ${vch_type}, ${sale_type}, ${account_name}, ${debtors}, ${address_1}, ${address_2}, ${city}, ${state}, ${tin_number}, ${material_centre},
-        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}
+        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}, ${gateway_order_id}, ${awb_number}, ${base_order_amount}
       )
       ON DUPLICATE KEY UPDATE
       series = ${series},
@@ -270,7 +280,8 @@ public class BusyPopulateRtoData {
       create_date = NOW(),
       hk_ref_no = ${shippingOrderId},
       gateway_order_id = ${gateway_order_id},
-      awb_number = ${awb_number}
+      awb_number = ${awb_number},
+      base_order_amount = ${base_order_amount}
      """)
        Long vch_code=keys[0][0];
        transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
@@ -285,22 +296,20 @@ public class BusyPopulateRtoData {
     public void transactionBodyForSalesGenerator(Long vch_code, Long shipping_order_id) {
       int s_no = 0;
       sql.eachRow("""
-                      select li.id, li.sku_id, pvi.qty, li.marked_price, li.hk_price, pvi.qty*li.discount_on_hk_price/li.qty, pvi.qty*li.reward_point_discount/li.qty,
-                      t.value as tax_value,pvi.qty*li.order_level_discount/li.qty, li.cost_price
+                      select li.id, li.sku_id, pvi.qty, li.marked_price, li.hk_price, (pvi.qty)*(li.discount_on_hk_price)/(li.qty) as discount_on_hk_price, (pvi.qty*li.reward_point_discount)/li.qty as reward_point_discount,
+                      t.value as tax_value,(pvi.qty)*(li.order_level_discount)/(li.qty) as order_level_discount, li.cost_price
 
                       from line_item li
                       inner join tax t on li.tax_id = t.id
                       join shipping_order so on li.shipping_order_id=so.id
 
                       left join shipment ship on so.shipment_id=ship.id
-                      left join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
+                      join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
                       from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
 
                       on li.id=pvi.line_item_id
                       where li.shipping_order_id = ${shipping_order_id}
-                      and ifnull(ship.return_date, pvi.txn_date) >= {lastUpdateDate}
                       group by li.id
-
                    """) {
         invoiceItems ->
 
@@ -313,7 +322,7 @@ public class BusyPopulateRtoData {
 
       String unit = "pcs";
       Double mrp = invoiceItems.marked_price;
-      Double discount = (invoiceItems.discount_on_hk_price/qty + invoiceItems.order_level_discount/qty);
+      Double discount = (invoiceItems.discount_on_hk_price + invoiceItems.order_level_discount)/qty;
       Double rate = invoiceItems.hk_price - discount;
       Double vat = invoiceItems.tax_value;
       Double amount = rate*qty;
@@ -346,7 +355,7 @@ public class BusyPopulateRtoData {
                     from line_item li
                     inner join tax t on li.tax_id = t.id
 
-                    left join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
+                    join (select line_item_id, pvi.txn_date, count(pvi.qty) qty
 
                     from  product_variant_inventory pvi where pvi.inv_txn_type_id in (60,65,70,270) group by line_item_id)pvi
 
@@ -354,7 +363,6 @@ public class BusyPopulateRtoData {
                     join shipping_order so on li.shipping_order_id=so.id
                     left join shipment ship on so.shipment_id=ship.id
                     where li.shipping_order_id = ${shipping_order_id}
-                    and ifnull(ship.return_date, pvi.txn_date) >= {lastUpdateDate}
                     group by li.shipping_order_id
                  """) {
       footerItems ->

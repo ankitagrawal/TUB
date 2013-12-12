@@ -24,6 +24,8 @@
     <div class="left_col mrgn-b-20">
         <div class='prices cont-lft' style="font-size: 14px;">
             <%--<div class='cut' style="font-size: 14px;">--%>
+        <c:choose>
+            <c:when test="${combo.discountPercent > 0}">
                 <span class='num cut' style="font-size: 14px;">
                   Rs. <fmt:formatNumber value="${combo.markedPrice}" maxFractionDigits="0"/>
                 </span>
@@ -41,6 +43,17 @@
                         maxFractionDigits="0"/>
                 </span>
             </p>
+            </c:when>
+            <c:otherwise>
+                <p class='hk'>
+                <span class='num' style="font-size: 1.8em;">
+                  MRP Rs. <fmt:formatNumber
+                        value="${combo.hkPrice}"
+                        maxFractionDigits="0"/>
+                </span>
+                </p>
+            </c:otherwise>
+        </c:choose>
         </div>
     </div>
     <div class="right_col">

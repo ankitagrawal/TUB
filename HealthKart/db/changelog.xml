@@ -14353,4 +14353,60 @@
             <column name="sku_item_id"/>
         </createIndex>
     </changeSet>
+    <changeSet author="RD(generated)" id="20131030-01">
+        <sql>
+            insert into permission values ('OUTWARD_VALIDATE_SO');
+        </sql>
+    </changeSet>
+    <changeSet author="RD (generated)" id="20131114-1">
+        <addAutoIncrement tableName="hk_reach_pricing_engine" columnName="id" columnDataType="int"/>
+    </changeSet>
+    <changeSet author="Rajesh Kumar" id="20131111-01">
+        <sql>
+            INSERT INTO store (id ,name ,prefix ,callback_rest_url)VALUES ('401', 'Bangalore', 'BLR', NULL);
+            INSERT INTO warehouse (tin, identifier, name, line1, line2, city, state, pincode, wh_phone, store_id,honoring_b2c_orders, warehouse_type, active) VALUES
+            ('29911142996', 'Bangalore Aqua Store', 'Aquamarine Healthcare Pvt Ltd', 'Shop no. #21,Ground floor', '80 Feet Road, 5th Block, Koramangala', 'Bangalore', 'Karnataka', '560095', '9999999999', '401','1', '3', '1');
+            INSERT INTO seek_invoice_num (warehouse_id, invoice_num, prefix, description) VALUES ('1002', '1', 'R','Retail Invoice 2013');
+        </sql>
+    </changeSet>
+    <changeSet author="arjun (generated)" id="1384774320513-2">
+        <addColumn tableName="warehouse">
+            <column name="prefix_invoice_generation" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Arjun Gupta" id="1384774420613-1">
+        <sql>
+            UPDATE warehouse  SET prefix_invoice_generation='HR'  WHERE id in(1,10,101);
+            UPDATE warehouse  SET prefix_invoice_generation='MH'  WHERE id in(2,20);
+            UPDATE warehouse  SET prefix_invoice_generation='PB'  WHERE id =301;
+            UPDATE warehouse  SET prefix_invoice_generation='HR'  WHERE id =999;
+            UPDATE warehouse  SET prefix_invoice_generation='DL'  WHERE id in(401,402);
+            UPDATE warehouse  SET prefix_invoice_generation='CHD'  WHERE id =1000;
+            UPDATE warehouse  SET prefix_invoice_generation='GK'  WHERE id =1001;
+            UPDATE warehouse  SET prefix_invoice_generation='BLR'  WHERE id =1002;
+        </sql>
+    </changeSet>
+    <changeSet author="arjun (generated)" id="1384775891669-4">
+        <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="prefix_invoice_generation" tableName="warehouse"/>
+    </changeSet>
+    <changeSet author="RD (generated)" id="20131127-01">
+        <sql>
+            update reverse_pickup_type set name='RTO' where id=20;
+        </sql>
+    </changeSet>
+    <changeSet author="abhay (generated)" id="1384775891669-5">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="user_report"/></not>
+        </preConditions>
+        <createTable tableName="user_report">
+            <column name="user_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueNumeric="0" name="number_of_orders_by_user" type="INT">
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="abhay (generated)" id="1384775891669-6">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_report" constraintName="fk_user_report_user1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
+    </changeSet>
 </databaseChangeLog>
