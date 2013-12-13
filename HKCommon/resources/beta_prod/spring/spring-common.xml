@@ -116,7 +116,7 @@
 </bean> -->
 
     <bean id="solr" class="org.apache.solr.client.solrj.impl.CommonsHttpSolrServer">
-        <constructor-arg value="http://172.16.3.51:8983/solr"/>
+        <constructor-arg value="http://172.16.110.120:8983/solr"/>
         <property name="connectionTimeout" value="20000"/>
         <property name="defaultMaxConnectionsPerHost" value="10"/>
         <property name="maxTotalConnections" value="50"/>
