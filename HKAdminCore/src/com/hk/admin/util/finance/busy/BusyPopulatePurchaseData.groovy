@@ -17,19 +17,21 @@ public class BusyPopulatePurchaseData {
     private String dbName;
     private String serverUser;
     private String serverPassword;
+    private String dbBusyName;
     Sql sql;
     Sql busySql;
 
-    BusyPopulatePurchaseData(String hostName, String dbName, String serverUser, String serverPassword){
+    BusyPopulatePurchaseData(String hostName, String dbName, String serverUser, String serverPassword, String dbBusyName){
         this.hostName = hostName;
         this.dbName = dbName;
         this.serverUser = serverUser;
         this.serverPassword = serverPassword;
+        this.dbBusyName = dbBusyName;
 
         sql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
                 serverPassword, "com.mysql.jdbc.Driver");
 
-        busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/healthkart_busy", serverUser,
+        busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbBusyName, serverUser,
                 serverPassword, "com.mysql.jdbc.Driver");
     }
 
@@ -104,22 +106,22 @@ public class BusyPopulatePurchaseData {
                 String invoiceNumber = purchaseRow.invoiceNumber;
 
 
-               /* if (warehouseId == 1 || warehouseId == 10 || warehouseId == 101) {
-                    series = "HR";
-                } else if (warehouseId == 2 || warehouseId == 20) {
-                    series = "MH";
-                } else if (warehouseId == 301) {
-                    series = "PB";
-                } else if (warehouseId == 999) {
-                    series = "HR";
-                } else if (warehouseId == 401) {
-                    series = "DL";
-                } else if(warehouseId == 1000 ){
-                    series = "CHD";
-                }
-                else if(warehouseId == 1001){
-                    series = "GK";
-                }*/
+                /* if (warehouseId == 1 || warehouseId == 10 || warehouseId == 101) {
+                     series = "HR";
+                 } else if (warehouseId == 2 || warehouseId == 20) {
+                     series = "MH";
+                 } else if (warehouseId == 301) {
+                     series = "PB";
+                 } else if (warehouseId == 999) {
+                     series = "HR";
+                 } else if (warehouseId == 401) {
+                     series = "DL";
+                 } else if(warehouseId == 1000 ){
+                     series = "CHD";
+                 }
+                 else if(warehouseId == 1001){
+                     series = "GK";
+                 }*/
 
                 int sameState = 0;
                 if (supplierState.equalsIgnoreCase(warehouseState)) {
@@ -339,7 +341,6 @@ public class BusyPopulatePurchaseData {
         }
     }
 }
-
 
 
 
