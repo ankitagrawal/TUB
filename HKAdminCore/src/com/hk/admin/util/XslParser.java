@@ -6,6 +6,7 @@ import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.dao.inventory.RetailLineItemDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.util.inventory.InventoryBarcodeXslManager;
 import com.hk.cache.CategoryCache;
 import com.hk.cache.RoleCache;
@@ -132,6 +133,8 @@ public class XslParser {
     private InventoryService inventoryService;
     @Autowired
     CourierService courierService;
+    @Autowired
+    PurchaseOrderService purchaseOrderService;
 
     public Set<Product> readProductList(File objInFile, User loggedOnUser) throws Exception {
 
@@ -511,6 +514,7 @@ public class XslParser {
         // Declaring data elements
         Map<Integer, String> headerMap;
         Map<Integer, String> rowMap;
+        Boolean aquaUnplannedPO = false;
         Set<PoLineItem> poLineItems = new HashSet<PoLineItem>();
         int rowCount = 1;
         try {
@@ -541,6 +545,12 @@ public class XslParser {
                         poLineItemDao.save(poLineItem);
 
                         poLineItems.add(poLineItem);
+
+                        Long aquaUnplannedPOItem = getLong(getCellValue(XslConstants.AQUA_UNPLANNED_PO, rowMap, headerMap));
+                        if (aquaUnplannedPOItem != null && aquaUnplannedPOItem == 1)
+                        {
+                            aquaUnplannedPO = true;
+                        }
                     }
                     Long brightSoId = getLong(getCellValue(XslConstants.BRIGHT_SO_ID, rowMap, headerMap));
                     if(brightSoId!=null){
@@ -551,6 +561,11 @@ public class XslParser {
                 }
                 logger.debug("read row " + rowCount);
                 rowCount++;
+            }
+
+            //Set the status of PO as sent to supplier if it is aqua unplanned PO
+            if (aquaUnplannedPO){
+                purchaseOrderService.poSentToSupplier(purchaseOrder);
             }
 
         } catch (Exception e) {

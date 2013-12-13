@@ -173,6 +173,8 @@ public class XslConstants {
     public static final String CONTACT_NUMBER_3 = "CONTACT NUMBER 3";
     public static final String EMAIL_ID_3 = "EMAIL ID 3";
     public static final String BRIGHT_SO_ID = "BRIGHT_SO_ID";
+
+    public static final String AQUA_UNPLANNED_PO = "AQUA_UNPLANNED_PO";
     
     
 }

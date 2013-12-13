@@ -51,10 +51,10 @@ public class PopulateBusyDataAction extends BaseAction {
             BusyPopulateItemData busyPopulateItemData = new BusyPopulateItemData(dbHostName, dbName, dbUser, dbPassword, dbBusyName);
             BusyPopulateSupplierData busyPopulateSupplierData = new BusyPopulateSupplierData(dbHostName, dbName, dbUser, dbPassword, dbBusyName);
 
-            logger.info("Populating Items ");
+            logger.warn("Populating Items ");
             busyPopulateItemData.populateItemData();
 
-            logger.info("Populating Suppliers ");
+            logger.warn("Populating Suppliers ");
             busyPopulateSupplierData.busySupplierUpdate();
 
         } catch (Exception e) {
@@ -72,16 +72,16 @@ public class PopulateBusyDataAction extends BaseAction {
             BusyPopulateReport busyPopulateReport = new BusyPopulateReport(dbHostName, dbUser, dbPassword, dbBusyName);
 
             Long beforePopulateCount = busyPopulateReport.recordRetailSalesCount();
-            logger.info("Retail Sales count before populating = "+beforePopulateCount);
+            logger.warn("Retail Sales count before populating = "+beforePopulateCount);
 
-            logger.info("Populating Retail Sales ");
+            logger.warn("Populating Retail Sales ");
             busyPopulateSalesData.transactionHeaderForSalesGenerator();
 
             Long afterPopulateCount = busyPopulateReport.recordRetailSalesCount();
-            logger.info("Retail Sales count after populating = "+afterPopulateCount);
+            logger.warn("Retail Sales count after populating = "+afterPopulateCount);
 
             setRetailSalesPopulated(afterPopulateCount - beforePopulateCount);
-            logger.info("Retail sales populated = "+getRetailSalesPopulated());
+            logger.warn("Retail sales populated = "+getRetailSalesPopulated());
 
         } catch (Exception e) {
             logger.error("Unable to insert: ", e);
@@ -99,16 +99,16 @@ public class PopulateBusyDataAction extends BaseAction {
             BusyPopulateReport busyPopulateReport = new BusyPopulateReport(dbHostName, dbUser, dbPassword, dbBusyName);
 
             Long beforePopulateCount = busyPopulateReport.recordServiceSalesCount();
-            logger.info("Service Sales count before populating = "+beforePopulateCount);
+            logger.warn("Service Sales count before populating = "+beforePopulateCount);
 
-            logger.info("Populating Service Sales ");
+            logger.warn("Populating Service Sales ");
             busyPopulateSalesData.transactionHeaderForServiceSalesGenerator();
 
             Long afterPopulateCount = busyPopulateReport.recordServiceSalesCount();
-            logger.info("Service Sales count after populating = "+afterPopulateCount);
+            logger.warn("Service Sales count after populating = "+afterPopulateCount);
 
             setServiceSalesPopulated(afterPopulateCount - beforePopulateCount);
-            logger.info("Service sales populated = "+getServiceSalesPopulated());
+            logger.warn("Service sales populated = "+getServiceSalesPopulated());
 
         } catch (Exception e) {
             logger.error("Unable to insert: ", e);
@@ -126,16 +126,16 @@ public class PopulateBusyDataAction extends BaseAction {
             BusyPopulateReport busyPopulateReport = new BusyPopulateReport(dbHostName, dbUser, dbPassword, dbBusyName);
 
             Long beforePopulateCount = busyPopulateReport.recordB2BSalesCount();
-            logger.info("B2B Sales count before populating = "+beforePopulateCount);
+            logger.warn("B2B Sales count before populating = "+beforePopulateCount);
 
-            logger.info("Populating B2B Sales ");
+            logger.warn("Populating B2B Sales ");
             busyPopulateSalesData.transactionHeaderForB2BSalesGenerator();
 
             Long afterPopulateCount = busyPopulateReport.recordB2BSalesCount();
-            logger.info("B2B Sales count after populating = "+afterPopulateCount);
+            logger.warn("B2B Sales count after populating = "+afterPopulateCount);
 
             setB2bSalesPopulated(afterPopulateCount - beforePopulateCount);
-            logger.info("B2B Sales populated = "+getB2bSalesPopulated());
+            logger.warn("B2B Sales populated = "+getB2bSalesPopulated());
 
         } catch (Exception e) {
             logger.error("Unable to insert: ", e);
@@ -154,16 +154,16 @@ public class PopulateBusyDataAction extends BaseAction {
             BusyPopulateReport busyPopulateReport = new BusyPopulateReport(dbHostName, dbUser, dbPassword, dbBusyName);
 
             Long beforePopulateCount = busyPopulateReport.recordRtoCount();
-            logger.info("RTO count before populating = "+beforePopulateCount);
+            logger.warn("RTO count before populating = "+beforePopulateCount);
 
-            logger.info("Populating RTO data ");
+            logger.warn("Populating RTO data ");
             busyPopulateRtoData.transactionHeaderForRtoGenerator();
 
             Long afterPopulateCount = busyPopulateReport.recordRtoCount();
-            logger.info("RTO count after populating = "+afterPopulateCount);
+            logger.warn("RTO count after populating = "+afterPopulateCount);
 
             setRtoPopulated(afterPopulateCount - beforePopulateCount);
-            logger.info("RTO invoices populated = "+getRtoPopulated());
+            logger.warn("RTO invoices populated = "+getRtoPopulated());
 
         } catch (Exception e) {
             logger.error("Unable to insert: ", e);
@@ -181,16 +181,16 @@ public class PopulateBusyDataAction extends BaseAction {
             BusyPopulateReport busyPopulateReport = new BusyPopulateReport(dbHostName, dbUser, dbPassword, dbBusyName);
 
             Long beforePopulateCount = busyPopulateReport.recordPiCount();
-            logger.info("PI count before populating ="+beforePopulateCount);
+            logger.warn("PI count before populating ="+beforePopulateCount);
 
-            logger.info("Populating Purchases ");
+            logger.warn("Populating Purchases ");
             busyPopulatePurchaseData.populatePurchaseData();
 
             Long afterPopulateCount = busyPopulateReport.recordPiCount();
-            logger.info("PI count after populating ="+afterPopulateCount);
+            logger.warn("PI count after populating ="+afterPopulateCount);
 
             setPiPopulated(afterPopulateCount - beforePopulateCount);
-            logger.info("PI populated = "+getPiPopulated());
+            logger.warn("PI populated = "+getPiPopulated());
 
         } catch (Exception e) {
             logger.error("Unable to insert: ", e);
@@ -208,16 +208,16 @@ public class PopulateBusyDataAction extends BaseAction {
             BusyPopulateReport busyPopulateReport = new BusyPopulateReport(dbHostName, dbUser, dbPassword, dbBusyName);
 
             Long beforePopulateCount = busyPopulateReport.recordPiReturnCount();
-            logger.info("PI Return count before populating ="+beforePopulateCount);
+            logger.warn("PI Return count before populating ="+beforePopulateCount);
 
-            logger.info("Populating Purchase Returns ");
+            logger.warn("Populating Purchase Returns ");
             busyPopulatePurchaseReturn.populatePurchaseReturnData();
 
             Long afterPopulateCount = busyPopulateReport.recordPiReturnCount();
-            logger.info("PI Return count after populating ="+afterPopulateCount);
+            logger.warn("PI Return count after populating ="+afterPopulateCount);
 
             setPiReturnPopulated(afterPopulateCount - beforePopulateCount);
-            logger.info("PI Returns populated = "+getPiReturnPopulated());
+            logger.warn("PI Returns populated = "+getPiReturnPopulated());
 
         } catch (Exception e) {
             logger.error("Unable to insert: ", e);
