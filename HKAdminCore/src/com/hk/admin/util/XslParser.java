@@ -546,7 +546,9 @@ public class XslParser {
 
                         poLineItems.add(poLineItem);
 
-                        Long aquaUnplannedPOItem = getLong(getCellValue(XslConstants.AQUA_UNPLANNED_PO, rowMap, headerMap));
+                        Long aquaUnplannedPOItem = Long.parseLong(getCellValue(XslConstants.AQUA_UNPLANNED_PO, rowMap, headerMap));
+                        logger.info("long value read = "+aquaUnplannedPOItem);
+
                         if (aquaUnplannedPOItem != null && aquaUnplannedPOItem == 1)
                         {
                             aquaUnplannedPO = true;
