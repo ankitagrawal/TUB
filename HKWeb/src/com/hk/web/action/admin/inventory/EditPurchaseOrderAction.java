@@ -7,6 +7,7 @@ import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.XslParser;
+import com.hk.constants.XslConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
@@ -287,8 +288,17 @@ public class EditPurchaseOrderAction extends BaseAction {
 		fileBean.save(excelFile);
 
 		try {
-			Set<PoLineItem> poLineItems = xslParser.readAndCreatePOLineItems(excelFile, purchaseOrder);
+			Map<Object,Object> hashmap =new HashMap<Object, Object>();
+            hashmap =  xslParser.readAndCreatePOLineItems(excelFile, purchaseOrder);
+            Boolean aquaUnplannedPO = (Boolean)hashmap.get(XslConstants.AQUA_UNPLANNED_PO);
+            logger.info("aqua unplanned PO = "+aquaUnplannedPO);
+            Set<PoLineItem> poLineItems = (Set<PoLineItem>)hashmap.get(XslConstants.PO_LINEITEMS);
+            //Set<PoLineItem> poLineItems = xslParser.readAndCreatePOLineItems(excelFile, purchaseOrder);
 			addRedirectAlertMessage(new SimpleMessage(poLineItems.size() + " PO Line Items Created Successfully."));
+            if(aquaUnplannedPO){
+                addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+                return new RedirectResolution(POAction.class);
+            }
 		} catch (Exception e) {
 			logger.error("Exception while reading excel sheet.", e);
 			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));

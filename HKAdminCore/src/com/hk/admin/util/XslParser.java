@@ -499,7 +499,7 @@ public class XslParser {
 
     }
 
-    public Set<PoLineItem> readAndCreatePOLineItems(File objInFile, PurchaseOrder purchaseOrder) throws Exception {
+    /*public Set<PoLineItem> readAndCreatePOLineItems(File objInFile, PurchaseOrder purchaseOrder) throws Exception {
         logger.debug("parsing po line items : " + objInFile.getAbsolutePath());
 
         InputStream poiInputStream = new FileInputStream(objInFile);
@@ -568,6 +568,7 @@ public class XslParser {
             //Set the status of PO as sent to supplier if it is aqua unplanned PO
             if (aquaUnplannedPO){
                 purchaseOrderService.poSentToSupplier(purchaseOrder);
+
             }
 
         } catch (Exception e) {
@@ -579,7 +580,95 @@ public class XslParser {
             }
         }
         return poLineItems;
+    }*/
+
+    public Map<Object,Object> readAndCreatePOLineItems(File objInFile, PurchaseOrder purchaseOrder) throws Exception {
+        logger.debug("parsing po line items : " + objInFile.getAbsolutePath());
+
+        InputStream poiInputStream = new FileInputStream(objInFile);
+        POIFSFileSystem objInFileSys = new POIFSFileSystem(poiInputStream);
+
+        HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
+
+        // Assuming there is only one sheet, the first one only will be picked
+        HSSFSheet courierServiceInfoSheet = workbook.getSheetAt(0);
+        Iterator<Row> objRowIt = courierServiceInfoSheet.rowIterator();
+
+        // Declaring data elements
+        Map<Object,Object> map = new HashMap<Object, Object>();
+        Map<Integer, String> headerMap;
+        Map<Integer, String> rowMap;
+        Boolean aquaUnplannedPO = false;
+        Set<PoLineItem> poLineItems = new HashSet<PoLineItem>();
+        int rowCount = 1;
+        try {
+            headerMap = getRowMap(objRowIt);
+            while (objRowIt.hasNext()) {
+                rowMap = getRowMap(objRowIt);
+                ProductVariant productVariant = getProductVariantService().getVariantById(getCellValue(XslConstants.VARIANT_ID, rowMap, headerMap));
+                if (productVariant != null) {
+
+                    Long qty = getLong(getCellValue(XslConstants.QTY, rowMap, headerMap));
+                    logger.debug("qty of variant - " + productVariant.getId() + " is - " + qty);
+                    if (qty != null && qty > 0) {
+                        Double cost = getDouble(getCellValue(XslConstants.COST, rowMap, headerMap));
+                        if (cost == null || cost == 0D) {
+                            cost = productVariant.getCostPrice();
+                        }
+                        Double mrp = getDouble(getCellValue(XslConstants.MRP, rowMap, headerMap));
+                        if (mrp == null || mrp == 0D) {
+                            mrp = productVariant.getMarkedPrice();
+                        }
+                        PoLineItem poLineItem = new PoLineItem();
+                        poLineItem.setPurchaseOrder(purchaseOrder);
+                        poLineItem.setQty(qty);
+                        Sku sku = skuService.getSKU(productVariant, purchaseOrder.getWarehouse());
+                        poLineItem.setSku(sku);
+                        poLineItem.setCostPrice(cost);
+                        poLineItem.setMrp(mrp);
+                        poLineItemDao.save(poLineItem);
+
+                        poLineItems.add(poLineItem);
+
+                        Long aquaUnplannedPOItem = getLong(getCellValue(XslConstants.AQUA_UNPLANNED_PO, rowMap, headerMap));
+                        logger.info("long value read = "+aquaUnplannedPOItem);
+
+                        if (aquaUnplannedPOItem != null && aquaUnplannedPOItem == 1)
+                        {
+                            aquaUnplannedPO = true;
+                        }
+                    }
+                    Long brightSoId = getLong(getCellValue(XslConstants.BRIGHT_SO_ID, rowMap, headerMap));
+                    if(brightSoId!=null){
+                        purchaseOrder.setBrightSoId(brightSoId);
+                        baseDao.save(purchaseOrder);
+                    }
+
+                }
+                logger.debug("read row " + rowCount);
+                rowCount++;
+            }
+
+            //Set the status of PO as sent to supplier if it is aqua unplanned PO
+            if (aquaUnplannedPO){
+                purchaseOrderService.poSentToSupplier(purchaseOrder);
+
+            }
+
+        } catch (Exception e) {
+            logger.error("Exception @ Row:" + rowCount + 1 + e.getMessage());
+            throw new Exception("Exception @ Row:" + rowCount, e);
+        } finally {
+            if (poiInputStream != null) {
+                IOUtils.closeQuietly(poiInputStream);
+            }
+        }
+        map.put(XslConstants.AQUA_UNPLANNED_PO, aquaUnplannedPO);
+        map.put(XslConstants.PO_LINEITEMS, poLineItems);
+        return map;
     }
+
+
 
     public Map<Warehouse, Set<ProductVariant>> parseBrightPOFile(File objInFile) throws Exception {
       logger.debug("parsing po line items : " + objInFile.getAbsolutePath());

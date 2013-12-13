@@ -175,6 +175,7 @@ public class XslConstants {
     public static final String BRIGHT_SO_ID = "BRIGHT_SO_ID";
 
     public static final String AQUA_UNPLANNED_PO = "AQUA_UNPLANNED_PO";
+    public static final String PO_LINEITEMS = "PO_LINEITEMS";
     
     
 }
