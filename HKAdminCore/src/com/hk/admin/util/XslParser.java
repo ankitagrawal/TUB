@@ -546,7 +546,7 @@ public class XslParser {
 
                         poLineItems.add(poLineItem);
 
-                        Long aquaUnplannedPOItem = Long.parseLong(getCellValue(XslConstants.AQUA_UNPLANNED_PO, rowMap, headerMap));
+                        Long aquaUnplannedPOItem = getLong(getCellValue(XslConstants.AQUA_UNPLANNED_PO, rowMap, headerMap));
                         logger.info("long value read = "+aquaUnplannedPOItem);
 
                         if (aquaUnplannedPOItem != null && aquaUnplannedPOItem == 1)
@@ -1223,7 +1223,9 @@ public class XslParser {
     private Long getLong(String value) {
         Long valueInLong = null;
         try {
-            valueInLong = Long.parseLong(value.replace(".0", ""));
+            if(value != null){
+                valueInLong = Long.parseLong(value.replace(".0", ""));
+            }
         } catch (Exception e) {
            logger.error("Exp while parsing value for Long: "+value);
         }
