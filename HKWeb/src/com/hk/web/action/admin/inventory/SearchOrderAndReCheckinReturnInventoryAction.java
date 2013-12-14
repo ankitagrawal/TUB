@@ -162,7 +162,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
 							if (conditionOfItem.equals(GOOD)) {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
-										null,EnumSkuItemStatus.Checked_IN,EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
+										null,EnumSkuItemStatus.Checked_IN_Non_Saleable,EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD_NON_SALEABLE), 0L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                                 skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
 								skuItemDao.save(skuItem);

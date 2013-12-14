@@ -10,7 +10,7 @@ import java.util.Arrays;
  * Generated
  */
 public enum EnumInvTxnType {
-    INV_CHECKIN(10L, "Fresh Inventory Checkin"),                               // +1
+    INV_CHECKIN(10L, "Fresh Inventory Checkin"),                              // +1
     INV_CHECKOUT(20L, "Inventory Checkout"),                                   // -1
     RV_CHECKIN(30L, "Checkin against Reconciliation Voucher"),                 // +1
     RV_LOST_PILFERAGE(40L, "Lost/Pilferage against Reconciliation Voucher"),   // -1
@@ -18,7 +18,8 @@ public enum EnumInvTxnType {
     RV_SUBTRACT_EXPIRED(50L, "Expired against Reconciliation Voucher-Subtract"),                 // -1
     RETURN_CHECKIN_DAMAGED(60L, "Damaged against Returned items"),     // 0
     RETURN_CHECKIN_EXPIRED(65L, "Expired against Returned items"),     // 0
-    RETURN_CHECKIN_GOOD(70L, "Checkin against Returned items"),                // +1
+    RETURN_CHECKIN_GOOD(70L, "Checkin against Returned items"),
+    RETURN_CHECKIN_GOOD_NON_SALEABLE(75L,"Checkin against Returned items but Non Saleable"),                // +1
     CANCEL_CHECKIN(80L, "Checkin against Cancellation"),                       // +1
     TRANSIT_LOST(90L, "Lost during transit"),                                  // -1
     INV_REPEAT_CHECKOUT(100L, "Inventory Checkout against Re-shipping"),       // -1
