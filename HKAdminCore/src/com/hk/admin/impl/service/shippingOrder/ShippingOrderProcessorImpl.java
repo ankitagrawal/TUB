@@ -165,7 +165,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         // finding line items with inventory mismatch
         logger.debug("Going to call autoProcessInventoryMismatch for shippping Order --" + shippingOrder.getId() );
         shippingOrder = this.autoProcessInventoryMismatch(shippingOrder, getUserService().getAdminUser());
-        if (shippingOrder == null || shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_Cancelled)) {
+        if (shippingOrder == null || shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Cancelled.getId())) {
           logger.debug("Got shipping order null or with cancelled status");
           return false;
         }
@@ -556,8 +556,8 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       Long totalQty = netAquaQty + unBoookedInventoryOfBright;
       Long bookedQty = adminInventoryService.getBookedInventory(lineItem.getSku().getProductVariant(), null);
 
-      logger.debug("Total AB qty -- " + totalQty + "--For variant --" +lineItem.getSku().getProductVariant().getId() );
-      logger.debug("Booked  qty --" + bookedQty + "--For variant --" +lineItem.getSku().getProductVariant().getId()) ;
+      logger.error("Total AB qty -- " + totalQty + "--For variant --" +lineItem.getSku().getProductVariant().getId() );
+      logger.error("Booked  qty --" + bookedQty + "--For variant --" +lineItem.getSku().getProductVariant().getId()) ;
 
       if (!((totalQty - bookedQty) >= lineItem.getQty())) {
         ProductVariant itemVariant = lineItem.getSku().getProductVariant();
@@ -568,15 +568,15 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         }
       }
     }
-    logger.debug("Out of stock JIT items --" + outOfStockJitItems.size()  );
-    logger.debug("Out of stock Line items --" + outOfStockLineItems.size()  );
+    logger.error("Out of stock JIT items --" + outOfStockJitItems.size()  );
+    logger.error("Out of stock Line items --" + outOfStockLineItems.size()  );
 
 
     // BLock to handle JIT items or free variants begin
     if (!outOfStockJitItems.isEmpty()) {
       if (outOfStockJitItems.size() == shippingOrder.getLineItems().size()) {
         // just log that jit items hence could not be cancelled automatically
-        logger.debug("Out of stock JIT items has sO size --" + outOfStockJitItems.size()  );
+        logger.error("Out of stock JIT items has sO size --" + outOfStockJitItems.size()  );
         shippingOrderService.logShippingOrderActivity(shippingOrder,
             EnumShippingOrderLifecycleActivity.SO_COULD_NOT_BE_CANCELLED_AUTO, EnumReason.JIT_ITEMS_IN_SO.asReason(),
             "JIT items or free product present.");
@@ -597,11 +597,11 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
     // Other items inventory mismatch begin
     if (outOfStockLineItems.size() == shippingOrder.getLineItems().size()) {
-      logger.debug("Out of stock NON JIT items has same sO size --" + outOfStockLineItems.size()  );
+      logger.error("Out of stock NON JIT items has same sO size --" + outOfStockLineItems.size()  );
       cancelledSO = shippingOrder;
     } else if (outOfStockLineItems.isEmpty()) {
       // nothing to cancel
-      logger.debug("Out of stock NON JIT items has different sO size when so is  empty --"  );
+      logger.error("Out of stock NON JIT items has different sO size when so is  empty --"  );
       comment.append("Inventory for the variant ");
       for (LineItem item : shippingOrder.getLineItems()) {
         comment.append(item.getCartLineItem().getProductVariant().getId() + " ");
@@ -616,7 +616,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       Map<String, ShippingOrder> splittedOrders = new HashMap<String, ShippingOrder>();
       List<String> messages = new ArrayList<String>();
       // split and cancel only the unfulfilled line items
-      logger.debug("Out of stock NON JIT items has different sO size when so is not empty --" + outOfStockLineItems.size()  );
+      logger.error("Out of stock NON JIT items has different sO size when so is not empty --" + outOfStockLineItems.size()  );
       this.autoSplitSO(shippingOrder, outOfStockLineItems, splittedOrders, messages);
       cancelledSO = splittedOrders.get(ShippingOrderConstants.NEW_SHIPPING_ORDER);
       shippingOrder = splittedOrders.get(ShippingOrderConstants.OLD_SHIPPING_ORDER);
@@ -647,14 +647,14 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
 
     if (lineItemsCreated) {
        if (bookedAtBright) {
-         logger.debug("So Booked at bright --" + cancelledSO.getId());
+         logger.error("So Booked at bright --" + cancelledSO.getId());
          cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
          shippingOrderService.logShippingOrderActivity(cancelledSO, user,
              shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_ReadyForValidation),
              EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO on validation state  partial booking done  could be fulfilled from Bright end Validate it.");
 
        }else {
-         logger.debug("So Booked at Aqua --" + cancelledSO.getId());
+         logger.error("So Booked at Aqua --" + cancelledSO.getId());
          cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
          shippingOrderService.logShippingOrderActivity(cancelledSO, user,
              shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue),
@@ -662,11 +662,11 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
        }
 
       shippingOrderService.save(cancelledSO);
-      return false;
+    //  return false;
 
     } else {
 
-      logger.debug("Inventory is not created for Cancelled so--" + cancelledSO.getId());
+      logger.error("Inventory is not created for Cancelled so--" + cancelledSO.getId());
       boolean invPresent = false;
       Long ABqty = 0L;
       for (LineItem lineItem : cancelledSO.getLineItems()) {
@@ -674,7 +674,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         Long unBoookedInventoryOfBright = inventoryHealthService.getUnbookedInventoryOfBright(productVariant);
         Long unBookedInventoryOfAqua = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku(), null);
         ABqty = unBoookedInventoryOfBright + unBookedInventoryOfAqua;
-        logger.debug(" AB inventory got is -" + ABqty);
+        logger.error(" AB inventory got is -" + ABqty);
         if (ABqty >= lineItem.getQty()) {
           cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
           shippingOrderService.save(cancelledSO);
@@ -689,7 +689,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
       for (LineItem lineItem : cancelledSO.getLineItems()){
         Product product = lineItem.getSku().getProductVariant().getProduct();
          if (product.isJit() || product.isDropShipping() || product.isService()){
-           logger.debug("Cancelled SO has regular product --" + lineItem.getSku().getProductVariant().getId() + " for So --" + cancelledSO.getId());
+           logger.error("Cancelled SO has JIT product --" + lineItem.getSku().getProductVariant().getId() + " for So --" + cancelledSO.getId());
            cancelledFlag = true;
            break;
          }
@@ -698,10 +698,18 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
         cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
         shippingOrderService.logShippingOrderActivity(cancelledSO, user,
             shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue),
-            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "So canvceeled has  JIt  products -- " + cancelledSO.getId());
+            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "So cancelled has  JIt  products -- " + cancelledSO.getId());
 
       }else {
-        cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
+      //  cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
+        logger.error("Going to call cancellation for so :" + cancelledSO.getId());
+        Payment payment = cancelledSO.getBaseOrder().getPayment();
+        Store store = cancelledSO.getBaseOrder().getStore();
+        if (paymentService.isValidReconciliation(payment, store)) {
+          this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,EnumReconciliationActionType.RefundAmount.getId(), false);
+        } else {
+          this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null, null, false);
+        }
         if (cancelledSO.getBaseOrder().getShippingOrders().size() > 1) {
           emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
         } else {
@@ -718,15 +726,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     }
     /*
 
-      Payment payment = cancelledSO.getBaseOrder().getPayment();
-     Store store = cancelledSO.getBaseOrder().getStore();
 
-    if (paymentService.isValidReconciliation(payment, store)) {
-      this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null,
-                                                        EnumReconciliationActionType.RefundAmount.getId(), false);
-    } else {
-      this.getAdminShippingOrderService().cancelShippingOrder(cancelledSO, null, null, false);
-    }
     // send mail
     if (cancelledSO.getBaseOrder().getShippingOrders().size() > 1) {
       emailManager.sendPartialOrderCancelEmailToUser(cancelledSO);
