@@ -14543,6 +14543,26 @@
     <changeSet author="arjun (generated)" id="1384775891669-4">
         <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="prefix_invoice_generation" tableName="warehouse"/>
     </changeSet>
+    <changeSet author="RD (generated)" id="20131127-01">
+        <sql>
+            update reverse_pickup_type set name='RTO' where id=20;
+        </sql>
+    </changeSet>
+    <changeSet author="abhay (generated)" id="1384775891669-5">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="user_report"/></not>
+        </preConditions>
+        <createTable tableName="user_report">
+            <column name="user_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueNumeric="0" name="number_of_orders_by_user" type="INT">
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="abhay (generated)" id="1384775891669-6">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_report" constraintName="fk_user_report_user1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
+    </changeSet>
     <changeSet author="Nihal (generated)" id="20131021-0809">
         <addColumn tableName="purchase_order">
             <column name="bright_so_id" type="INT"/>

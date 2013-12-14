@@ -18,46 +18,46 @@ import java.util.regex.Pattern
 
 public class BusyPopulateItemData {
 
-    private String hostName;
-    private String dbName;
-    private String serverUser;
-    private String serverPassword;
-    private String dbBusyName;
-    Sql sql;
-    Sql busySql;
-    BusyPopulateItemData(String hostName, String dbName, String serverUser, String serverPassword, String dbBusyName){
-        this.hostName = hostName;
-        this.dbName = dbName;
-        this.serverUser = serverUser;
-        this.serverPassword = serverPassword;
-        this.dbBusyName = dbBusyName;
+  private String hostName;
+  private String dbName;
+  private String serverUser;
+  private String serverPassword;
+  private String dbBusyName;
+  Sql sql;
+  Sql busySql;
+  BusyPopulateItemData(String hostName, String dbName, String serverUser, String serverPassword, String dbBusyName){
+    this.hostName = hostName;
+    this.dbName = dbName;
+    this.serverUser = serverUser;
+    this.serverPassword = serverPassword;
+    this.dbBusyName = dbBusyName;
 
-        sql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
-                serverPassword, "com.mysql.jdbc.Driver");
+    sql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbName, serverUser,
+            serverPassword, "com.mysql.jdbc.Driver");
 
-        busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbBusyName, serverUser,
-                serverPassword, "com.mysql.jdbc.Driver");
-    }
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyPopulateItemData.class);
+    busySql = Sql.newInstance("jdbc:mysql://"+hostName+":3306/"+dbBusyName, serverUser,
+            serverPassword, "com.mysql.jdbc.Driver");
+  }
+  private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyPopulateItemData.class);
 
 
-    public void populateItemData() {
-        String lastUpdateDate;
-        busySql.eachRow("""
+  public void populateItemData() {
+    String lastUpdateDate;
+    busySql.eachRow("""
                     select max(create_date) as max_date
                     from item_detail;
                       """){
-            lastDate ->
-                lastUpdateDate = lastDate.max_date;
-        }
+          lastDate ->
+          lastUpdateDate = lastDate.max_date;
+      }
 
-        if(lastUpdateDate == null){
-            lastUpdateDate = "2009-01-01";
-        }
+    if(lastUpdateDate == null){
+      lastUpdateDate = "2009-01-01";
+    }
 
-        logger.debug("last update date="+lastUpdateDate);
+    logger.debug("last update date="+lastUpdateDate);
 
-        def query = "INSERT INTO " + dbBusyName + "." +"item_detail(item_code ,item_name ,print_name ,parent_group ,unit,sale_price ,purchase_price ,mrp ,\
+      def query = "INSERT INTO " + dbBusyName + "." +"item_detail(item_code ,item_name ,print_name ,parent_group ,unit,sale_price ,purchase_price ,mrp ,\
               tax_rate_local,tax_rate_central ,item_description_1 , item_description_2 ,item_description_3 ,item_description_4 ,                 \
               imported,create_date)                                                                                                              \
                                                                                                                                                  \
@@ -127,12 +127,12 @@ public class BusyPopulateItemData {
               trim(leading  concat(substring_index(in_view_pv_po_option.pv_options_concat,',',4),',')FROM substring_index(in_view_pv_po_option.pv_options_concat,',',5))),40)  ,   \
       imported=0";
 
-        try{
-            sql.executeInsert(query);
-        }
-        catch (Exception e) {
+     try{
+         sql.executeInsert(query);
+    }
+      catch (Exception e) {
             logger.info("Unable to insert : "+e);
         }
-    }
+  }
 
-}
+ }

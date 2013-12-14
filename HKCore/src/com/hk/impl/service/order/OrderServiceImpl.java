@@ -346,12 +346,18 @@ public class OrderServiceImpl implements OrderService {
     public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess) {
 
         boolean shouldUpdate = true;
+       boolean orderMarkedDeliverd=false;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
             if (!getShippingOrderService().shippingOrderHasReplacementOrder(shippingOrder)) {
                 if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
                     shouldUpdate = false;
+                  if(shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Delivered.getId())) {
+                       orderMarkedDeliverd=true;
+                  }
+                 else {
                     break;
+                  }
                 }
             }
         }
@@ -359,6 +365,10 @@ public class OrderServiceImpl implements OrderService {
         if (shouldUpdate) {
             order.setOrderStatus(getOrderStatus(boStatusOnSuccess));
             order = getOrderDao().save(order);
+        }
+        if(!shouldUpdate && orderMarkedDeliverd){
+           order.setOrderStatus(EnumOrderStatus.Delivered.asOrderStatus());
+          order = getOrderDao().save(order);
         }
         /*
          * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =

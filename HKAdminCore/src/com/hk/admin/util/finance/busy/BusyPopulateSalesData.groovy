@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 
 /**
  * Created by IntelliJ IDEA.
- * User: Arjun
+ * User: Tarun
  * Date: April 13, 2012
  * Time: 01:28:07 PM
  * To change this template use File | Settings | File Templates.
@@ -19,10 +19,10 @@ public class BusyPopulateSalesData {
     private String serverUser;
     private String serverPassword;
     private String dbBusyName;
-
+    //def dbBusyName;
     Sql sql;
     Sql busySql;
-
+    public static final String  BUSY_DB_NAME = "healthkart_busy";
 
     BusyPopulateSalesData(String hostName, String dbName, String serverUser, String serverPassword, String dbBusyName){
         this.hostName = hostName;
@@ -324,26 +324,26 @@ public class BusyPopulateSalesData {
                                 w.name as warehouse, w.id as warehouse_id,\
                                 sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,  \
                                 c.name as courier_name," +
-                "if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,                       \
-                so.shipping_order_status_id , ship.return_date as return_date, th.hk_ref_no, bo.gateway_order_id, aw.awb_number,\
-                w.state as warehouse_state, w.prefix_invoice_generation series, \
-                bo.amount as base_order_amount, ship.delivery_date as delivery_date                                              \
-       from     line_item li                                                                   \
-                inner join shipping_order so on li.shipping_order_id=so.id                          \
-                inner join base_order bo on so.base_order_id = bo.id                                \
-                left join payment p ON bo.payment_id = p.id                                         \
-                left join payment_mode pm ON pm.id = p.payment_mode_id                              \
-                inner join user u on bo.user_id = u.id                                              \
-                inner join address a ON bo.address_id = a.id                                        \
-                left join shipment ship on ship.id = so.shipment_id                                 \
-                left join awb aw on ship.awb_id=aw.id                                               \
-                left join courier c on aw.courier_id = c.id                                         \
-                left join gateway pay_gate on p.gateway_id = pay_gate.id                            \
-                inner join warehouse w on w.id = so.warehouse_id                                    \
-                left join " + dbBusyName + "." + tableName + " th on so.id=th.hk_ref_no               \
+                                "if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,                       \
+                                so.shipping_order_status_id , ship.return_date as return_date, th.hk_ref_no, bo.gateway_order_id, aw.awb_number,\
+                                w.state as warehouse_state, w.prefix_invoice_generation series, \
+                                bo.amount as base_order_amount, ship.delivery_date as delivery_date                                              \
+                       from     line_item li                                                                   \
+                                inner join shipping_order so on li.shipping_order_id=so.id                          \
+                                inner join base_order bo on so.base_order_id = bo.id                                \
+                                left join payment p ON bo.payment_id = p.id                                         \
+                                left join payment_mode pm ON pm.id = p.payment_mode_id                              \
+                                inner join user u on bo.user_id = u.id                                              \
+                                inner join address a ON bo.address_id = a.id                                        \
+                                left join shipment ship on ship.id = so.shipment_id                                 \
+                                left join awb aw on ship.awb_id=aw.id                                               \
+                                left join courier c on aw.courier_id = c.id                                         \
+                                left join gateway pay_gate on p.gateway_id = pay_gate.id                            \
+                                inner join warehouse w on w.id = so.warehouse_id                                    \
+                                left join " + dbBusyName + "." + tableName + " th on so.id=th.hk_ref_no               \
                        where    (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) " +
-                "and so.shipping_order_status_id <> 999)) \
-                and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >='" + lastUpdateDate +"'   \
+                                "and so.shipping_order_status_id <> 999)) \
+                                and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >='" + lastUpdateDate +"'   \
                                 and so.is_service_order = 1                                                            \
                                 and th.hk_ref_no is null                                                               \
                        GROUP BY so.id                                                                         \
@@ -825,9 +825,9 @@ public class BusyPopulateSalesData {
     public void deliveryDateInTransactionHeader(){
 
         def query = "select ship.delivery_date, th.hk_ref_no " +
-                "from   shipment ship inner join shipping_order so on ship.id = so.shipment_id " +
-                "inner join " + dbBusyName +".transaction_header th on th.hk_ref_no = so.id " +
-                "where  th.delivery_date is null and th.vch_type=9 and th.date >= '2013-11-01 00:00:00' "
+                    "from   shipment ship inner join shipping_order so on ship.id = so.shipment_id " +
+                            "inner join " + dbBusyName +".transaction_header th on th.hk_ref_no = so.id " +
+                    "where  th.delivery_date is null and th.vch_type=9 and th.date >= '2013-11-01 00:00:00' "
         sql.eachRow(query) {
             accountingInvoice ->
 

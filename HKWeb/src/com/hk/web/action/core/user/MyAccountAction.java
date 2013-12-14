@@ -4,6 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.cache.RoleCache;
 import com.hk.constants.core.EnumRole;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.user.Address;
@@ -20,9 +21,12 @@ import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import org.apache.commons.lang.StringUtils;
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.stripesstuff.plugin.security.Secure;
 
 import java.util.List;
@@ -59,6 +63,9 @@ public class MyAccountAction extends BaseAction {
   
   /*@Autowired
   private RoleService roleService;*/
+
+  @Value("#{hkEnvProps['" + Keys.Env.mailBoltUrl + "']}")
+  private String mailBoltUrl;
 
   @DefaultHandler
   public Resolution pre() {
@@ -160,6 +167,26 @@ public class MyAccountAction extends BaseAction {
   public Resolution subscribeForNotifications() {
     user = getUserService().getUserById(getPrincipal().getId());
     userService.subscribeAllNotifications(user.getLogin());
+
+    String unsubscribeToken = user.getUnsubscribeToken();
+
+    if (unsubscribeToken != null) {
+        String postUrl = mailBoltUrl + "HKDataStore/subscribes/" + unsubscribeToken;
+        try {
+            ClientRequest request = new ClientRequest(postUrl);
+            request.setHttpMethod("POST");
+            ClientResponse<String> response = null;
+            response = request.post();
+            int status = response.getStatus();
+            logger.info("Calling Post API " + postUrl);
+            if (status == 200) {
+                logger.debug("Post API returned correct status");
+            }
+        } catch (Exception e) {
+            logger.error("Something bad happened " + postUrl);
+        }
+    }
+
     addRedirectAlertMessage(new SimpleMessage("You have successfully subscribed to HealthKart Mails"));
     return new RedirectResolution(MyAccountAction.class);
   }

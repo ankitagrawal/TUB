@@ -60,7 +60,7 @@
               <label>Your name<span class='aster' title="this field is required">*</span></label>
             <s:text name="name" class="signUpInputNew" />
             <label>Email Id<span class='aster' title="this field is required">*</span></label>
-            <s:text name="email" class="signUpInputNew" />
+            <s:text name="email" class="signUpInputNew" value="${email}" />
             <label >Password <span class='aster' title="this field is required">*</span></label>
             <s:password name="password" class="signUpInputNew" />
             <label>Confirm Password <span class='aster' title="this field is required">*</span></label>
