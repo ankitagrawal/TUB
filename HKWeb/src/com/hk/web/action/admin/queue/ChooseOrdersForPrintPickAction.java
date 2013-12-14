@@ -255,7 +255,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             variantsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForVariant(cycleCountDtoList);
         }
         for (ShippingOrder shippingOrder : shippingOrdersTempList) {
-            if (shippingOrdersList.size() == 20) {
+            if (shippingOrdersList.size() == getPerPageDefault()) {
                 break;
             }
             boolean shouldAdd = true;
