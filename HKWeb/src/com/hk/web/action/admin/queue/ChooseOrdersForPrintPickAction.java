@@ -290,7 +290,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     }
 
     public int getPerPageDefault() {
-        return 20;
+        return 50;
     }
 
     public int getPageCount() {
