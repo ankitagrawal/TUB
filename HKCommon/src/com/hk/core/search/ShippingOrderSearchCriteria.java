@@ -68,6 +68,16 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 	private Date shippingOrderCreateDate;
 	private Long brightSoId;
 
+    public String getBrightSoGatewayId() {
+        return brightSoGatewayId;
+    }
+
+    public void setBrightSoGatewayId(String brightSoGatewayId) {
+        this.brightSoGatewayId = brightSoGatewayId;
+    }
+
+    private String brightSoGatewayId;
+
 	public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
 		this.searchForPrinting = searchForPrinting;
 		return this;
@@ -371,10 +381,14 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 		 */
 
 		DetachedCriteria fsicliCriteria = null;
-		if (brightSoId != null) {
+		/*if (brightSoId != null) {
 			fsicliCriteria = criteria.createCriteria("lineItems").createAlias("cartLineItem", "cl")
 					.createAlias("cl.foreignSkuItemCLIs", "fi").add(Restrictions.eq("fi.foreignShippingOrderId", brightSoId));
-		}
+		}*/
+        if(brightSoGatewayId != null){
+            fsicliCriteria = criteria.createCriteria("lineItems").createAlias("cartLineItem", "cl")
+                    .createAlias("cl.foreignSkuItemCLIs", "fi").add(Restrictions.eq("fi.foreignShippingOrderGatewayId", brightSoGatewayId));
+        }
 
 		return criteria;
 	}

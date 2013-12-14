@@ -78,6 +78,16 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     private Date startTargetDispatchDate;
     private Long brightSoId;
 
+    public String getBrightGatewayId() {
+        return brightGatewayId;
+    }
+
+    public void setBrightGatewayId(String brightGatewayId) {
+        this.brightGatewayId = brightGatewayId;
+    }
+
+    private String brightGatewayId;
+
     private String brand;
 
     private String getActionMessage(int action) {
@@ -184,6 +194,9 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             }
             if(brightSoId != null){
             	shippingOrderSearchCriteria.setBrightSoId(brightSoId);
+            }
+            if(brightGatewayId != null){
+                shippingOrderSearchCriteria.setBrightSoGatewayId(brightGatewayId);
             }
         }
         return shippingOrderSearchCriteria;

@@ -47,7 +47,17 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 	private Date endDate;
 	private List<ShippingOrder> shippingOrders;
 	private List<ShippingOrder> shippingOrderMarked;
-	private Integer defaultPerPage = 100;
+
+    public List<ShippingOrder> getShippingOrderList() {
+        return shippingOrderList;
+    }
+
+    public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
+        this.shippingOrderList = shippingOrderList;
+    }
+
+    private List<ShippingOrder> shippingOrderList;
+    private Integer defaultPerPage = 100;
 	private Page shippingOrderPage;
 	private List<ShippingOrderStatus> shippingOrderStatusList;
 	private List<ShippingOrderStatus> shippingOrderStatus;
@@ -101,8 +111,8 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
 
 	@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_ACTION_QUEUE }, authActionBean = AdminPermissionAction.class)
 	public Resolution validate() {
-		if (!shippingOrderMarked.isEmpty()) {
-			for (ShippingOrder shippingOrder : shippingOrderMarked) {
+		if (shippingOrderList!=null && !shippingOrderList.isEmpty()) {
+			for (ShippingOrder shippingOrder : shippingOrderList) {
 				shippingOrderService.validateShippingOrderAB(shippingOrder);
 			}
 		} else {

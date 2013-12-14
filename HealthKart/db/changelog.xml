@@ -14558,4 +14558,9 @@
             <column name="shipping_order_booking_type" type="INT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Utsav (generated)" id="20131021-0811">
+        <addColumn tableName="foreign_si_cli">
+            <column name="foreign_shipping_order_gateway_id" type="VARCHAR(30)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -37,6 +37,17 @@ public class ForeignSkuItemCLI {
   @Column(name="foreign_shipping_order_id")
   private Long foreignShippingOrderId;
 
+    public String getForeignShippingOrderGatewayId() {
+        return foreignShippingOrderGatewayId;
+    }
+
+    public void setForeignShippingOrderGatewayId(String foreignShippingOrderGatewayId) {
+        this.foreignShippingOrderGatewayId = foreignShippingOrderGatewayId;
+    }
+
+    @Column(name="foreign_shipping_order_gateway_id")
+  private  String foreignShippingOrderGatewayId;
+
   @Column(name="foreign_base_order_id")
   private Long foreignOrderId;
 

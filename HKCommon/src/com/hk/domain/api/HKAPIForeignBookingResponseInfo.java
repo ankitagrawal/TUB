@@ -24,6 +24,17 @@ public class HKAPIForeignBookingResponseInfo {
   private Long whId;
   private Long bkTyId;
 
+  private String fsogwId;
+  public String getFsogwId(){
+      return fsogwId;
+  }
+
+  public void setFsogwId(String fsogwId){
+      this.fsogwId = fsogwId;
+  }
+
+
+
   public Long getFsiCLIId() {
     return fsiCLIId;
   }
