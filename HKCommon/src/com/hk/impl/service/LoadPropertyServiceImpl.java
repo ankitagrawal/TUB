@@ -93,8 +93,10 @@ public class LoadPropertyServiceImpl implements LoadPropertyService {
         return hybridRelease;
     }
 
+  /*  code commented at master
     public boolean isSyncEdge() {
         return Boolean.parseBoolean(getProperty(Keys.Env.syncEdge, "true").toString());
     }
 
+*/
 }

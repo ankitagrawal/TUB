@@ -157,6 +157,7 @@ public class Keys {
         public static final String fedExAuthKeyGGN = "fedExAuthKeyGGN";
 
         public static final String dbBusyName = "dbBusyName";
+        public static final String brightlifecareRestUrl = "brightlifecareRestUrl";
 
 
   }

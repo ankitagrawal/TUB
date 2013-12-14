@@ -40,5 +40,5 @@ public interface LoadPropertyService {
 
     public boolean isHybridRelease();
 
-    public boolean isSyncEdge();
+ //   public boolean isSyncEdge();
 }
