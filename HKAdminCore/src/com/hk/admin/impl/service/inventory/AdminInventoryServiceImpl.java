@@ -331,6 +331,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
   public void reCheckInInventory(ShippingOrder shippingOrder, EnumSkuItemStatus skuItemStatus, EnumSkuItemOwner skuItemOwner, EnumInvTxnType invnTxnType, Long qty) {
     // Recheckin InventoInry against checked out qty
     // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
+	  //TODO: Hardcoding for A/B and making item non_saleable ,no matter from how the order got cancelled
     User loggedOnUser = userService.getLoggedInUser();
     for (LineItem lineItem : shippingOrder.getLineItems()) {
       List<ProductVariantInventory> checkedOutInventories = getAdminPVIDao().getCheckedOutSkuItems(lineItem.getShippingOrder(), lineItem);
