@@ -1,10 +1,12 @@
 package com.hk.admin.impl.service.inventory;
 
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.constants.inventory.EnumPurchaseOrderType;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -51,6 +53,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
   SkuService skuService;
   @Autowired
   BaseDao baseDao;
+  @Autowired
+  AdminEmailManager adminEmailManager;
 
   public void updatePOFillRate(PurchaseOrder purchaseOrder) {
     long totalAskedQty = 0;
@@ -150,6 +154,24 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
       return getSupplierDao().findByTIN("07320452122");
     }
     return null;
+  }
+
+  public void poSentToSupplier(PurchaseOrder po){
+
+      List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
+
+      for (PurchaseOrderStatus status : purchaseOrderStatus) {
+          EnumPurchaseOrderStatus poStatus = EnumPurchaseOrderStatus.getById(status.getId());
+          po.setUpdateDate(new Date());
+          po.setApprovedBy(userService.getAdminUser());
+          po.setPurchaseOrderStatus(poStatus.asEnumPurchaseOrderStatus());
+          po = (PurchaseOrder) getBaseDao().save(po);
+          if (poStatus.getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
+              adminEmailManager.sendPOApprovedEmail(po);
+              po.setPurchaseOrderStatus(EnumPurchaseOrderStatus.SentToSupplier.asEnumPurchaseOrderStatus());
+              po = (PurchaseOrder) getBaseDao().save(po);
+          }
+      }
   }
 
   public PurchaseOrderDao getPurchaseOrderDao() {
