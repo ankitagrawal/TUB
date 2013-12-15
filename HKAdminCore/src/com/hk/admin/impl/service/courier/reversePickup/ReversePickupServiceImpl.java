@@ -200,7 +200,7 @@ public class ReversePickupServiceImpl implements ReversePickupService {
                             switch (enumReason) {
                                 case Good:
                                     getAdminInventoryService().inventoryCheckinCheckout(pvi.getSku(), skuItem, lineItem, shippingOrder, null, null, null,
-                                            EnumSkuItemStatus.Checked_IN_Non_Saleable, EnumSkuItemOwner.SELF, EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN.asInvTxnType(), 1l, loggedOnUser);
+                                            EnumSkuItemStatus.Checked_IN_Non_Saleable, EnumSkuItemOwner.SELF, EnumInvTxnType.REVERSE_PICKUP_INVENTORY_CHECKIN.asInvTxnType(), 0l, loggedOnUser);
                                     warehouseChecked = true;
                                     break;
                                 case Damaged:
