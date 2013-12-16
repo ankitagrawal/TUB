@@ -313,7 +313,7 @@ public class BusyPopulateSalesData {
 
         def tableName = 'transaction_header';
 
-        lastUpdateDate = "2013-04-01";                                                                    \
+        lastUpdateDate = "2013-04-01";
 
         def query = "select     so.id as shipping_order_id,                                                   \
                                 ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) as order_date,                \
@@ -343,7 +343,7 @@ public class BusyPopulateSalesData {
                                 left join " + dbBusyName + "." + tableName + " th on so.id=th.hk_ref_no               \
                        where    (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) " +
                                 "and so.shipping_order_status_id <> 999)) \
-                                and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}   \
+                                and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >='" + lastUpdateDate +"'   \
                                 and so.is_service_order = 1                                                            \
                                 and th.hk_ref_no is null                                                               \
                        GROUP BY so.id                                                                         \
@@ -599,7 +599,7 @@ public class BusyPopulateSalesData {
                                 inner join warehouse w on w.id = so.warehouse_id                 \
                                 left join " + dbBusyName + "." + tableName + " th on so.id=th.hk_ref_no  \
                      where      (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999))    \
-                                and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}   \
+                                and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= '" + lastUpdateDate + "'   \
                                 and bo.is_b2b_order = 1          \
                                 and th.hk_ref_no is null         \
                      GROUP BY so.id                   \

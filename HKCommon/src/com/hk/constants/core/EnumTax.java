@@ -19,6 +19,9 @@ public enum EnumTax {
 //		NA(51L, "NA", 0.0D, "VAT"),
 		VAT_2(52L, "0.02", 0.02D, "VAT"),
 
+		VAT_14_5(53L, "0.145", 0.145D, "VAT"),
+		VAT_5_5(54L, "0.055", 0.055D, "VAT"),
+
 		VAT_SEC_0(110L, "ZeroPercent", 0.00D, "VAT_SECONDARY"),
 		VAT_SEC_1(120L, "OnePercent", 0.010D, "VAT_SECONDARY"),
 		VAT_SEC_1_5(125L, "OneDotFivePercent", 0.015D, "VAT_SECONDARY"),

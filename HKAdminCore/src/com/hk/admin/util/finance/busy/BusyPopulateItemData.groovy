@@ -4,6 +4,9 @@ import groovy.sql.Sql
 import org.slf4j.LoggerFactory
 import org.slf4j.Logger
 
+import java.sql.SQLException
+import java.util.regex.Pattern
+
 /**
  * Created by IntelliJ IDEA.
  * User: Tarun
@@ -47,9 +50,12 @@ public class BusyPopulateItemData {
           lastDate ->
           lastUpdateDate = lastDate.max_date;
       }
+
     if(lastUpdateDate == null){
       lastUpdateDate = "2009-01-01";
     }
+
+    logger.debug("last update date="+lastUpdateDate);
 
       def query = "INSERT INTO " + dbBusyName + "." +"item_detail(item_code ,item_name ,print_name ,parent_group ,unit,sale_price ,purchase_price ,mrp ,\
               tax_rate_local,tax_rate_central ,item_description_1 , item_description_2 ,item_description_3 ,item_description_4 ,                 \
@@ -94,7 +100,7 @@ public class BusyPopulateItemData {
                                                                                                                                                                                                                         \
       on in_view_pv_po_option.product_variant_id = pv.id                                                                                                                                                                 \
                                                                                                                                                                                                                         \
-      WHERE sk.update_date >${lastUpdateDate}                                                                                                                                                                          \
+      WHERE sk.update_date > '"+ lastUpdateDate +"'                                                                                                                                                                       \
                                                                                                                                                                                                                        \
       ON DUPLICATE KEY UPDATE                                                                                                                                                                                          \
       item_code=item_code ,                                                                                                                                                                                            \
@@ -122,11 +128,11 @@ public class BusyPopulateItemData {
       imported=0";
 
      try{
-      sql.executeInsert("""query""");
+         sql.executeInsert(query);
     }
       catch (Exception e) {
-
-        Logger.info("Unable to insert in  item: ",e);
-          }
+            logger.info("Unable to insert : "+e);
+        }
   }
-}
+
+ }

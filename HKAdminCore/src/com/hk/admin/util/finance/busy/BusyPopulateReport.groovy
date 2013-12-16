@@ -97,4 +97,36 @@ class BusyPopulateReport {
 
         return rtoCount;
     }
+
+    public long recordPiCount()
+    {
+        Long piCount = 0l;
+
+        busySql.eachRow("""
+                    select count(*) as pi_count
+                    from transaction_header
+                    where vch_type = 2;
+                      """){
+            latestcount ->
+                piCount = latestcount.pi_count;
+        }
+
+        return piCount;
+    }
+
+    public long recordPiReturnCount()
+    {
+        Long piReturnCount = 0l;
+
+        busySql.eachRow("""
+                    select count(*) as pi_return_count
+                    from transaction_header
+                    where vch_type = 10;
+                      """){
+            latestcount ->
+                piReturnCount = latestcount.pi_return_count;
+        }
+
+        return piReturnCount;
+    }
 }
