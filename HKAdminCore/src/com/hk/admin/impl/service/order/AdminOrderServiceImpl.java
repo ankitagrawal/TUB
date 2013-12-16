@@ -212,7 +212,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                   List<SkuItemLineItem> skuItemLineItemsToBeDeleted = new ArrayList<SkuItemLineItem>();
                   for (SkuItemCLI skuItemCLI : cartLineItem.getSkuItemCLIs()){
                       SkuItem skuItem = skuItemCLI.getSkuItem();
-                      skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                      skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN_Non_Saleable.getSkuItemStatus());
                       skuItemsToBeFreed.add(skuItem);
                       if(skuItemCLI.getSkuItemLineItems()!=null){
                       	skuItemLineItemsToBeDeleted.addAll(skuItemCLI.getSkuItemLineItems());
