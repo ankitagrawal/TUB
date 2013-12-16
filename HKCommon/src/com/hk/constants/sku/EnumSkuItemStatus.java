@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public enum EnumSkuItemStatus {
 
   Checked_IN(10L, "CHECKED IN"),
+	Checked_IN_Non_Saleable(15L,"CHECKED IN BUT NON SALEABLE"),
   Checked_OUT(20L, "CHECKED OUT"),
   Stock_Transfer_Out(30L, "Stock Transfer Out"),
   Damaged(40L, "Damaged"),
