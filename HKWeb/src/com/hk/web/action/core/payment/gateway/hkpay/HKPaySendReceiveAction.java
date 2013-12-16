@@ -117,11 +117,7 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
         String issuerId = getContext().getRequest().getParameter("issuerId");
         Gateway gateway = getGateway(getContext().getRequest().getParameter("gatewayId"));
 
-        StringBuffer paramsSB = new StringBuffer();
-        paramsSB.append("secretKey: " + secretKey).append("\n")
-                .append(getContext().getRequest().getParameterMap().toString());
-        logger.info("Response from the gateway " + gateway.getName() + " is: \n" + paramsSB.toString());
-
+        logger.info("Response from HKPAY " + getContext().getRequest().getParameterMap().toString());
 
         Resolution resolution = null;
         try {
@@ -159,8 +155,8 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
         try {
             gateway = EnumGateway.getGatewayFromId(Long.parseLong(gatewayId)).asGateway();
         } catch (Exception e) {
-            logger.info("Exception parsing gateway id in HKPaySendReceiveAction", e);
-            gateway = null;
+            logger.info("Exception parsing gateway id in HKPaySendReceiveAction. Setting as default HKPAY.", e);
+            gateway = EnumGateway.HKPay.asGateway();
         }
         return gateway;
     }
