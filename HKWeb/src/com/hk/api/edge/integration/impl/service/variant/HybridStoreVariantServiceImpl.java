@@ -77,7 +77,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     @Override
     public void syncStockOnEdge(VariantStockSyncRequest variantStockSyncRequest) {
 
-        logger.error("variant stock sync request sending " + variantStockSyncRequest.toString());
+        //logger.error("variant stock sync request sending " + variantStockSyncRequest.toString());
         URIBuilder builder = new URIBuilder().fromURI(ServiceEndPoints.SYNC + VARIANT_STOCK);
 
         HkHttpClient.executePostForObject(builder.getWebServiceUrl(), variantStockSyncRequest.getParameters(), null);
@@ -86,7 +86,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
     @Override
     @Transactional
     public void syncVariantSaveFromEdge(VariantSavedSyncRequest variantSavedSyncRequest) {
-        logger.error("variant save sync request recived for " + variantSavedSyncRequest.toString());
+        //logger.error("variant save sync request recived for " + variantSavedSyncRequest.toString());
         ProductVariant productVariant = getProductVariantService().getVariantById(variantSavedSyncRequest.getOldVariantId());
 
         try {
@@ -110,7 +110,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
                 productVariant.setDiscountPercent(variantSavedSyncRequest.getDiscount());
                 productVariant.setDeleted(variantSavedSyncRequest.isDeleted());
 
-                logger.error("variant save sync request recived 1 " + productVariant.isDeleted());
+                /*logger.error("variant save sync request recived 1 " + productVariant.isDeleted());*/
                 getBaseDao().save(productVariant);
 
                 product.setCodAllowed(variantSavedSyncRequest.isCodAllowed());
@@ -118,9 +118,9 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
                 product.setMaxDays(variantSavedSyncRequest.getMaxDispatchDays());
                 product.setMinDays(variantSavedSyncRequest.getMinDispatchDays());
 
-                logger.error("variant save sync request recived 2 " + product.isJit());
+                /*logger.error("variant save sync request recived 2 " + product.isJit());
                 logger.error("variant save sync request recived 3 " + product.getMaxDays());
-                logger.error("variant save sync request recived 4 " + product.getMinDays());
+                logger.error("variant save sync request recived 4 " + product.getMinDays());*/
 
                 boolean isProductDeleted = true;
                 for (ProductVariant productVariantTemp : product.getProductVariants()) {
@@ -137,22 +137,22 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
 
                 getBaseDao().save(product);
 
-                logger.error("variant save sync request recived 5 " + product.isJit());
+                /*logger.error("variant save sync request recived 5 " + product.isJit());
                 logger.error("variant save sync request recived 6 " + product.getMaxDays());
-                logger.error("variant save sync request recived 7 " + product.getMinDays());
+                logger.error("variant save sync request recived 7 " + product.getMinDays());*/
 
             }
         } catch (Throwable t) {
             logger.error("Error syncing save from edge", t);
         }
 
-        logger.error("variant save sync request finished for " + variantSavedSyncRequest.toString());
+        /*logger.error("variant save sync request finished for " + variantSavedSyncRequest.toString());*/
     }
 
     @Override
     @Transactional
     public void syncPricingFromEdge(VariantPricingSyncRequest variantPricingSyncRequest) {
-        logger.error("variant pricing sync request recived for " + variantPricingSyncRequest.toString());
+        /*logger.error("variant pricing sync request recived for " + variantPricingSyncRequest.toString());*/
         ProductVariant productVariant = getProductVariantService().getVariantById(variantPricingSyncRequest.getOldVariantId());
 
         if (productVariant != null) {
@@ -160,7 +160,7 @@ public class HybridStoreVariantServiceImpl implements HybridStoreVariantService,
             productVariant.setDiscountPercent(variantPricingSyncRequest.getDiscount());
             getBaseDao().save(productVariant);
         }
-        logger.error("variant pricing sync request completed for " + variantPricingSyncRequest.toString());
+        /*logger.error("variant pricing sync request completed for " + variantPricingSyncRequest.toString());*/
     }
 
     @Override
