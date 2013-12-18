@@ -21,7 +21,8 @@ public enum EnumOrderStatus {
     Lost(60L, "Lost"),
     PartiallyLost(70L, "Partially Lost"),
     SubscriptionInProgress(80L,"Subscription in Process"),
-    Cancelled(99L, "Cancelled");
+    Cancelled(99L, "Cancelled"),
+    Migrated(100L, "Migrated");
 
     private java.lang.String name;
 
