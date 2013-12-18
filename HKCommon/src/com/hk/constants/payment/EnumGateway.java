@@ -20,7 +20,8 @@ public enum EnumGateway {
     ICICI(100L, "Icici", 0.019D),
     PAYPAL(110L, "Paypal", 0.039D),
     EBS(90L, "Ebs", 0.02D),
-    CCAVENUE_DUMMY(1L, "CCAvenue Dummy", 0.0D);
+    CCAVENUE_DUMMY(1L, "CCAvenue Dummy", 0.0D),
+    HKPay(500L, "HKPay", 0.0D);
 
     private java.lang.String name;
     private java.lang.Long id;
@@ -80,7 +81,7 @@ public enum EnumGateway {
     }
 
     public static List<Long> getHKServiceEnabledGateways(){
-        return Arrays.asList(CITRUS.asGateway().getId(), EBS.asGateway().getId(), ICICI.asGateway().getId());
+        return Arrays.asList(CITRUS.asGateway().getId(), EBS.asGateway().getId(), ICICI.asGateway().getId()/*,HKPay.asGateway().getId()*/);
     }
 
     public static List<Gateway> getSeekGateways(){

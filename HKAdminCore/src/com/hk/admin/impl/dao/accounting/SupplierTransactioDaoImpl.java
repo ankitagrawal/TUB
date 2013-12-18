@@ -96,7 +96,7 @@ public class SupplierTransactioDaoImpl extends BaseDaoImpl implements SupplierTr
             supplierTransactionCriteria.add(Restrictions.le("date", endDate));
         }
 
-        supplierTransactionCriteria.addOrder(Order.asc("date"));
+        //supplierTransactionCriteria.addOrder(Order.asc("date"));
 
         return (List<SupplierTransaction>) findByCriteria(supplierTransactionCriteria);
     }

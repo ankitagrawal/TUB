@@ -52,7 +52,7 @@ public class HKStartupListener implements ServletContextListener {
         AppConstants.appBasePath = event.getServletContext().getRealPath("/");
 
         LoadPropertyService loadPropertyService = ServiceLocatorFactory.getService(LoadPropertyService.class);
-        
+
         AppConstants.isHybridRelease = loadPropertyService.isHybridRelease();
 
         /*

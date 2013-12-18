@@ -44,7 +44,7 @@ public abstract class BasePaymentGatewayWrapper<T extends BasePaymentGatewayWrap
      * returned is to the internal parameters map! As such any changed made to the Map will be reflected in the
      * Resolution, and any subsequent calls to addParameter(s) will be reflected in the Map.
      * </p>
-     * 
+     *
      * @return the Map of parameters for the resolution
      */
     public Map<String, Object> getParameters() {
@@ -139,7 +139,7 @@ public abstract class BasePaymentGatewayWrapper<T extends BasePaymentGatewayWrap
             if (paymentMethod.equals("null")){
                paymentMethod = null;
             }
-            
+
             String billingAddress = tokenizer.nextToken();
             if (!billingAddress.equals("null"))
                 billingAddressId = Long.parseLong(billingAddress);
@@ -147,4 +147,12 @@ public abstract class BasePaymentGatewayWrapper<T extends BasePaymentGatewayWrap
 
     }
 
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            sb.append("Key: " + entry.getKey() + " Value: " + entry.getValue()).append("\n");
+        }
+        return sb.toString();
+    }
 }

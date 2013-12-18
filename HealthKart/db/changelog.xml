@@ -14409,4 +14409,11 @@
     <changeSet author="abhay (generated)" id="1384775891669-6">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_report" constraintName="fk_user_report_user1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
     </changeSet>
+    <changeSet author="Shakti Singh (generated)" id="20130912-01">
+        <sql>
+            insert into gateway (id,name, active, priority) values(500,'HKPay', 0, 0);
+            insert into issuer (name, issuer_type, active,priority) values('Cash on Delivery', 'COD', 0 , 0);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
