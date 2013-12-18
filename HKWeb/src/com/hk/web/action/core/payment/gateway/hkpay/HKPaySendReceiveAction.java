@@ -165,6 +165,9 @@ public class HKPaySendReceiveAction extends BasePaymentGatewaySendReceiveAction<
                                        String gatewayOrderId, String orderId, String authStatus, String checkSum) throws HealthkartPaymentGatewayException {
         String newChecksum = getResponseChecksum(secretKey, accountId, Amount, gatewayOrderId, orderId, authStatus);
         if (!newChecksum.equals(checkSum)) {
+            logger.info("Checksum Mismatch For gateway order Id : " + gatewayOrderId);
+            String pass = secretKey + "|" + accountId + "|" + Amount + "|" + gatewayOrderId + "|" + orderId + "|" + authStatus;
+            logger.info("Checksum feed at HKR end " + pass);
             throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.CHECKSUM_MISMATCH);
         }
     }
