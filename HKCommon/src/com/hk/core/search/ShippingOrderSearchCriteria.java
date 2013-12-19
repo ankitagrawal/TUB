@@ -66,6 +66,8 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private boolean installable = false;
     private Date shippingOrderCreateDate;
 
+    private String variantId;
+
     public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
         this.searchForPrinting = searchForPrinting;
         return this;
@@ -363,6 +365,14 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
                 productCriteria.add(Restrictions.eq("installable", true));
             }
 
+        if (StringUtils.isNotBlank(variantId)) {
+          lineItemsCriteria = criteria.createCriteria("lineItems");
+          lineItemsCriteria.add(Restrictions.eq("qty", 1L));
+          skuCriteria = lineItemsCriteria.createCriteria("sku");
+          productVariantCriteria = skuCriteria.createCriteria("productVariant");
+          productVariantCriteria.add(Restrictions.eq("id", variantId));
+        }
+
         /*
         * paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
         * baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
@@ -446,4 +456,12 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 	public void setShippingOrderCreateDate(Date shippingOrderCreateDate) {
 		this.shippingOrderCreateDate = shippingOrderCreateDate;
 	}
+
+  public String getVariantId() {
+    return variantId;
+  }
+
+  public void setVariantId(String variantId) {
+    this.variantId = variantId;
+  }
 }

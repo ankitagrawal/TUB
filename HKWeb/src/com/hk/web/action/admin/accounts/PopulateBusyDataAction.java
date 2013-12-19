@@ -38,6 +38,8 @@ public class PopulateBusyDataAction extends BaseAction {
     private Long serviceSalesPopulated;
     private Long b2bSalesPopulated;
     private Long rtoPopulated;
+    private Long piPopulated;
+    private Long piReturnPopulated;
 
 
 	@DefaultHandler
@@ -176,12 +178,24 @@ public class PopulateBusyDataAction extends BaseAction {
 		try {
 			BusyPopulatePurchaseData busyPopulatePurchaseData = new BusyPopulatePurchaseData(dbHostName, dbName, dbUser, dbPassword, dbBusyName);
 
+            BusyPopulateReport busyPopulateReport = new BusyPopulateReport(dbHostName, dbUser, dbPassword, dbBusyName);
+
+            Long beforePopulateCount = busyPopulateReport.recordPiCount();
+            logger.info("PI count before populating ="+beforePopulateCount);
+
 			logger.info("Populating Purchases ");
 			busyPopulatePurchaseData.populatePurchaseData();
+
+            Long afterPopulateCount = busyPopulateReport.recordPiCount();
+            logger.info("PI count after populating ="+afterPopulateCount);
+
+            setPiPopulated(afterPopulateCount - beforePopulateCount);
+            logger.info("PI populated = "+getPiPopulated());
+
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);
 		}
-		addRedirectAlertMessage(new SimpleMessage("Busy purchases updated !!"));
+		addRedirectAlertMessage(new SimpleMessage("Busy purchases ["+getPiPopulated()+"] updated !!"));
 		return new RedirectResolution("/pages/admin/busyUpdates.jsp");
 	}
 
@@ -191,12 +205,24 @@ public class PopulateBusyDataAction extends BaseAction {
         try {
             BusyPopulatePurchaseReturn busyPopulatePurchaseReturn = new BusyPopulatePurchaseReturn(dbHostName, dbName, dbUser, dbPassword, dbBusyName);
 
-            logger.info("Populating Purchases ");
+            BusyPopulateReport busyPopulateReport = new BusyPopulateReport(dbHostName, dbUser, dbPassword, dbBusyName);
+
+            Long beforePopulateCount = busyPopulateReport.recordPiReturnCount();
+            logger.info("PI Return count before populating ="+beforePopulateCount);
+
+            logger.info("Populating Purchase Returns ");
             busyPopulatePurchaseReturn.populatePurchaseReturnData();
+
+            Long afterPopulateCount = busyPopulateReport.recordPiReturnCount();
+            logger.info("PI Return count after populating ="+afterPopulateCount);
+
+            setPiReturnPopulated(afterPopulateCount - beforePopulateCount);
+            logger.info("PI Returns populated = "+getPiReturnPopulated());
+
         } catch (Exception e) {
             logger.error("Unable to insert: ", e);
         }
-        addRedirectAlertMessage(new SimpleMessage("Busy purchases returns upadted !!"));
+        addRedirectAlertMessage(new SimpleMessage("Busy purchases returns ["+getPiReturnPopulated()+"] updated !!"));
         return new RedirectResolution("/pages/admin/busyUpdates.jsp");
     }
 
@@ -230,5 +256,21 @@ public class PopulateBusyDataAction extends BaseAction {
 
     public void setRtoPopulated(Long rtoPopulated) {
         this.rtoPopulated = rtoPopulated;
+    }
+
+    public Long getPiPopulated() {
+        return piPopulated;
+    }
+
+    public void setPiPopulated(Long piPopulated) {
+        this.piPopulated = piPopulated;
+    }
+
+    public Long getPiReturnPopulated() {
+        return piReturnPopulated;
+    }
+
+    public void setPiReturnPopulated(Long piReturnPopulated) {
+        this.piReturnPopulated = piReturnPopulated;
     }
 }
