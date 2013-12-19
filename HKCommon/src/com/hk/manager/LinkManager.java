@@ -176,6 +176,11 @@ public class LinkManager {
     return getUrlFromResolution(redirectResolution);
   }
 
+    public String getPaymentGatewayReturnUrl() {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/gateway/hkpay/HKPaySendReceive.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
   public String getCodConverterLink(Order order) {
     RedirectResolution redirectResolution = new RedirectResolution("/core/payment/RegisterOnlinePayment.action").addParameter("order", order);
     return getUrlFromResolution(redirectResolution);

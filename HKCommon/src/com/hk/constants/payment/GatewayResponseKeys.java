@@ -302,5 +302,12 @@ public class GatewayResponseKeys {
 
     }
 
+    public class HKPayConstants {
+        public static final String secureHKPay = "secureHKPay";
+        public static final String accountId = "accountId";
+        public static final String secret_key = "secret_key";
+        public static final String hkpayUrl = "hkpayUrl";
+    }
+
 
 }

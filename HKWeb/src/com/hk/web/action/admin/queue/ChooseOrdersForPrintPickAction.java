@@ -267,7 +267,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             variantsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForVariant(cycleCountDtoList);
         }
         for (ShippingOrder shippingOrder : shippingOrdersTempList) {
-            if (shippingOrdersList.size() == 20) {
+            if (shippingOrdersList.size() == getPerPageDefault()) {
                 break;
             }
             boolean shouldAdd = true;
@@ -302,7 +302,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     }
 
     public int getPerPageDefault() {
-        return 20;
+        return 50;
     }
 
     public int getPageCount() {

@@ -4,7 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
-import com.hk.constants.order.EnumBookingType;
+import com.hk.constants.shippingOrder.EnumBookingType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemOwner;

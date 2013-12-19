@@ -22,6 +22,7 @@ public class EbsPaymentGatewayWrapper extends BasePaymentGatewayWrapper<EbsPayme
 
     private static Logger logger = LoggerFactory.getLogger(EbsPaymentGatewayWrapper.class);
 
+    String url;
 
     //request paramters
     public static final String secret_key = "secret_key";
@@ -102,6 +103,7 @@ public class EbsPaymentGatewayWrapper extends BasePaymentGatewayWrapper<EbsPayme
 
     @Override
     public void setGatewayUrl(String url) {
+        this.url = url;
     }
 
 
