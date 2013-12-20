@@ -37,7 +37,7 @@
          <script language=javascript type=text/javascript>
            $(document).ready(function() {
              $('.invBarcode').focus();
-             $('.invBarcode').change(function() {
+             $('.invBarcode').live(function() {
                var formName = $('#invBarcodeCheckinForm');
                var formURL = formName.attr('action');
                formName.attr('action', formURL + "?checkinInvBarcode=");
