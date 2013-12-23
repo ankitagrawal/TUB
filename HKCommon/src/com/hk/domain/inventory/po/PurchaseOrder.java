@@ -146,10 +146,12 @@ public class PurchaseOrder implements java.io.Serializable {
 	private int noOfSku;
 	
 	@Transient
-	private Long extraInventoryId; 
-	
-	@Column(name="bright_so_id")
-	private Long brightSoId;
+	private Long extraInventoryId;
+
+
+
+    @Column(name="bright_so_gateway_id")
+	private String brightSoGwId;
 
 	public Long getId() {
 		return id;
@@ -403,13 +405,13 @@ public class PurchaseOrder implements java.io.Serializable {
 		this.purchaseOrderType = purchaseOrderType;
 	}
 
-	public Long getBrightSoId() {
-		return brightSoId;
-	}
+    public String getBrightSoGwId() {
+        return brightSoGwId;
+    }
 
-	public void setBrightSoId(Long brightSoId) {
-		this.brightSoId = brightSoId;
-	}
+    public void setBrightSoGwId(String brightSoGwId) {
+        this.brightSoGwId = brightSoGwId;
+    }
   
 }
 

@@ -14563,11 +14563,11 @@
     <changeSet author="abhay (generated)" id="1384775891669-6">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_report" constraintName="fk_user_report_user1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user"/>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="20131021-0809">
+    <!--<changeSet author="Nihal (generated)" id="20131021-0809">
         <addColumn tableName="purchase_order">
             <column name="bright_so_id" type="INT"/>
         </addColumn>
-    </changeSet>
+    </changeSet>-->
     <changeSet author="Nihal (generated)" id="1377076644551-2">
         <addColumn tableName="shipping_order">
             <column name="shipping_order_booking_type" type="INT"/>
@@ -14589,5 +14589,9 @@
             insert into issuer (name, issuer_type, active,priority) values('Cash on Delivery', 'COD', 0 , 0);
         </sql>
     </changeSet>
-
+    <changeSet author="Nihal (generated)" id="20131021-0815">
+        <addColumn tableName="purchase_order">
+            <column name="bright_so_gateway_id" type="VARCHAR(30)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

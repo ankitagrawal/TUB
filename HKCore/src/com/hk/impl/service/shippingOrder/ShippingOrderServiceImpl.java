@@ -494,15 +494,17 @@ if(shippingOrder.getShippingOrderStatus().getId() >= EnumShippingOrderStatus.SO_
       return EnumBookingType.SINGLE_BOOKED.getId();
     }
 
-    for (LineItem lineItem : shippingOrder.getLineItems()){
-        CartLineItem cartLineItem =   lineItem.getCartLineItem();
-       for (SkuItemCLI sicli : cartLineItem.getSkuItemCLIs()){
-         if (!(sicli.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId()))){
-           shippingOrder.setShippingOrderBookingTypeId(EnumBookingType.PARTIAL_BOOKED.getId());
-            return EnumBookingType.PARTIAL_BOOKED.getId();
-         }
-       }
-    }
+		for (LineItem lineItem : shippingOrder.getLineItems()) {
+			CartLineItem cartLineItem = lineItem.getCartLineItem();
+			if (cartLineItem.getSkuItemCLIs()!=null && cartLineItem.getSkuItemCLIs().size()>0) {
+				for (SkuItemCLI sicli : cartLineItem.getSkuItemCLIs()) {
+					if (!(sicli.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId()))) {
+						shippingOrder.setShippingOrderBookingTypeId(EnumBookingType.PARTIAL_BOOKED.getId());
+						return EnumBookingType.PARTIAL_BOOKED.getId();
+					}
+				}
+			}
+		}
     shippingOrder.setShippingOrderBookingTypeId(EnumBookingType.COMPLETE_BOOKED.getId());
     return EnumBookingType.COMPLETE_BOOKED.getId();
   }
