@@ -48,20 +48,20 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
 	}
 
 	public List<PurchaseOrder> searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy,
-			String invoiceNumber, String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, Long brightSoId, Date startDate, Date endDate, String poType) {
+			String invoiceNumber, String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, String brightSoGwId, Date startDate, Date endDate, String poType) {
 		return findByCriteria(getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName,
-				warehouse, extraInventoryCreated, brightSoId, startDate, endDate, poType));
+				warehouse, extraInventoryCreated, brightSoGwId, startDate, endDate, poType));
 	}
 
 	public Page searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-			String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, Long brightSoId, Date startDate, Date endDate, String poType, int pageNo, int perPage) {
+			String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, String brightSoGwId, Date startDate, Date endDate, String poType, int pageNo, int perPage) {
 		return list(
 				getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse,
-						extraInventoryCreated, brightSoId, startDate, endDate, poType), pageNo, perPage);
+						extraInventoryCreated, brightSoGwId, startDate, endDate, poType), pageNo, perPage);
 	}
 
 	private DetachedCriteria getPurchaseOrderCriteria(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy,
-			String invoiceNumber, String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, Long brightSoId, Date startDate, Date endDate, String poType) {
+			String invoiceNumber, String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, String brightSoGwId, Date startDate, Date endDate, String poType) {
 		DetachedCriteria purchaseOrderCriteria = DetachedCriteria.forClass(PurchaseOrder.class);
 		DetachedCriteria supplierCriteria = null;
 		if (purchaseOrder != null) {
@@ -107,8 +107,8 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
         if(startDate != null && endDate != null){
             purchaseOrderCriteria.add(Restrictions.between("createDate",startDate, endDate));
         }
-		if (brightSoId != null) {
-			purchaseOrderCriteria.add(Restrictions.eq("brightSoId", brightSoId));
+		if (brightSoGwId != null) {
+			purchaseOrderCriteria.add(Restrictions.eq("brightSoGwId", brightSoGwId));
 		}
 
 		purchaseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));

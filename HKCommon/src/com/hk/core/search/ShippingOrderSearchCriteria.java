@@ -66,7 +66,6 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 	private boolean containsJitProducts = false;
 	private boolean installable = false;
 	private Date shippingOrderCreateDate;
-	private Long brightSoId;
 
     public String getBrightSoGatewayId() {
         return brightSoGatewayId;
@@ -469,11 +468,5 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 		this.shippingOrderCreateDate = shippingOrderCreateDate;
 	}
 
-	public Long getBrightSoId() {
-		return brightSoId;
-	}
 
-	public void setBrightSoId(Long brightSoId) {
-		this.brightSoId = brightSoId;
-	}
 }

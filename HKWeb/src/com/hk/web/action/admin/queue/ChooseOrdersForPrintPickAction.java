@@ -76,15 +76,8 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     private Date paymentEndDate;
     private Date endTargetDispatchDate;
     private Date startTargetDispatchDate;
-    private Long brightSoId;
 
-    public String getBrightGatewayId() {
-        return brightGatewayId;
-    }
 
-    public void setBrightGatewayId(String brightGatewayId) {
-        this.brightGatewayId = brightGatewayId;
-    }
 
     private String brightGatewayId;
 
@@ -191,9 +184,6 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             } 
             if (category != null) {
                 shippingOrderSearchCriteria.setBasketCategory(category.getName()).setBaseGatewayOrderId(baseGatewayOrderId).setGatewayOrderId(gatewayOrderId);
-            }
-            if(brightSoId != null){
-            	shippingOrderSearchCriteria.setBrightSoId(brightSoId);
             }
             if(brightGatewayId != null){
                 shippingOrderSearchCriteria.setBrightSoGatewayId(brightGatewayId);
@@ -459,11 +449,11 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         this.startTargetDispatchDate = startTargetDispatchDate;
     }
 
-		public Long getBrightSoId() {
-			return brightSoId;
-		}
+    public String getBrightGatewayId() {
+        return brightGatewayId;
+    }
 
-		public void setBrightSoId(Long brightSoId) {
-			this.brightSoId = brightSoId;
-		}
+    public void setBrightGatewayId(String brightGatewayId) {
+        this.brightGatewayId = brightGatewayId;
+    }
 }

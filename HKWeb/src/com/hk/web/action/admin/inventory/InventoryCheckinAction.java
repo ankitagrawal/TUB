@@ -419,8 +419,8 @@ public class InventoryCheckinAction extends BaseAction {
 					return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 				}
 			}
-			Long foreignShippingOrderId = skuItem.getForeignSkuItemCLI().getForeignShippingOrderId();
-			if (foreignShippingOrderId != null && foreignShippingOrderId.toString().equals(grn.getInvoiceNumber())) {
+			String foreignShippingOrderGatewayId = skuItem.getForeignSkuItemCLI().getForeignShippingOrderGatewayId();
+			if (foreignShippingOrderGatewayId != null && foreignShippingOrderGatewayId.equals(grn.getInvoiceNumber())) {
 				adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, grnLineItem, null, null, EnumSkuItemStatus.BOOKED, EnumSkuItemOwner.SELF,
 						getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), 1l, loggedOnUser);
 				skuGroupService.updateBookingAfterCheckin(skuItem, skuItem.getSkuGroup());
