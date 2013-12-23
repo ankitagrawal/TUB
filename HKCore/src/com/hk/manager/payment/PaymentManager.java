@@ -4,6 +4,8 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumGateway;
+import com.hk.constants.payment.EnumIssuerType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.core.PaymentMode;
@@ -11,6 +13,7 @@ import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
+import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.BillingAddress;
@@ -24,8 +27,13 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.util.TokenUtils;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +78,8 @@ public class PaymentManager {
     EmailManager                   emailManager;
     @Autowired
     InventoryHealthService         inventoryHealthService;
+    @Autowired
+    GatewayIssuerMappingService gatewayIssuerMappingService;
 
     @Value("#{hkEnvProps['" + Keys.Env.hybridRelease + "']}")
     private boolean                hybridRelease;
