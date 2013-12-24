@@ -962,7 +962,7 @@ public class OrderServiceImpl implements OrderService {
 				}
 				String url = brightlifecareRestUrl + "product/variant/updatePaymentStatusForBookingOnBright/";
 				Gson gson = new Gson();
-				String json = gson.toJson(Arrays.asList(fsicliIds));
+				String json = gson.toJson(fsicliIds);
 				ClientRequest request = new ClientRequest(url);
 				request.body("application/json", json);
 				ClientResponse response = request.post();
