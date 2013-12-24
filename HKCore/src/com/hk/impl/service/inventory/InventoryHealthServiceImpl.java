@@ -777,6 +777,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             hkapiBookingInfo.setMrp(foreignSkuItemCLI.getAquaMrp());
             hkapiBookingInfo.setFcCode(fulfilmentCenterCode);
             hkapiBookingInfos.add(hkapiBookingInfo);
+            hkapiBookingInfo.setProcessed(foreignSkuItemCLI.getProcessedStatus());
             fsicliId = foreignSkuItemCLI.getId();
 
         }

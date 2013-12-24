@@ -21,6 +21,7 @@ public class HKAPIBookingInfo {
   private Long fsiCLIId;
   private String fcCode;
   private Long bkTyId;
+  private String processed;
 
   public Double getMrp() {
     return mrp;
@@ -117,4 +118,13 @@ public class HKAPIBookingInfo {
   public void setBkTyId(Long bkTyId) {
     this.bkTyId = bkTyId;
   }
+
+	public String getProcessed() {
+		return processed;
+	}
+
+	public void setProcessed(String processed) {
+		this.processed = processed;
+	}
+  
 }
