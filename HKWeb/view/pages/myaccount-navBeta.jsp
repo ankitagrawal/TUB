@@ -30,14 +30,14 @@
               title="My Addresses" > Addresses</s:link>
         <span>&raquo;</span>
     </li>
-      <shiro:hasAnyRoles name="<%=RoleConstants.AFFILIATE%>">
+      <%--<shiro:hasAnyRoles name="<%=RoleConstants.AFFILIATE%>">
       <li id="affiliateAccountLink">
         <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" title="Affiliate Account" >
             Affiliate Account </s:link>
           <span>&raquo;</span>
       </li>
         </shiro:hasAnyRoles>
-        <shiro:hasRole name="<%=RoleConstants.HK_AFFILIATE%>">
+      <shiro:hasRole name="<%=RoleConstants.HK_AFFILIATE%>">
         <li id="affiliateShowCouponScreen">
             <s:link beanclass="com.hk.web.action.core.affiliate.AffiliateAccountAction" event="showCouponScreen" title="Download Coupon Codes" >
                 Affiliate Program
@@ -57,6 +57,6 @@
             Insights </s:link>
           <span>&raquo;</span>
       </li>
-    </shiro:hasRole>
+    </shiro:hasRole>--%>
   </ul>
 </fieldset>
