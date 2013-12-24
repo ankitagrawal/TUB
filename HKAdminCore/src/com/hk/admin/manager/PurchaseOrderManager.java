@@ -63,7 +63,7 @@ public class PurchaseOrderManager {
 	private List<PoLineItem> poLineItemList = new ArrayList<PoLineItem>();
 	public static final String PO_DETAILS = "PO_DETAILS";
 	public static final String ITEM = "ITEM";
-	public static final String VARIANT_ID = "VARIANT ID";
+	public static final String VARIANT_ID = "VARIANT_ID";
 	public static final String VARIANT_NAME = "VARIANT NAME";
 	public static final String UPC = "UPC";
 	private static final String QTY = "QTY";
