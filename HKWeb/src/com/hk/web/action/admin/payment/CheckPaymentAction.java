@@ -348,6 +348,7 @@ public class CheckPaymentAction extends BaseAction {
         order.setConfirmationDate(new Date());
         orderService.save(order);
 //              orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+        orderService.updatePaymentStatusForBrightBooking(order);
         orderService.sendEmailToServiceProvidersForOrder(order);
 //        }
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
@@ -417,6 +418,7 @@ public class CheckPaymentAction extends BaseAction {
           order.setConfirmationDate(new Date());
           orderService.save(order);
 //                  orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+          orderService.updatePaymentStatusForBrightBooking(order);
           orderService.sendEmailToServiceProvidersForOrder(order);
 //        }
           addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
