@@ -948,7 +948,7 @@ public class OrderServiceImpl implements OrderService {
 		try {
 			String url = brightlifecareRestUrl + "product/variant/updatePaymentStatusForBookingOnBright/" + foreignSkuItemCLI.getId();
 			ClientRequest request = new ClientRequest(url);
-			ClientResponse response = request.get();
+			ClientResponse response = request.post();
 			int status = response.getStatus();
 			if (status == 200) {
 				String data = (String) response.getEntity(String.class);
