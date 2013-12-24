@@ -190,8 +190,10 @@
 		        </div>
                 
 		        <br/>
+                <c:if test="${purchaseOrder.supplier.active}">
 		                    (<s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO
 			                    <s:param name="supplier" value="${purchaseOrder.supplier.id}"/></s:link>)
+                </c:if>
 	        </td>
             <td>
                 <c:if test="${purchaseOrder.extraInventoryCreated}">

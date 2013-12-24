@@ -389,13 +389,13 @@ $(document).ready(function() {
                                 <td><s:checkbox name="grn.reconciled"/></td>--%>
         <td>Status</td>
         <td>${pa.grn.grnStatus.name}
-            <shiro:hasRole name="<%=RoleConstants.GOD%>">
+            <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN_STATUS%>">
                 <s:select name="grn.grnStatus" value="${pa.grn.grnStatus.id}">
                     <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                serviceProperty="grnStatusList"
                                                value="id" label="name"/>
                 </s:select>
-            </shiro:hasRole>
+            </shiro:hasPermission>
         </td>
         <td>Remarks</td>
         <td><s:textarea name="grn.remarks" style="height:50px;"/></td>

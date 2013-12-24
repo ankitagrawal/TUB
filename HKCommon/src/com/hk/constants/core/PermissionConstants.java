@@ -202,4 +202,6 @@ public class PermissionConstants {
 
     public static final String MANAGE_REVERSE_ORDER = "MANAGE_REVERSE_ORDER";
     public static final String OUTWARD_VALIDATE_SO = "OUTWARD_VALIDATE_SO";
+    public static final String EDIT_GRN_STATUS   =   "EDIT_GRN_STATUS";
+    public static final String OLD_REPLACEMENT_ORDER_CHANGE= "OLD_REPLACEMENT_ORDER_CHANGE";
 }

@@ -4,13 +4,13 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.payment.*;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
+import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.BillingAddress;
@@ -24,8 +24,12 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.util.TokenUtils;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +39,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -69,6 +74,8 @@ public class PaymentManager {
     EmailManager                   emailManager;
     @Autowired
     InventoryHealthService         inventoryHealthService;
+    @Autowired
+    GatewayIssuerMappingService gatewayIssuerMappingService;
 
     @Value("#{hkEnvProps['" + Keys.Env.hybridRelease + "']}")
     private boolean                hybridRelease;
@@ -81,6 +88,8 @@ public class PaymentManager {
     private Long                   defaultGateway;
     @Value("#{hkEnvProps['" + Keys.Env.codRoute + "']}")
     private String                 codRoute;
+    @Value("#{hkEnvProps['" + Keys.Env.hkpayUrl + "']}")
+    private String hkPayUrl;
 
     @Autowired
     private PaymentDao             paymentDao;
@@ -150,7 +159,8 @@ public class PaymentManager {
      * @return
      * @param billingAddress
      */
-    public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, Gateway gateway, Issuer issuer, BillingAddress billingAddress) {
+    public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr,
+                                    Gateway gateway, Issuer issuer, BillingAddress billingAddress) {
         Payment payment = new Payment();
         payment.setAmount(order.getAmount());
         payment.setOrder(order);
@@ -286,6 +296,46 @@ public class PaymentManager {
             order = processOrder(payment);
         }
         return order;
+    }
+
+    public Order success(String gatewayOrderId,String hkPayRefId, String gatewayReferenceId,
+                         String rrn, String responseMessage, String authIdCode,Gateway gateway, Boolean shouldCodCall) {
+
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+
+        Order order = null;
+        // if payment type is full, then send order to processing also, else just accept and update payment status
+        if (payment != null) {
+            payment.setGatewayOrderId(hkPayRefId);
+            if (gateway != null) {
+                payment.setGateway(gateway);
+            }
+            if (payment.getPaymentDate() == null) {
+                payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            }
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.SUCCESS));
+            payment.setResponseMessage(responseMessage);
+            payment.setAuthIdCode(authIdCode);
+            payment.setRrn(rrn);
+            if (EnumIssuerType.COD.getId().equalsIgnoreCase(payment.getIssuer().getIssuerType())) {
+                Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
+                if (orderCount != null && orderCount >= 2) {
+                    payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
+                } else {
+                    payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+                }
+            }
+            order = processOrder(payment);
+
+            if (EnumIssuerType.COD.getId().equalsIgnoreCase(payment.getIssuer().getIssuerType())) {
+                createUserCodCall(order);
+                pushCODToThirdParty(shouldCodCall, order.getPayment());
+            }
+        }
+        orderEventPublisher.publishOrderPlacedEvent(order);
+        return order;
+
     }
 
     public Order success(String gatewayOrderId, String gatewayReferenceId, String rrn, String responseMessage, String authIdCode) {
@@ -442,6 +492,20 @@ public class PaymentManager {
         return order;
     }
 
+    public Order pendingApproval(String gatewayOrderId,String hkPayRefId, String gatewayReferenceId, Gateway gateway) {
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+        Order order = null;
+        if (payment != null) {
+            // setting the new gatewayOrderId
+            payment.setGatewayOrderId(hkPayRefId);
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setGateway(gateway);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+            order = authPending(gatewayOrderId, gatewayReferenceId, null, null, null, null, null);
+        }
+        return order;
+    }
+
     public Payment fail(String gatewayOrderId) {
         return fail(gatewayOrderId, null, null);
     }
@@ -452,6 +516,23 @@ public class PaymentManager {
         if (payment != null) {
             initiatePaymentFailureCall(payment.getOrder());
             payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setResponseMessage(responseMessage);
+            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.FAILURE));
+            payment = getPaymentService().save(payment);
+        }
+        return payment;
+    }
+
+    @Transactional
+    public Payment fail(String gatewayOrderId, String hkpayRefId, String gatewayReferenceId, String responseMessage, Gateway gateway) {
+        Payment payment = getPaymentService().findByGatewayOrderId(gatewayOrderId);
+        if (payment != null) {
+            initiatePaymentFailureCall(payment.getOrder());
+            payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+            // setting the new gatewayOrderId
+            payment.setGatewayOrderId(hkpayRefId);
+            payment.setGateway(gateway);
             payment.setGatewayReferenceId(gatewayReferenceId);
             payment.setResponseMessage(responseMessage);
             payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.FAILURE));
@@ -538,6 +619,41 @@ public class PaymentManager {
      * if(gateway!= null && EnumGateway.getHKServiceEnabledGateways().contains(gateway.getId())){ hkPaymentService =
      * ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class); } return hkPaymentService; }
      */
+
+
+    public boolean isHKPayWorking() throws Exception {
+        boolean isWorking = false;
+        HttpClient httpClient = new HttpClient();
+        GetMethod getMethod = new GetMethod(hkPayUrl);
+        int status = httpClient.executeMethod(getMethod);
+        if (HttpStatus.SC_OK == status) {
+            logger.info("HKPay is live");
+            isWorking = true;
+        }
+        return isWorking;
+    }
+
+    public boolean isCodMappingExists(Issuer issuer) {
+        boolean isCodMappingExists=false;
+        Gateway gateway = EnumGateway.HKPay.asGateway();
+        GatewayIssuerMapping gatewayIssuerMapping= gatewayIssuerMappingService.getGatewayIssuerMapping(issuer, gateway, true);
+        if (gatewayIssuerMapping != null && gatewayIssuerMapping.getPriority() > 0) {
+            isCodMappingExists = true;
+        }
+        return isCodMappingExists;
+    }
+
+    /*
+    * utility is made to make HKPAY work for COD
+    * */
+    public void updateCodPayment(Payment payment, String codContactName, String codContactNumber) {
+        if (payment != null) {
+            payment.setPaymentMode(EnumPaymentMode.COD.asPaymenMode());
+            payment.setContactName(codContactName);
+            payment.setContactNumber(codContactNumber);
+            paymentDao.save(payment);
+        }
+    }
 
     public boolean verifyPaymentStatus(PaymentStatus changedStatus, PaymentStatus oldStatus) {
         return oldStatus.getId().equals(changedStatus.getId());

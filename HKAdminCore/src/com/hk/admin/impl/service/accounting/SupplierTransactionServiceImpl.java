@@ -107,7 +107,7 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
     public SupplierTransaction createSupplierTransaction(Supplier supplier, SupplierTransactionType supplierTransactionType, Double amount, Date date,
                                                          String busyPaymentId, Double busySupplierBalance, String narration) {
         SupplierTransaction supplierTransaction;
-        supplierTransaction = getSupplierTransactionFromBusyPaymentId(busyPaymentId);
+        supplierTransaction = getSupplierTransactionFromBusyPaymentId(supplier, busyPaymentId);
         if(supplierTransaction == null){
             supplierTransaction = new SupplierTransaction();
             supplierTransaction.setSupplier(supplier);
@@ -134,6 +134,11 @@ public class SupplierTransactionServiceImpl implements SupplierTransactionServic
     public SupplierTransaction getSupplierTransactionFromBusyPaymentId(String busyPaymentId) {
         return getSupplierTransactionDao().getSupplierTransactionFromBusyPaymentId(busyPaymentId);
     }
+
+    public SupplierTransaction getSupplierTransactionFromBusyPaymentId(Supplier supplier, String busyPaymentId) {
+        return getSupplierTransactionDao().getSupplierTransactionFromBusyPaymentId(supplier, busyPaymentId);
+    }
+
 
     @Override
     public SupplierTransaction getLastTransactionForSupplier(Supplier supplier) {

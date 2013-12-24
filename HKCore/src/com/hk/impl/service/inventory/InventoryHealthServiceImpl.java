@@ -13,6 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
@@ -21,6 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -48,6 +53,7 @@ import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.pact.dao.order.cartLineItem.CartLineItemDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.sku.SkuItemDao;
+import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.WarehouseService;
@@ -57,8 +63,6 @@ import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.pact.dao.sku.SkuItemLineItemDao;
-
 
 @Service
 public class InventoryHealthServiceImpl implements InventoryHealthService {
@@ -88,13 +92,16 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
     ShippingOrderService              shippingOrderService;
 
+    private ExecutorService           adminVariantSyncExecutorService = Executors.newFixedThreadPool(40);
+
     private SkuItemLineItemDao        skuItemLineItemDao;
 
-    private Logger                    logger             = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
+    private Logger                    logger                          = LoggerFactory.getLogger(InventoryHealthServiceImpl.class);
 
-    private static final String       bookedInventorySql = "select a.marked_price as mrp, sum(a.qty) as qty"
-                                                                 + " from cart_line_item as a inner join base_order as b on a.order_id = b.id"
-                                                                 + " where a.product_variant_id = :pvId " + " and b.order_status_id in (:statusIds) " + " group by a.marked_price";
+    private static final String       bookedInventorySql              = "select a.marked_price as mrp, sum(a.qty) as qty"
+                                                                              + " from cart_line_item as a inner join base_order as b on a.order_id = b.id"
+                                                                              + " where a.product_variant_id = :pvId " + " and b.order_status_id in (:statusIds) "
+                                                                              + " group by a.marked_price";
 
     private Map<Double, Long> getBookedInventoryQty(ProductVariant productVariant) {
         String sql = bookedInventorySql;
@@ -505,6 +512,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         return list.get(list.size() - 1);
     }
 
+    private void updateVariantInfoOnEdge(String productVariantId) {
+        ProductVariant productVariant = productVariantService.getVariantById(productVariantId);
+        updateVariantInfoOnEdge(productVariant);
+    }
+
     private void updateVariantInfoOnEdge(ProductVariant productVariant) {
         /* if (AppConstants.isHybridRelease) { */
         VariantStockSyncRequest variantStockSyncRequest = new VariantStockSyncRequest();
@@ -647,6 +659,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
 
     public void inventoryHealthCheck(ProductVariant productVariant) {
+        final String productVariantIdToSync = productVariant.getId();
         InventoryService inventoryManageService = ServiceLocatorFactory.getService(InventoryService.class);
         Long availableUnbookedInventory = inventoryManageService.getAvailableUnBookedInventory(productVariant);
 
@@ -689,7 +702,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
                 if (availableUnBookedInvnListToUpdate.size() > 0) {
                     updateVariantInfo(productVariant, availableUnBookedInvnListToUpdate);
-                    updateVariantInfoOnEdge(productVariant);
+                    // updateVariantInfoOnEdge(productVariant);
                 }
             }
         } else {
@@ -705,7 +718,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             }
 
             getBaseDao().save(productVariant);
-            updateVariantInfoOnEdge(productVariant);
+            // updateVariantInfoOnEdge(productVariant);
 
             List<ProductVariant> inStockVariants = product.getInStockVariants();
             if (inStockVariants != null && inStockVariants.isEmpty()) {
@@ -715,6 +728,23 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             }
             getBaseDao().save(product);
         }
+
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+
+            @Override
+            public void afterCompletion(int status) {
+                logger.error("Going to call edge from IHC for" + productVariantIdToSync);
+                if (status == TransactionSynchronization.STATUS_COMMITTED) {
+                    adminVariantSyncExecutorService.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            logger.error("actual  call to edge from IHC for" + productVariantIdToSync);
+                            updateVariantInfoOnEdge(productVariantIdToSync);
+                        }
+                    });
+                }
+            }
+        });
 
     }
 

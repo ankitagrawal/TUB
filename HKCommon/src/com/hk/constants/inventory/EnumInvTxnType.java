@@ -42,8 +42,11 @@ public enum EnumInvTxnType {
     REVERSE_PICKUP_INVENTORY_CHECKIN(270L, "Reverse Pickup Inventory CheckIn"),
     RV_SUBTRACT_DAMAGE_LOGISTICS(280L, "RV Subtract Damage Logistics"),
     RV_ADD_VENDOR_REPLACEMENT(290L,"RV Add Vendor Replacement"),
-    RV_ADD_VENDOR_REJECTED(300L,"RV Add Vendor Rejected")
-
+    RV_ADD_VENDOR_REJECTED(300L,"RV Add Vendor Rejected"),
+    RV_ADD_FOUND_ADD(310L,"RV Add Found Add"),
+    RV_SUBSTRACT_NEAR_EXPIRY(320L,"RV Substract Near Expiry"),
+    RV_AUDIT_ADD(330L,"RV Audit Add"),
+    RV_AUDIT_SUBSTRACT(340L,"RV Audit Substract")
   ;
 
 

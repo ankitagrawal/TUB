@@ -4,11 +4,11 @@ import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.clm.CLMConstants;
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.RoleConstants;
-import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.user.EnumEmailSubscriptions;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.loyaltypg.UserBadgeInfo;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointTxn;
@@ -17,7 +17,6 @@ import com.hk.domain.queue.Bucket;
 import com.hk.domain.store.Store;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.service.UserService;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
@@ -146,6 +145,14 @@ public class User {
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Order> orders = new ArrayList<Order>();
+
+    @JsonSkip
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    private UserBadgeInfo userBadgeInfo;
+
+    @JsonSkip
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    private UserReport report;
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
@@ -531,6 +538,22 @@ public class User {
         return id.hashCode();
     }
 
+    public UserBadgeInfo getUserBadgeInfo() {
+        return userBadgeInfo;
+    }
+
+    public void setUserBadgeInfo(UserBadgeInfo userBadgeInfo) {
+        this.userBadgeInfo = userBadgeInfo;
+    }
+
+    public UserReport getReport() {
+        return report;
+    }
+
+    public void setReport(UserReport report) {
+        this.report = report;
+    }
+
     public List<Bucket> getBuckets() {
         return buckets;
     }
@@ -539,14 +562,14 @@ public class User {
         this.buckets = buckets;
     }
 
-    public Integer getOrderCount(){
-      int orderCount = 0;
-      //TODO: implement this correctly Lazy init exception
+    public Integer getOrderCount() {
+        int orderCount = 0;
+        //TODO: implement this correctly Lazy init exception
       /*for(Order order : this.orders){
          if(order.getOrderStatus().getId().equals(EnumOrderStatus.Delivered.getId())){
            orderCount++;
          }
       }*/
-      return orderCount;
+        return orderCount;
     }
 }

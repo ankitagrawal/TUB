@@ -573,14 +573,14 @@
 
 <c:if test="${bep.toBeEditedOptions.options['productVariantOutOfStock']}">
   <td width="50px" align="right">
-    <c:choose>
-      <c:when test="${!variant.product.jit}">
+    <%--<c:choose>
+      <c:when test="${!variant.product.jit}">--%>
         ${variant.outOfStock}
-      </c:when>
+      <%--</c:when>
       <c:otherwise>
         <s:checkbox name="products[${ctr.index}].productVariants[${ctrVariant.index}].outOfStock"/>
       </c:otherwise>
-    </c:choose>
+    </c:choose>--%>
   </td>
 </c:if>
 

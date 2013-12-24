@@ -15,6 +15,8 @@ public interface SupplierTransactionDao extends BaseDao {
 
     public SupplierTransaction getSupplierTransactionFromBusyPaymentId(String busyPaymentId);
 
+    public SupplierTransaction getSupplierTransactionFromBusyPaymentId(Supplier supplier, String busyPaymentId);
+
     public SupplierTransaction getSupplierTransactionFromPurchaseInvoice(PurchaseInvoice purchaseInvoice);
 
     public SupplierTransaction getSupplierTransactionFromDebitNote(DebitNote debitNote);

@@ -11,6 +11,7 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.courier.EnumPickupStatus" %>
+<%@ page import="com.hk.constants.inventory.EnumDebitNoteStatus" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.DebitNoteAction" var="pa"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <%
@@ -364,8 +365,10 @@
                 <td><s:checkbox name="debitNote.isDebitToSupplier"/></td> -->
                 <td>Status</td>
                 <td><s:select name="debitNote.debitNoteStatus" id="debitNoteStatusId" value="${pa.debitNote.debitNoteStatus.id}">
-                    <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="debitNoteStatusList"
-                                               value="id" label="name"/>
+                    <c:forEach items="<%=EnumDebitNoteStatus.getAllDebitNoteStatus()%>"
+                               var="allDebitNote">
+                        <s:option value="${allDebitNote.id}">${allDebitNote.name}</s:option>
+                    </c:forEach>
                 </s:select></td>
                 <td>Supplier Invoice #</td>
                 <td><c:if test="${pa.debitNote.purchaseInvoice!=null }">${pa.debitNote.purchaseInvoice.invoiceNumber}</c:if></td>
