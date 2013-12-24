@@ -733,12 +733,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
             @Override
             public void afterCompletion(int status) {
-                logger.error("Going to call edge from IHC for" + productVariantIdToSync);
+                //logger.error("Going to call edge from IHC for" + productVariantIdToSync);
                 if (status == TransactionSynchronization.STATUS_COMMITTED) {
                     adminVariantSyncExecutorService.submit(new Runnable() {
                         @Override
                         public void run() {
-                            logger.error("actual  call to edge from IHC for" + productVariantIdToSync);
+                            //logger.error("actual  call to edge from IHC for" + productVariantIdToSync);
                             updateVariantInfoOnEdge(productVariantIdToSync);
                         }
                     });
