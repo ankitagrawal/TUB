@@ -318,16 +318,17 @@ public class PaymentManager {
             payment.setResponseMessage(responseMessage);
             payment.setAuthIdCode(authIdCode);
             payment.setRrn(rrn);
-            order = processOrder(payment);
-
             if (EnumIssuerType.COD.getId().equalsIgnoreCase(payment.getIssuer().getIssuerType())) {
-
                 Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
                 if (orderCount != null && orderCount >= 2) {
                     payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
                 } else {
                     payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
                 }
+            }
+            order = processOrder(payment);
+
+            if (EnumIssuerType.COD.getId().equalsIgnoreCase(payment.getIssuer().getIssuerType())) {
                 createUserCodCall(order);
                 pushCODToThirdParty(shouldCodCall, order.getPayment());
             }
