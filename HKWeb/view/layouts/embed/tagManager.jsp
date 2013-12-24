@@ -147,7 +147,7 @@
             %>
             {
               'sku' : '<%=storeVariantBasicDetails.getId()%>',
-              'name' : '<%=storeVariantBasicDetails.getName().replaceAll("'", "\\'").replaceAll("[ ]+", " ").trim()%>',
+              'name' : '<%=storeVariantBasicDetails.getName().replaceAll("'", "\\\\'").replaceAll("[ ]+", " ").trim()%>',
               'category' : '<%=storeVariantBasicDetails.getNavKey()%>',
               'price' : ${hk:decimal2(productLineItem.hkPrice)},
               'quantity' : ${productLineItem.qty}
