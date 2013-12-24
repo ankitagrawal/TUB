@@ -380,6 +380,7 @@ public class CheckPaymentAction extends BaseAction {
             order.setConfirmationDate(new Date());
             orderService.save(order);
             orderService.sendEmailToServiceProvidersForOrder(order);
+            orderService.updatePaymentStatusForBrightBooking(order);
             addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
           }
 

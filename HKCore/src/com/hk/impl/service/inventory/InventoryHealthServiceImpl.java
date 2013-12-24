@@ -43,6 +43,7 @@ import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.order.EnumUnitProcessedStatus;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuGroupStatus;
@@ -909,20 +910,24 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         if (qtyToBeSet == null) {
             qtyToBeSet = cartLineItem.getQty();
         }
-        for (int i = 1; i <= qtyToBeSet; i++) {
-            ForeignSkuItemCLI foreignSkuItemCLI = new ForeignSkuItemCLI();
-            foreignSkuItemCLI.setAquaMrp(cartLineItem.getMarkedPrice());
-            foreignSkuItemCLI.setCartLineItem(cartLineItem);
-            foreignSkuItemCLI.setSkuItemId(null);
-            foreignSkuItemCLI.setProductVariant(cartLineItem.getProductVariant());
-            foreignSkuItemCLI.setUnitNum((long) i);
-            foreignSkuItemCLI.setUpdateDate(new Date());
-            foreignSkuItemCLI.setProcessedStatus(EnumUnitProcessedStatus.UNPROCESSED.getId());
-            foreignSkuItemCLI.setCounter(1L);
-            foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
-            foreignSkuItemCLIs.add(foreignSkuItemCLI);
+		for (int i = 1; i <= qtyToBeSet; i++) {
+			ForeignSkuItemCLI foreignSkuItemCLI = new ForeignSkuItemCLI();
+			foreignSkuItemCLI.setAquaMrp(cartLineItem.getMarkedPrice());
+			foreignSkuItemCLI.setCartLineItem(cartLineItem);
+			foreignSkuItemCLI.setSkuItemId(null);
+			foreignSkuItemCLI.setProductVariant(cartLineItem.getProductVariant());
+			foreignSkuItemCLI.setUnitNum((long) i);
+			foreignSkuItemCLI.setUpdateDate(new Date());
+			if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(cartLineItem.getOrder().getPayment().getPaymentStatus().getId())) {
+				foreignSkuItemCLI.setProcessedStatus(EnumUnitProcessedStatus.UNPROCESSED.getId());
+			} else {
+				foreignSkuItemCLI.setProcessedStatus(EnumUnitProcessedStatus.AUTHORIZATION_PENDING.getId());
+			}
+			foreignSkuItemCLI.setCounter(1L);
+			foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
+			foreignSkuItemCLIs.add(foreignSkuItemCLI);
 
-        }
+		}
         cartLineItem.setForeignSkuItemCLIs(foreignSkuItemCLIs);
         getBaseDao().save(cartLineItem);
         return foreignSkuItemCLIs;

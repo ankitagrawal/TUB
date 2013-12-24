@@ -89,6 +89,8 @@ public interface OrderService {
   public List<HKAPIForeignBookingResponseInfo>  updateBookedInventoryOnBright(LineItem lineItem, String  fulfilmentCenterCode);
   
   public int getOrderCountByUser(Long userId);
+  
+  public void updatePaymentStatusForBrightBooking(Order order);
 
 }
 
