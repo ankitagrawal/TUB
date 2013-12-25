@@ -1493,7 +1493,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 fsicliBookedForDifferentOrder.setForeignBarcode(existingSkuItem.getBarcode());
                 fsicliBookedForDifferentOrder.setForeignSkuGroupId(existingFscli.getForeignSkuGroupId());
 
-                String tempBarcodeId = existingSkuItem.getBarcode() + existingSkuItem.getId();
+                String tempBarcodeId = existingSkuItem.getBarcode() + "-SWP-" + existingSkuItem.getId();
                 existingSkuItem.setBarcode(tempBarcodeId);
                 existingSkuItem = (SkuItem) getBaseDao().save(existingSkuItem);
                 bookedSkuItemFordifferentOrder = (SkuItem) getBaseDao().save(bookedSkuItemFordifferentOrder);
