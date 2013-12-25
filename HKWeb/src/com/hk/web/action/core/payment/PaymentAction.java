@@ -14,12 +14,16 @@ import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.user.Address;
 import com.hk.domain.user.BillingAddress;
+import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
+import com.hk.manager.UserManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
+import com.hk.web.action.core.user.SelectAddressAction;
 import com.hk.web.factory.PaymentModeActionFactory;
 import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -158,6 +162,22 @@ public class PaymentAction extends BaseAction {
             if (EnumIssuerType.COD.getId().equalsIgnoreCase(issuer.getIssuerType())) {
                 paymentManager.updateCodPayment(payment, codContactName,codContactPhone);
             }
+
+
+            // check whether address in payment table is null or not
+            Address address = payment.getOrder().getAddress();
+            if (address == null) {
+                addRedirectAlertMessage(new SimpleMessage("Choose address for making payment"));
+                return new RedirectResolution(SelectAddressAction.class);
+            }
+
+            // check if user is logged in or not
+            User loggedInUser = getUserService().getLoggedInUser();
+            if (loggedInUser == null) {
+                addRedirectAlertMessage(new SimpleMessage("Please SignUp for making payment"));
+                return new RedirectResolution(LoginAction.class);
+            }
+
             if (gateway != null) {
                 Class actionClass = PaymentModeActionFactory.getActionClassForPayment(gateway, issuer.getIssuerType());
                 redirectResolution = new RedirectResolution(actionClass, "proceed");
