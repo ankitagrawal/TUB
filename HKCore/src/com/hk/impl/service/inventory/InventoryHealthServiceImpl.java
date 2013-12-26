@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.hk.domain.order.CartLineItemExtraOption;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.transform.Transformers;
@@ -775,6 +776,8 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             hkapiBookingInfo.setSoId(null);
             hkapiBookingInfo.setMrp(foreignSkuItemCLI.getAquaMrp());
             hkapiBookingInfo.setFcCode(fulfilmentCenterCode);
+            hkapiBookingInfo.setItemExtraConfig(foreignSkuItemCLI.getExtraConfig());
+            logger.debug("hkapiBookingInfo itemExtraConfig = "+hkapiBookingInfo.getItemExtraConfig());
             hkapiBookingInfos.add(hkapiBookingInfo);
             fsicliId = foreignSkuItemCLI.getId();
 
@@ -919,6 +922,25 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             foreignSkuItemCLI.setUpdateDate(new Date());
             foreignSkuItemCLI.setProcessedStatus(EnumUnitProcessedStatus.UNPROCESSED.getId());
             foreignSkuItemCLI.setCounter(1L);
+
+            List<CartLineItemExtraOption> cartLineItemExtraOptions = cartLineItem.getCartLineItemExtraOptions();
+
+            if (cartLineItemExtraOptions != null && cartLineItemExtraOptions.size()>0)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+
+                for (CartLineItemExtraOption ob : cartLineItemExtraOptions)
+                {
+                    stringBuilder.append(ob.getName()).append(" : ").append(ob.getValue());
+                    stringBuilder.append(" | ");
+                }
+                int index = stringBuilder.lastIndexOf("|");
+                String itemExtraConfig = stringBuilder.substring(0,index-1);
+                logger.debug("extra config = "+itemExtraConfig);
+
+                foreignSkuItemCLI.setExtraConfig(itemExtraConfig);
+            }
+
             foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
             foreignSkuItemCLIs.add(foreignSkuItemCLI);
 
