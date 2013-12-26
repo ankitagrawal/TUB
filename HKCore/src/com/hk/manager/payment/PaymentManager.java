@@ -244,6 +244,9 @@ public class PaymentManager {
         // also add the address id to the checksum as pricing may depend on that
         checksumString.append(order.getAddress().getId());
 
+        String gatewayOrderId = order.getPayment() != null ? order.getPayment().getGatewayOrderId() : null;
+        logger.info("For gatewayOrderId " + gatewayOrderId + " Checksum String is " + checksumString.toString());
+
         return BaseUtils.getMD5Checksum(checksumString.toString());
     }
 
