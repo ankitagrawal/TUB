@@ -13,40 +13,40 @@ import javax.annotation.PostConstruct;
 public class HKImageUtils {
 
     @Value("#{hkEnvProps['" + Keys.Env.accessKey + "']}")
-    String awsAccessKey;
+    String                awsAccessKey;
 
     @Value("#{hkEnvProps['" + Keys.Env.secretKey + "']}")
-    String awsSecretKey;
+    String                awsSecretKey;
 
     @Value("#{hkEnvProps['" + Keys.Env.bucket + "']}")
-    String uploadBucket;
+    String                uploadBucket;
 
     @Value("#{hkEnvProps['" + Keys.Env.readBucket + "']}")
-    String downloadBucket;
+    String                downloadBucket;
 
     @Value("#{hkEnvProps['" + Keys.Env.imageDistributionDomain_prefix + "']}")
-    String imageDistributionDomain_prefix;
+    String                imageDistributionDomain_prefix;
 
     @Value("#{hkEnvProps['" + Keys.Env.imageDistributionDomain_suffix + "']}")
-    String imageDistributionDomain_suffix;
+    String                imageDistributionDomain_suffix;
 
     @Value("#{hkEnvProps['" + Keys.Env.imageUploads + "']}")
-    String imageUploads;
+    String                imageUploads;
 
     @Value("#{hkEnvProps['" + Keys.Env.noOfImagesInRepositorySubDir + "']}")
-    Long noOfImagesInRepositoryDir;
+    Long                  noOfImagesInRepositoryDir;
 
     @Value("#{hkEnvProps['" + Keys.Env.bucket + "']}")
     private static String awsBucketStr;
 
-    static String awsBucket;
-    static String awsReadBucket;
-    static String awsImageDistributionDomain_prefix;
-    static String awsImageDistributionDomain_suffix;
-    static String imageUploadsPath;
-    static Long noOfImagesInRepositorySubDir;
+    static String         awsBucket;
+    static String         awsReadBucket;
+    static String         awsImageDistributionDomain_prefix;
+    static String         awsImageDistributionDomain_suffix;
+    static String         imageUploadsPath;
+    static Long           noOfImagesInRepositorySubDir;
 
-    private static int CDN_NETWORKS = 10;
+    private static int    CDN_NETWORKS = 10;
 
     @PostConstruct
     public void postConstruction() {
@@ -77,27 +77,32 @@ public class HKImageUtils {
         }
         String imageDistributionUrl = awsReadBucket + ".s3.amazonaws.com/";
         if (StringUtils.isNotBlank(awsImageDistributionDomain_prefix) && StringUtils.isNotBlank(awsImageDistributionDomain_suffix)) {
-          Long urlInt = (imageId % CDN_NETWORKS) + 1;
-          imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
+            Long urlInt = (imageId % CDN_NETWORKS) + 1;
+            imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
         }
 
-      return prefix + imageDistributionUrl + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
-        //return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
+        return prefix + imageDistributionUrl + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
+        // return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" +
+        // "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
     }
 
     public static String getS3ImageUrl(EnumImageSize imageSize, Long imageId) {
 
-        String prefix = "http://";
-        if (WebContext.isSecure()) {
-            prefix = "https://";
+        if (imageId != null) {
+            String prefix = "http://";
+            if (WebContext.isSecure()) {
+                prefix = "https://";
+            }
+            String imageDistributionUrl = awsReadBucket + ".s3.amazonaws.com/";
+            if (StringUtils.isNotBlank(awsImageDistributionDomain_prefix) && StringUtils.isNotBlank(awsImageDistributionDomain_suffix)) {
+                Long urlInt = (imageId % CDN_NETWORKS) + 1;
+                imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
+            }
+            return prefix + imageDistributionUrl + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
         }
-        String imageDistributionUrl = awsReadBucket + ".s3.amazonaws.com/";
-        if (StringUtils.isNotBlank(awsImageDistributionDomain_prefix) && StringUtils.isNotBlank(awsImageDistributionDomain_suffix)) {
-          Long urlInt = (imageId % CDN_NETWORKS) + 1;
-          imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
-        }
-        return prefix + imageDistributionUrl + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
-        //return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
+        return "#";
+        // return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" +
+        // imageId + "_" + imageSize.getSuffix() + ".jpg";
     }
 
     public static String getS3SuperSaverImageUrl(EnumImageSize imageSize, Long imageId) {
@@ -107,12 +112,12 @@ public class HKImageUtils {
         }
         String imageDistributionUrl = awsReadBucket + ".s3.amazonaws.com/";
         if (StringUtils.isNotBlank(awsImageDistributionDomain_prefix) && StringUtils.isNotBlank(awsImageDistributionDomain_suffix)) {
-          Long urlInt = (imageId % CDN_NETWORKS) + 1;
-          imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
+            Long urlInt = (imageId % CDN_NETWORKS) + 1;
+            imageDistributionUrl = awsImageDistributionDomain_prefix + urlInt.intValue() + "." + awsImageDistributionDomain_suffix + "/";
         }
 
         return prefix + imageDistributionUrl + getS3SuperSaverImageKey(imageSize, imageId);
-        //return prefix + awsReadBucket + ".s3.amazonaws.com/" + getS3SuperSaverImageKey(imageSize, imageId);
+        // return prefix + awsReadBucket + ".s3.amazonaws.com/" + getS3SuperSaverImageKey(imageSize, imageId);
     }
 
     public static String getRepositoryImagePath(EnumImageSize imageSize, Long imageId) {

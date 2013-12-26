@@ -116,7 +116,7 @@
 </bean> -->
 
     <bean id="solr" class="org.apache.solr.client.solrj.impl.CommonsHttpSolrServer">
-        <constructor-arg value="http://172.16.111.149:8983/solr"/>
+        <constructor-arg value="http://172.16.3.51:8983/solr"/>
         <property name="connectionTimeout" value="20000"/>
         <property name="defaultMaxConnectionsPerHost" value="10"/>
         <property name="maxTotalConnections" value="50"/>
@@ -125,11 +125,11 @@
 
     <bean id="connectionFactory"
           class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://172.16.111.152:61616" />
+        <property name="brokerURL" value="tcp://172.16.3.92:61616" />
     </bean>
 
     <bean  id="producerFactory" class="com.hk.hkjunction.producer.ProducerFactory">
-        <constructor-arg name="address" value="172.16.111.152">
+        <constructor-arg name="address" value="172.16.3.92">
         </constructor-arg>
     </bean>
 

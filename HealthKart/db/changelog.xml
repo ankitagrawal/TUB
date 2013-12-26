@@ -14594,4 +14594,9 @@
             <column name="bright_so_gateway_id" type="VARCHAR(30)"/>
         </addColumn>
     </changeSet>
-</databaseChangeLog>
+    <changeSet author="Pratham (generated)" id="2013-12-23-4">
+        <createIndex indexName="gateway_order_id_UNIQUE" tableName="payment" unique="true">
+            <column name="gateway_order_id"/>
+        </createIndex>
+    </changeSet>
+    </databaseChangeLog>
