@@ -53,6 +53,9 @@ public class OrderLoggingServiceImpl implements OrderLoggingService {
         OrderLifecycle orderLifecycle = new OrderLifecycle();
         orderLifecycle.setOrder(order);
         orderLifecycle.setOrderLifecycleActivity(orderLifecycleActivity);
+        if (user == null){
+          user = getUserService().getAdminUser();
+        }
         orderLifecycle.setUser(user);
         if (StringUtils.isNotBlank(comments)) {
             orderLifecycle.setComments(comments);
