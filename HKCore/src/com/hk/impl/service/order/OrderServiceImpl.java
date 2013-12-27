@@ -12,6 +12,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.order.EnumUnitProcessedStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -922,4 +923,59 @@ public class OrderServiceImpl implements OrderService {
      }
     return getOrderDao().getOrderCountByUser(userId);
   }
+  
+  @Override
+	public void updatePaymentStatusForBrightBooking(Order order) {
+		List<ForeignSkuItemCLI> foreignSkuItemCLIList = new ArrayList<ForeignSkuItemCLI>();
+		Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+		for (CartLineItem cartLineItem : productCartLineItems) {
+			List<ForeignSkuItemCLI> foreignSkuItemCLIs = cartLineItem.getForeignSkuItemCLIs();
+			if (foreignSkuItemCLIs != null && foreignSkuItemCLIs.size() > 0) {
+				for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
+					if (foreignSkuItemCLI.getProcessedStatus().equals(EnumUnitProcessedStatus.AUTHORIZATION_PENDING.getName())) {
+						foreignSkuItemCLIList.add(foreignSkuItemCLI);
+					}
+				}
+			}
+		}
+		if (foreignSkuItemCLIList != null && foreignSkuItemCLIList.size() > 0) {
+			boolean updated = updatePaymentStatusForBookingOnBright(foreignSkuItemCLIList);
+			if (updated) {
+				for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIList) {
+					foreignSkuItemCLI.setProcessedStatus(EnumUnitProcessedStatus.UNPROCESSED.getId());
+					getBaseDao().save(foreignSkuItemCLI);
+				}
+				logger.debug("(Bright Booking) Payment status updated from Auth Pending, cart line item of order -" + order.getId());
+			} else {
+				logger.debug("(Bright Booking) Could not update payment status, cart line item Id -" + order.getId());
+			}
+		}
+	}
+  
+	@SuppressWarnings("unchecked")
+	private boolean updatePaymentStatusForBookingOnBright(List<ForeignSkuItemCLI> foreignSkuItemCLIs) {
+		if (foreignSkuItemCLIs != null && foreignSkuItemCLIs.size() > 0) {
+			try {
+				List<Long> fsicliIds = new ArrayList<Long>();
+				for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
+					fsicliIds.add(foreignSkuItemCLI.getId());
+				}
+				String url = brightlifecareRestUrl + "product/variant/updatePaymentStatusForBookingOnBright/";
+				Gson gson = new Gson();
+				String json = gson.toJson(fsicliIds);
+				ClientRequest request = new ClientRequest(url);
+				request.body("application/json", json);
+				ClientResponse response = request.post();
+				int status = response.getStatus();
+				if (status == 200) {
+					String data = (String) response.getEntity(String.class);
+					Boolean bookedAtBright = new Gson().fromJson(data, Boolean.class);
+					return bookedAtBright;
+				}
+			} catch (Exception e) {
+				logger.error("Exception while checking booking status on Bright", e.getMessage());
+			}
+		}
+		return false;
+	}
 }
