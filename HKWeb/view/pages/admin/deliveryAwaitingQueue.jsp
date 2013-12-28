@@ -14,8 +14,9 @@
 </s:layout-component>
 <s:layout-component name="heading">Delivery Awaiting Queue</s:layout-component>
 <s:layout-component name="content">
-  <s:form beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction" method="get" autocomplete="false">
+
     <fieldset class="top_label">
+			<s:form beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction" method="get" autocomplete="false">
       <ul>
         <div class="grouped">
           <li><label>Order ID</label> <s:text name="orderId"/></li>
@@ -43,8 +44,42 @@
           </li>
         </div>
       </ul>
+			</s:form>
     </fieldset>
-  </s:form>
+
+<%--
+	<fieldset class="top_label">
+		<s:form beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction" method="get" autocomplete="false">
+			<ul>
+				<div class="grouped">
+					<li><label>Order ID</label> <s:text name="orderId"/></li>
+					<li><label>Gateway Order ID</label> <s:text name="gatewayOrderId" class="gatewayOrderId"/></li>
+					<li><label>Tracking ID</label> <s:text name="trackingId"/></li>
+						&lt;%&ndash;
+									 <li>
+										 <label>Start
+											 date</label><s:text class="date_input startDate" style="width:150px"
+																					 formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+									 </li>
+									 <li>
+										 <label>End
+											 date</label><s:text class="date_input endDate" style="width:150px"
+																					 formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+									 <li>
+						&ndash;%&gt;
+					<s:select name="courier" class="courierService">
+						<s:option value="">All Couriers</s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
+						                           label="name"/>
+					</s:select>
+					<li>
+						<div class="buttons"><s:submit name="searchOrders" value="Search"/></div>
+					</li>
+				</div>
+			</ul>
+		</s:form>
+	</fieldset>
+--%>
 
   <s:form beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction" autocomplete="off">
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${deliveryQueueBean}"/>
