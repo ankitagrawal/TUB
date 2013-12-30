@@ -39,6 +39,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -227,11 +229,11 @@ public class PaymentManager {
         StringBuffer checksumString = new StringBuffer();
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
 
-        // TODO: # warehouse fix this.
+        List<CartLineItem> cartLineItemList = new ArrayList<CartLineItem>();
+        cartLineItemList.addAll(cartLineItems);
+        Collections.sort(cartLineItemList);
 
-        // Collections.sort(cartLineItems);
-
-        for (CartLineItem lineItem : cartLineItems) {
+        for (CartLineItem lineItem : cartLineItemList) {
             if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
                 if (lineItem.getProductVariant() != null) {
                     checksumString.append(lineItem.getId()).append(lineItem.getProductVariant().getId()).append(lineItem.getQty());
@@ -243,6 +245,9 @@ public class PaymentManager {
         }
         // also add the address id to the checksum as pricing may depend on that
         checksumString.append(order.getAddress().getId());
+
+        String gatewayOrderId = order.getPayment() != null ? order.getPayment().getGatewayOrderId() : null;
+        logger.info("For gatewayOrderId " + gatewayOrderId + " Checksum String is " + checksumString.toString());
 
         return BaseUtils.getMD5Checksum(checksumString.toString());
     }
