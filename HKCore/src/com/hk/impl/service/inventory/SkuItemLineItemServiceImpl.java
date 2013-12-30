@@ -422,7 +422,13 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       baseDao.delete(skuItemCLI);
       iterator.remove();
     }
-    baseDao.deleteAll(skuItemsToBeDeleted);
+    List<SkuItem> expectedCheckedinSkuItems = new ArrayList <SkuItem> ();
+    for (SkuItem si : skuItemsToBeDeleted){
+    	if (si.getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())){
+    		expectedCheckedinSkuItems.add(si);
+    	}
+    }
+    baseDao.deleteAll(expectedCheckedinSkuItems);
     return true;
   }
 
