@@ -81,7 +81,9 @@ public class PaymentModeAction extends BaseAction {
         bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(), true);
         cardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Card.getId(), true);
         debitCardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Debit.getId(), true);
-        codIssuer = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.COD.getId(),true).get(0);
+        List<Issuer> issuerList = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.COD.getId(), true);
+        if(!issuerList.isEmpty())
+          codIssuer = issuerList.get(0);
 
         if (isHybridRelease()) {
             return new ForwardResolution("/pages/paymentModeBeta.jsp");
