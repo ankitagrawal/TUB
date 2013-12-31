@@ -43,7 +43,7 @@
 
     //Total Online Attempts
     String totalOnlinePaymentSQL = "SELECT hour(payment_date) as hour, count(*) as totalPayments FROM payment " +
-            "where date(payment_date) = date(now()) and payment_mode_id = 1000 group by hour(payment_date)";
+            "where date(payment_date) = date(now()) and payment_mode_id = 1000 and payment_status_id <= 5 group by hour(payment_date)";
     SQLQuery totalOnlinePaymentQuery = baseDao.createSqlQuery(totalOnlinePaymentSQL);
     List<Object[]> totalOnlinePaymentList = totalOnlinePaymentQuery.list();
 
