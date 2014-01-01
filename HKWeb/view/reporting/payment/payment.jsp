@@ -109,7 +109,7 @@
     myChart.setLineColor('#008000', 'Total Online Successful');
 
     myChart.colorize(['#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9']);
-    myChart.setSize(550, 300);
+    myChart.setSize(1100, 600);
     myChart.setTitle('Payment Performance');
     myChart.setTitleColor('#37379E');
     myChart.setTitleFontSize(10);
