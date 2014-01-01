@@ -23,33 +23,33 @@
 
     //Total Payment Attempts
     String maxPaymentSQL = "SELECT count(*) as totalPayments FROM payment " +
-            "where date(payment_date) = date(now()) group by hour(payment_date) order by totalPayments desc limit 1";
+            "where date(create_dt) = date(now()) group by hour(create_dt) order by totalPayments desc limit 1";
     SQLQuery maxPaymentQuery = baseDao.createSqlQuery(maxPaymentSQL);
     BigInteger maxPayments = (BigInteger) maxPaymentQuery.uniqueResult();
     if (maxPayments == null)
         maxPayments = new BigInteger("100");
 
     //Total Payment Attempts
-    String totalPaymentSQL = "SELECT hour(payment_date) as hour, count(*) as totalPayments FROM payment " +
-            "where date(payment_date) = date(now()) group by hour(payment_date)";
+    String totalPaymentSQL = "SELECT hour(create_dt) as hour, count(*) as totalPayments FROM payment " +
+            "where date(create_dt) = date(now()) group by hour(create_dt)";
     SQLQuery totalPaymentQuery = baseDao.createSqlQuery(totalPaymentSQL);
     List<Object[]> totalPaymentList = totalPaymentQuery.list();
 
     //Total Payment Successfuls
-    String totalPaymentSuccessfulSQL = "SELECT hour(payment_date) as hour, count(*) as totalPayments FROM payment " +
-            "where date(payment_date) = date(now()) and payment_status_id in (2,3,7) group by hour(payment_date)";
+    String totalPaymentSuccessfulSQL = "SELECT hour(create_dt) as hour, count(*) as totalPayments FROM payment " +
+            "where date(create_dt) = date(now()) and payment_status_id in (2,3,7) group by hour(create_dt)";
     SQLQuery totalPaymentSuccessfulQuery = baseDao.createSqlQuery(totalPaymentSuccessfulSQL);
     List<Object[]> totalPaymentSuccessfulList = totalPaymentSuccessfulQuery.list();
 
     //Total Online Attempts
-    String totalOnlinePaymentSQL = "SELECT hour(payment_date) as hour, count(*) as totalPayments FROM payment " +
-            "where date(payment_date) = date(now()) and payment_mode_id = 1000 and payment_status_id <= 5 group by hour(payment_date)";
+    String totalOnlinePaymentSQL = "SELECT hour(create_dt) as hour, count(*) as totalPayments FROM payment " +
+            "where date(create_dt) = date(now()) and payment_mode_id = 1000 and payment_status_id <= 5 group by hour(create_dt)";
     SQLQuery totalOnlinePaymentQuery = baseDao.createSqlQuery(totalOnlinePaymentSQL);
     List<Object[]> totalOnlinePaymentList = totalOnlinePaymentQuery.list();
 
     //Total Online Successful
-    String totalOnlinePaymentSuccessfulSQL = "SELECT hour(payment_date) as hour, count(*) as totalPayments FROM payment " +
-            "where date(payment_date) = date(now()) and payment_mode_id = 1000 and payment_status_id in (2,3) group by hour(payment_date)";
+    String totalOnlinePaymentSuccessfulSQL = "SELECT hour(create_dt) as hour, count(*) as totalPayments FROM payment " +
+            "where date(create_dt) = date(now()) and payment_mode_id = 1000 and payment_status_id in (2,3) group by hour(create_dt)";
     SQLQuery totalOnlinePaymentSuccessfulQuery = baseDao.createSqlQuery(totalOnlinePaymentSuccessfulSQL);
     List<Object[]> totalOnlinePaymentSuccessfulList = totalOnlinePaymentSuccessfulQuery.list();
 %>
