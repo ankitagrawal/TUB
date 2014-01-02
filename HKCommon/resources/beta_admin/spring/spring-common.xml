@@ -125,11 +125,11 @@
 
     <bean id="connectionFactory"
           class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://172.16.3.92:61616" />
+        <property name="brokerURL" value="tcp://180.179.52.161:61616" />
     </bean>
 
     <bean  id="producerFactory" class="com.hk.hkjunction.producer.ProducerFactory">
-        <constructor-arg name="address" value="172.16.3.92">
+        <constructor-arg name="address" value="180.179.52.161">
         </constructor-arg>
     </bean>
 
