@@ -1,19 +1,17 @@
 <%@ page import="com.hk.pact.dao.BaseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="org.hibernate.SQLQuery" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="java.util.Calendar" %>
-<%@ page import="java.util.GregorianCalendar" %>
 <%@ page import="java.math.BigInteger" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.List" %>
 <html>
 <head>
-    <title>Payment Performance</title>
+    <title>HKPay/PG Performance</title>
     <script type="text/javascript" src="jscharts.js"></script>
 
 </head>
 <body>
-<h1>Payment Performance : <%=new Date()%>
+<h1>HKPay/PG Performance : <%=new Date()%>
 </h1>
 <%
     // Set refresh, autoload time as 5 minutes
@@ -110,7 +108,7 @@
 
     myChart.colorize(['#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9']);
     myChart.setSize(1100, 600);
-    myChart.setTitle('Payment Performance');
+    myChart.setTitle('HKPay/PG Performance');
     myChart.setTitleColor('#37379E');
     myChart.setTitleFontSize(10);
     myChart.setLineOpacity(1);
