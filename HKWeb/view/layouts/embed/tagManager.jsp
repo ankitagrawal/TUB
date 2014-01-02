@@ -126,6 +126,7 @@
     }
     if (paymentSuccessBean != null) {
       List<String> tmVariantIds = new ArrayList<String>();
+      List<String> tmStringVariantIds = new ArrayList<String>();
   %>
   <script type="text/javascript">
     dataLayer.push({
@@ -143,7 +144,8 @@
             CartLineItem cartLineItem = (CartLineItem) pageContext.getAttribute("productLineItem");
             StoreVariantBasicResponse storeVariantBasicDetails = Functions.getStoreVariantBasicDetails(cartLineItem.getProductVariant().getId(), pageContext);
             if (storeVariantBasicDetails != null && storeVariantBasicDetails.getId() !=null) {
-            tmVariantIds.add(storeVariantBasicDetails.getId().toString());
+              tmVariantIds.add(storeVariantBasicDetails.getId().toString());
+              tmStringVariantIds.add("'"+storeVariantBasicDetails.getId().toString()+"'");
             %>
             {
               'sku' : '<%=storeVariantBasicDetails.getId()%>',
@@ -173,7 +175,8 @@
       'transactionDate' : '${paymentSuccessBean.purchaseDate}',
       'transactionMode' : '${paymentSuccessBean.paymentMode.name}',
       'transactionAmount' : '<%=Math.round(paymentSuccessBean.getPayment().getAmount())%>',
-      'tmVariantIds' : '<%=StringUtils.join(tmVariantIds.iterator(), ",")%>'
+      'tmVariantIds' : '<%=StringUtils.join(tmVariantIds.iterator(), ",")%>',
+      'variantId' : [<%=StringUtils.join(tmStringVariantIds.iterator(), ",")%>]
     });
   </script>
   <%
