@@ -1,45 +1,53 @@
 package com.hk.web.validation;
 
-import java.util.Collection;
-import java.util.Locale;
-
+import com.hk.domain.user.User;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.user.UserDao;
 import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.domain.user.User;
-import com.hk.pact.dao.BaseDao;
+import java.util.Collection;
+import java.util.Locale;
 
 @Component
 public class UserTypeConverter implements TypeConverter<User> {
-    public void setLocale(Locale locale) {
+  public void setLocale(Locale locale) {
+  }
+
+  @Autowired
+  private BaseDao baseDao;
+
+  @Autowired
+  private UserDao userDao;
+
+  public User convert(String s, Class<? extends User> aClass, Collection<ValidationError> validationErrors) {
+    User user = null;
+    Long idLong = null;
+    try {
+      idLong = Long.parseLong(s);
+      user = getBaseDao().get(User.class, idLong);
+    } catch (NumberFormatException e) {
+      //Try getting user through Hash
+      user = getUserDao().findByUserHash(s);
     }
+    return user;
+  }
 
-    @Autowired
-    private BaseDao baseDao;
+  public BaseDao getBaseDao() {
+    return baseDao;
+  }
 
-    public User convert(String s, Class<? extends User> aClass, Collection<ValidationError> validationErrors) {
-        Long idLong = null;
-        try {
-            idLong = Long.parseLong(s);
-        } catch (NumberFormatException e) {
-        }
-        if (idLong == null) {
-            return null;
-        } else {
-            // return userDao.getUserById(idLong);
-            return getBaseDao().get(User.class, idLong);
-        }
-    }
+  public void setBaseDao(BaseDao baseDao) {
+    this.baseDao = baseDao;
+  }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
+  public UserDao getUserDao() {
+    return userDao;
+  }
 
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
-
+  public void setUserDao(UserDao userDao) {
+    this.userDao = userDao;
+  }
 }
