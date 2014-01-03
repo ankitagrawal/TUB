@@ -109,7 +109,7 @@ public class POAction extends BasePaginatedAction {
 
     private Integer                           defaultPerPage    = 20;
 	private String                            poType;
-    private Long 															brightSoId;
+    private String                            brightSoGwId;
 
     @DefaultHandler
     public Resolution pre() {
@@ -120,7 +120,7 @@ public class POAction extends BasePaginatedAction {
                 warehouse = getPrincipalUser().getSelectedWarehouse();
             }
             purchaseOrderPage = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse,
-                    extraInventoryCreated, brightSoId, startDate, endDate, poType, getPageNo(), getPerPage());
+                    extraInventoryCreated, brightSoGwId, startDate, endDate, poType, getPageNo(), getPerPage());
             purchaseOrderList = purchaseOrderPage.getList();
         }
         return new ForwardResolution("/pages/admin/poList.jsp");
@@ -187,8 +187,8 @@ public class POAction extends BasePaginatedAction {
         grn.setPurchaseOrder(purchaseOrder);
         grn.setGrnDate(new Date());
         grn.setInvoiceDate(new Date());
-        if(purchaseOrder.getBrightSoId()!=null){
-        	grn.setInvoiceNumber(purchaseOrder.getBrightSoId().toString());
+        if(purchaseOrder.getBrightSoGwId()!=null){
+        	grn.setInvoiceNumber(purchaseOrder.getBrightSoGwId());
         }else{
         	grn.setInvoiceNumber("-");
         }
@@ -561,13 +561,13 @@ public class POAction extends BasePaginatedAction {
       this.fileBean = fileBean;
     }
 
-		public Long getBrightSoId() {
-			return brightSoId;
-		}
+    public String getBrightSoGwId() {
+        return brightSoGwId;
+    }
 
-		public void setBrightSoId(Long brightSoId) {
-			this.brightSoId = brightSoId;
-		}
+    public void setBrightSoGwId(String brightSoGwId) {
+        this.brightSoGwId = brightSoGwId;
+    }
 		
 		public String getPoType() {
         return poType;

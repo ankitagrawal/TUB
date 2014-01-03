@@ -22,6 +22,7 @@ public class HKAPIBookingInfo {
   private String fcCode;
   private Long bkTyId;
   private String itemExtraConfig;
+  private String processed;
 
   public Double getMrp() {
     return mrp;
@@ -126,4 +127,11 @@ public class HKAPIBookingInfo {
   public void setItemExtraConfig(String itemExtraConfig) {
         this.itemExtraConfig = itemExtraConfig;
   }
+    public String getProcessed() {
+    return processed;
+    }
+
+    public void setProcessed(String processed) {
+    this.processed = processed;
+    }
 }

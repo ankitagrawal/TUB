@@ -638,9 +638,9 @@ public class XslParser {
                             aquaUnplannedPO = true;
                         }
                     }
-                    Long brightSoId = getLong(getCellValue(XslConstants.BRIGHT_SO_ID, rowMap, headerMap));
-                    if(brightSoId!=null){
-                        purchaseOrder.setBrightSoId(brightSoId);
+                    String brightSoGwId = getCellValue(XslConstants.BRIGHT_SO_GATEWAY_ID, rowMap, headerMap);
+                    if(brightSoGwId!=null){
+                        purchaseOrder.setBrightSoGwId(brightSoGwId);
                         baseDao.save(purchaseOrder);
                     }
 

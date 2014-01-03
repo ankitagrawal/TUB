@@ -1,4 +1,4 @@
-package com.hk.constants.order;
+package com.hk.constants.shippingOrder;
 
 import java.util.Arrays;
 import java.util.List;

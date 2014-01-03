@@ -81,7 +81,7 @@
 
             </c:when>
             <c:otherwise>
-              <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
+              <a href="http://www.healthkartplus.com?src=hk" rel="nofollow" target="_blank" style="text-decoration:none;">
                 <c:choose>
                   <c:when test="${city == 'DELHI' || city == 'NEW DELHI'  || city == 'GURGAON' || city == 'NOIDA'}">
                     <img src="${pageContext.request.contextPath}/images/banners/banner01A.png"

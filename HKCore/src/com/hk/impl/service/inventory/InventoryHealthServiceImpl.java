@@ -44,6 +44,7 @@ import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.order.EnumUnitProcessedStatus;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuGroupStatus;
@@ -779,6 +780,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             hkapiBookingInfo.setItemExtraConfig(foreignSkuItemCLI.getExtraConfig());
             logger.debug("hkapiBookingInfo itemExtraConfig = "+hkapiBookingInfo.getItemExtraConfig());
             hkapiBookingInfos.add(hkapiBookingInfo);
+            hkapiBookingInfo.setProcessed(foreignSkuItemCLI.getProcessedStatus());
             fsicliId = foreignSkuItemCLI.getId();
 
         }
@@ -920,7 +922,11 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             foreignSkuItemCLI.setProductVariant(cartLineItem.getProductVariant());
             foreignSkuItemCLI.setUnitNum((long) i);
             foreignSkuItemCLI.setUpdateDate(new Date());
-            foreignSkuItemCLI.setProcessedStatus(EnumUnitProcessedStatus.UNPROCESSED.getId());
+            if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(cartLineItem.getOrder().getPayment().getPaymentStatus().getId())) {
+                foreignSkuItemCLI.setProcessedStatus(EnumUnitProcessedStatus.UNPROCESSED.getId());
+            } else {
+                foreignSkuItemCLI.setProcessedStatus(EnumUnitProcessedStatus.AUTHORIZATION_PENDING.getId());
+            }
             foreignSkuItemCLI.setCounter(1L);
 
             List<CartLineItemExtraOption> cartLineItemExtraOptions = cartLineItem.getCartLineItemExtraOptions();
@@ -945,6 +951,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             foreignSkuItemCLIs.add(foreignSkuItemCLI);
 
         }
+
         cartLineItem.setForeignSkuItemCLIs(foreignSkuItemCLIs);
         getBaseDao().save(cartLineItem);
         return foreignSkuItemCLIs;
@@ -1078,12 +1085,12 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
 
             @Override
             public void afterCompletion(int status) {
-                logger.error("Going to call edge from IHC for" + productVariantIdToSync);
+                //logger.error("Going to call edge from IHC for" + productVariantIdToSync);
                 if (status == TransactionSynchronization.STATUS_COMMITTED) {
                     adminVariantSyncExecutorService.submit(new Runnable() {
                         @Override
                         public void run() {
-                            logger.error("actual  call to edge from IHC for" + productVariantIdToSync);
+                            //logger.error("actual  call to edge from IHC for" + productVariantIdToSync);
                             updateVariantInfoOnEdge(productVariantIdToSync);
                         }
                     });
@@ -1515,7 +1522,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 fsicliBookedForDifferentOrder.setForeignBarcode(existingSkuItem.getBarcode());
                 fsicliBookedForDifferentOrder.setForeignSkuGroupId(existingFscli.getForeignSkuGroupId());
 
-                String tempBarcodeId = existingSkuItem.getBarcode() + existingSkuItem.getId();
+                String tempBarcodeId = existingSkuItem.getBarcode() + "-SWP-" + existingSkuItem.getId();
                 existingSkuItem.setBarcode(tempBarcodeId);
                 existingSkuItem = (SkuItem) getBaseDao().save(existingSkuItem);
                 bookedSkuItemFordifferentOrder = (SkuItem) getBaseDao().save(bookedSkuItemFordifferentOrder);

@@ -37,7 +37,7 @@
                         <li><a href="${pageContext.request.contextPath}/beta/hk/TermsConditions.action">Terms & Conditions</a></li>
                         <li><a href="http://www.healthkart.com/resources">Blog</a></li>
                         <li><a href="${pageContext.request.contextPath}/beta/brand/BrandListing.action">Brand Directory</a></li>
-                        <li><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction">Loyalty</s:link></li>
+                        <li><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction" rel="nofollow">Loyalty</s:link></li>
                     </ul>
                 </div>
                 <div class="footer-menu">
@@ -113,9 +113,9 @@
                     <span class="txt-middle mrgn-r-5"> | Connect with us:</span>
 
                     <span style="display: inline-block;" class="disp-inln txt-middle mrgn-t-10">
-                        <a class="icn icn-fb" target="_blank" href="https://www.facebook.com/healthkart"></a>
-                        <a class="icn icn-twitter" target="_blank" href="https://twitter.com/healthkart"></a>
-                        <a class="icn icn-google-plus" target="_blank" href="https://plus.google.com/+healthkart/posts"></a>
+                        <a class="icn icn-fb" target="_blank" href="https://www.facebook.com/healthkart" rel="nofollow"></a>
+                        <a class="icn icn-twitter" target="_blank" href="https://twitter.com/healthkart" rel="nofollow"></a>
+                        <a class="icn icn-google-plus" target="_blank" href="https://plus.google.com/+healthkart/posts" rel="nofollow"></a>
                     </span>
                 </div>
             </div>

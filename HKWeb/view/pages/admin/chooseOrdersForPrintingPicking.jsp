@@ -154,12 +154,12 @@
 
             </div>
             <br>
-            <div align="center">
+            <%-- <div align="center">
                 <label>Bright SO ID</label><s:text name="brightSoId"/>
                 <s:submit name="searchOrdersForPrinting" value="Search By Bright So Id"
                           style="font-size:0.9em"/>
                 </div>
-            <br>
+            <br> --%>
             <div align="center">
                 <label>Bright Gateway Id</label><s:text name="brightGatewayId"/>
                 <s:submit name="searchOrdersForPrinting" value="Search By Bright Gateway Id"

@@ -6,6 +6,7 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumGateway;
+import com.hk.constants.payment.EnumIssuerType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
@@ -13,18 +14,23 @@ import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.user.Address;
 import com.hk.domain.user.BillingAddress;
+import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
+import com.hk.manager.UserManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
+import com.hk.web.action.core.user.SelectAddressAction;
 import com.hk.web.factory.PaymentModeActionFactory;
 import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +55,8 @@ public class PaymentAction extends BaseAction {
 //    private Set<CartLineItem> trimCartLineItems = new HashSet<CartLineItem>();
 //    private Integer               sizeOfCLI;
 
+    Boolean isHKPayWorking = false;
+
     @Validate(required = true)
     Issuer issuer;
 
@@ -66,6 +74,13 @@ public class PaymentAction extends BaseAction {
 
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
+
+    @Validate(required = false)
+    private String codContactName;
+
+    @Validate(required = false)
+    private String codContactPhone;
+
     /*
    algorithm to route multiple gateways, first let the customer choose the issuer now based on the issuer, get all the damn gateways that serve it, alongwith the priority assigned by admin
    then you iterate over your faddu logic, to decide which gateway won then call the action corresponding to that gateway along with the issuer if needed
@@ -73,17 +88,19 @@ public class PaymentAction extends BaseAction {
     @SuppressWarnings("unchecked")
     public Resolution proceed() {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
+
+            if (EnumIssuerType.COD.getId().equalsIgnoreCase(issuer.getIssuerType())) {
+                if (StringUtils.isBlank(codContactName)) {
+                    addRedirectAlertMessage(new SimpleMessage("Cod Contact Name cannot be blank"));
+                    return new RedirectResolution(PaymentModeAction.class);
+                } else if (StringUtils.isBlank(codContactPhone)) {
+                    addRedirectAlertMessage(new SimpleMessage("Cod Contact Phone cannot be blank"));
+                    return new RedirectResolution(PaymentModeAction.class);
+                }
+            }
+
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
-//            trimCartLineItems = orderManager.trimEmptyLineItems(order);
-//            sizeOfCLI = trimCartLineItems.size();
-//            if(trimCartLineItems!=null && trimCartLineItems.size()>0){
-//                if(order.getCartLineItems()==null || order.getCartLineItems().size()==0){
-//                    return new RedirectResolution(CartAction.class);
-//                }
-//                return new ForwardResolution(OrderSummaryAction.class).addParameter("trim",true).addParameter("sizeOfCLI",sizeOfCLI);
-//            }
-
 
             BillingAddress billingAddress = null;
             if (billingAddressId != null) {
@@ -93,33 +110,46 @@ public class PaymentAction extends BaseAction {
             String issuerCode = null;
             if (issuer != null) {
                 try {
-                    List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
-                    Long total = 0L;
 
-                    for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-                        total += gatewayIssuerMapping.getPriority();
-                    }
+                        List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
+                        Long total = 0L;
 
-                    Integer random = (new Random()).nextInt(total.intValue());
-                    long oldValue = 0L;
-                    long priority = 0L;
-                    long gatewayRangeValue = 0L;
-
-                    for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
-                        priority = gatewayIssuerMapping.getPriority();
-                        gatewayRangeValue = oldValue + priority;
-                        if (random < gatewayRangeValue) {
-                            gateway = gatewayIssuerMapping.getGateway();
-                            issuerCode = gatewayIssuerMapping.getIssuerCode();
-                            break;
+                        for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
+                            total += gatewayIssuerMapping.getPriority();
                         }
-                        oldValue += priority;
-                    }
+
+                        Integer random = (new Random()).nextInt(total.intValue());
+                        long oldValue = 0L;
+                        long priority = 0L;
+                        long gatewayRangeValue = 0L;
+
+                        for (GatewayIssuerMapping gatewayIssuerMapping : gatewayIssuerMappings) {
+                            priority = gatewayIssuerMapping.getPriority();
+                            gatewayRangeValue = oldValue + priority;
+                            if (random < gatewayRangeValue) {
+                                gateway = gatewayIssuerMapping.getGateway();
+                                issuerCode = gatewayIssuerMapping.getIssuerCode();
+                                break;
+                            }
+                            oldValue += priority;
+                        }
+
+                        if(EnumGateway.HKPay.getId().equals(gateway.getId())){
+                            boolean isWorking = paymentManager.isHKPayWorking();
+                            if(!isWorking){
+                                gateway = EnumGateway.EBS.asGateway();
+                                logger.error("Routing to EBS since HKPay is down");
+                                issuerCode = null;
+                                gateway = EnumGateway.EBS.asGateway();
+                            }
+                        }
+
                 } catch (Exception e) {
                     //todo pratham, remove this piece of code
                     //this is a very crude away, although this code should not fail, but as a worse case scenario, redirecting customer to icici no matter what since it gives max option
                     logger.error("Routing Multiple gateways failed due to some exception" + e);
-                    gateway = EnumGateway.ICICI.asGateway();
+                    issuerCode = null;
+                    gateway = EnumGateway.EBS.asGateway();
 
                 }
             }
@@ -129,6 +159,24 @@ public class PaymentAction extends BaseAction {
 
             // first create a payment row, this will also contain the payment checksum
             Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), gateway, issuer, billingAddress);
+            if (EnumIssuerType.COD.getId().equalsIgnoreCase(issuer.getIssuerType())) {
+                paymentManager.updateCodPayment(payment, codContactName,codContactPhone);
+            }
+
+
+            // check whether address in payment table is null or not
+            Address address = payment.getOrder().getAddress();
+            if (address == null) {
+                addRedirectAlertMessage(new SimpleMessage("Choose address for making payment"));
+                return new RedirectResolution(SelectAddressAction.class);
+            }
+
+            // check if user is logged in or not
+            User loggedInUser = getUserService().getLoggedInUser();
+            if (loggedInUser == null) {
+                addRedirectAlertMessage(new SimpleMessage("Please SignUp for making payment"));
+                return new RedirectResolution(LoginAction.class);
+            }
 
             if (gateway != null) {
                 Class actionClass = PaymentModeActionFactory.getActionClassForPayment(gateway, issuer.getIssuerType());
@@ -179,5 +227,29 @@ public class PaymentAction extends BaseAction {
 
     public void setBillingAddressId(Long billingAddressId) {
         this.billingAddressId = billingAddressId;
+    }
+
+    public Boolean isHKPayWorking() throws Exception {
+        return paymentManager.isHKPayWorking();
+    }
+
+    public void setHKPayWorking(boolean HKPayWorking) {
+        isHKPayWorking = HKPayWorking;
+    }
+
+    public String getCodContactName() {
+        return codContactName;
+    }
+
+    public void setCodContactName(String codContactName) {
+        this.codContactName = codContactName;
+    }
+
+    public String getCodContactPhone() {
+        return codContactPhone;
+    }
+
+    public void setCodContactPhone(String codContactPhone) {
+        this.codContactPhone = codContactPhone;
     }
 }

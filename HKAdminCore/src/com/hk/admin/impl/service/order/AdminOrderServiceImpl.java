@@ -615,6 +615,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         emailManager.sendCodConfirmEmailToUser(order);
         orderEventPublisher.publishCodStatus(order);
         getOrderLoggingService().logOrderActivity(order, user, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
+        orderService.updatePaymentStatusForBrightBooking(order);
         return payment;
     }
 

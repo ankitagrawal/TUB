@@ -76,15 +76,8 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     private Date paymentEndDate;
     private Date endTargetDispatchDate;
     private Date startTargetDispatchDate;
-    private Long brightSoId;
 
-    public String getBrightGatewayId() {
-        return brightGatewayId;
-    }
 
-    public void setBrightGatewayId(String brightGatewayId) {
-        this.brightGatewayId = brightGatewayId;
-    }
 
     private String brightGatewayId;
 
@@ -192,9 +185,6 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             if (category != null) {
                 shippingOrderSearchCriteria.setBasketCategory(category.getName()).setBaseGatewayOrderId(baseGatewayOrderId).setGatewayOrderId(gatewayOrderId);
             }
-            if(brightSoId != null){
-            	shippingOrderSearchCriteria.setBrightSoId(brightSoId);
-            }
             if(brightGatewayId != null){
                 shippingOrderSearchCriteria.setBrightSoGatewayId(brightGatewayId);
             }
@@ -267,7 +257,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             variantsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForVariant(cycleCountDtoList);
         }
         for (ShippingOrder shippingOrder : shippingOrdersTempList) {
-            if (shippingOrdersList.size() == 20) {
+            if (shippingOrdersList.size() == getPerPageDefault()) {
                 break;
             }
             boolean shouldAdd = true;
@@ -302,7 +292,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     }
 
     public int getPerPageDefault() {
-        return 20;
+        return 50;
     }
 
     public int getPageCount() {
@@ -459,11 +449,11 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         this.startTargetDispatchDate = startTargetDispatchDate;
     }
 
-		public Long getBrightSoId() {
-			return brightSoId;
-		}
+    public String getBrightGatewayId() {
+        return brightGatewayId;
+    }
 
-		public void setBrightSoId(Long brightSoId) {
-			this.brightSoId = brightSoId;
-		}
+    public void setBrightGatewayId(String brightGatewayId) {
+        this.brightGatewayId = brightGatewayId;
+    }
 }

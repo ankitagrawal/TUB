@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>JS Charts</title>
+<script type="text/javascript" src="jscharts.js"></script>
+</head>
+<body>
+<div id="chart_container">Loading chart...</div>
+<script type="text/javascript">
+	var myChart = new JSChart('chart_container', 'line', '');
+	myChart.setDataArray([[1, 20],[10, 60],[20, 79],[30, 90],[40, 100],[50, 113],[60, 125],[70, 135],[80, 148],[90, 170],[99, 215]], 'blue line');
+    myChart.setDataArray([[0, 28],[8, 85],[20, 90],[30, 100],[40, 118],[50, 145],[60, 180],[70, 155],[80, 160],[90, 190],[100, 205]], 'red line');
+	myChart.colorize(['#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9','#3E90C9']);
+	myChart.setSize(550, 300);
+	myChart.setTitle('Interactive line chart showing inverse of the normal cumulative distribution');
+	myChart.setTitleColor('#37379E');
+	myChart.setTitleFontSize(10);
+	myChart.setLineColor('#37379E');
+	myChart.setLineOpacity(1);
+	myChart.setLineWidth(2);
+	myChart.setAxisValuesColor('#37379E');
+	myChart.setAxisNameX('%');
+	myChart.setAxisNameY('');
+	myChart.setAxisColor('#B7C611');
+	myChart.setGridColor('#B7C611');
+	myChart.setTooltip([1,'20','blue line']);
+	myChart.setTooltip([10,'60','blue line']);
+	myChart.setTooltip([20,'79','blue line']);
+	myChart.setTooltip([30,'90','blue line']);
+	myChart.setTooltip([40,'100','blue line']);
+	myChart.setTooltip([50,'113','blue line']);
+	myChart.setTooltip([60,'125','blue line']);
+	myChart.setTooltip([70,'135','blue line']);
+	myChart.setTooltip([80,'148','blue line']);
+	myChart.setTooltip([90,'170','blue line']);
+	myChart.setTooltip([99,'215','blue line']);
+	myChart.setFlagColor('#37379F');
+	myChart.setFlagRadius(4);
+	myChart.setAxisValuesNumberY(10);
+	myChart.setIntervalEndY(225);
+	myChart.setIntervalStartY(0);
+	myChart.setLineColor('#C83636', 'red line');
+	myChart.setTooltip([0,'28','red line']);
+	myChart.setTooltip([8,'85','red line']);
+	myChart.setTooltip([20,'95','red line']);
+	myChart.setTooltip([30,'100','red line']);
+	myChart.setTooltip([40,'118','red line']);
+	myChart.setTooltip([50,'145','red line']);
+	myChart.setTooltip([60,'180','red line']);
+	myChart.setTooltip([70,'155','red line']);
+	myChart.setTooltip([80,'160','red line']);
+	myChart.setTooltip([90,'190','red line']);
+	myChart.setTooltip([100,'205']);
+	myChart.setLegendShow(true);
+	myChart.draw();
+</script>
+</body>
+</html>

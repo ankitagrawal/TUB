@@ -9,7 +9,7 @@
 <s:useActionBean beanclass="com.hk.web.action.nwb.NwbMenuAction" var="menuAction" event="pre"/>
 
 <s:layout-definition>
-  <c:set var="maxLeafElms" value="5"/>
+  <c:set var="maxLeafElms" value="11"/>
   <div class="container_24 mrgn-t-10">
   <div class="flyout-menu">
       <div id="dropDownButton" class="menu-hdr">
@@ -44,7 +44,7 @@
                                   <span style="display:inline-block">&raquo;</span>
                                   <c:set var="leafElms"
                                          value="${fn:length(l1child.childNodes)>maxLeafElms?maxLeafElms:fn:length(l1child.childNodes)}"/>
-                                  <c:set var="seeMore" value="${fn:length(l1child.childNodes)>maxLeafElms?'true':'false'}"/>
+                                  <%--<c:set var="seeMore" value="${fn:length(l1child.childNodes)>maxLeafElms?'true':'false'}"/>--%>
                                   <div class="gl gm-tc-list">
 
                                       <c:forEach items="${l1child.childNodes}" var="l2child" end="${leafElms}" varStatus="counter">

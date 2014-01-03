@@ -9,6 +9,7 @@ import com.hk.domain.payment.Gateway;
 import com.hk.web.action.core.payment.CodGatewaySendReceiveAction;
 import com.hk.web.action.core.payment.TekprocessGatewaySendReceiveAction;
 import com.hk.web.action.core.payment.gateway.*;
+import com.hk.web.action.core.payment.gateway.hkpay.HKPaySendReceiveAction;
 import com.hk.web.action.core.payment.gateway.test.CCAvenueDummyGatewaySendReceiveAction;
 
 public class PaymentModeActionFactory {
@@ -16,7 +17,9 @@ public class PaymentModeActionFactory {
     @SuppressWarnings("unchecked")
     public static Class<? extends BasePaymentGatewaySendReceiveAction> getActionClassForPayment(Gateway gateway, String issuerType) {
 
-        if (EnumGateway.CCAVENUE_DUMMY.getId().equals(gateway.getId())) {
+        if (EnumGateway.HKPay.getId().equals(gateway.getId())) {
+            return HKPaySendReceiveAction.class;
+        }else if (EnumGateway.CCAVENUE_DUMMY.getId().equals(gateway.getId())) {
             return CCAvenueDummyGatewaySendReceiveAction.class;
         } else if (EnumGateway.TECHPROCESS.getId().equals(gateway.getId())) {
             return TekprocessGatewaySendReceiveAction.class;
