@@ -370,6 +370,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     List<SkuItemCLI> skuItemCLIsToBeDeleted = new ArrayList<SkuItemCLI>();
     List<SkuItem> skuItemsToBeDeleted = new ArrayList<SkuItem>();
     Set<LineItem> lineItems = shippingOrder.getLineItems();
+    List<SkuItem> expectedCheckedinSkuItems = new ArrayList <SkuItem> ();
     for (LineItem lineItem : lineItems) {
 
       CartLineItem cartLineItem = lineItem.getCartLineItem();
@@ -379,7 +380,11 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 
         skuItemsToBeDeleted.addAll(updateForeignSICLIForCancelledOrder(infos));
       }
-
+      for (SkuItem si : skuItemsToBeDeleted){
+      	if (si.getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())){
+      		expectedCheckedinSkuItems.add(si);
+      	}
+      }
       List<SkuItemLineItem> skuItemLineItems = lineItem.getSkuItemLineItems();
       if (skuItemLineItems != null && skuItemLineItems.size() > 0) {
         for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
@@ -422,7 +427,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
       baseDao.delete(skuItemCLI);
       iterator.remove();
     }
-    baseDao.deleteAll(skuItemsToBeDeleted);
+    baseDao.deleteAll(expectedCheckedinSkuItems);
     return true;
   }
 

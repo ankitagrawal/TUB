@@ -370,7 +370,7 @@ public class User {
      */
 
     public String toString() {
-        return id == null ? "" : id.toString();
+        return userHash == null ? "" : userHash;
     }
 
     public Date getLastLoginDate() {
