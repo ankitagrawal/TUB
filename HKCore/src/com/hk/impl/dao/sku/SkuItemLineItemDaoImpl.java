@@ -6,6 +6,7 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.StockTransfer;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -71,6 +72,18 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
   public List<SkuItemLineItem> getSkuItemLIsTemp() {
     String sql = "from SkuItemLineItem s group by s.skuItem having count(s.skuItem) > 1";
     return (List<SkuItemLineItem>) getSession().createQuery(sql).list();
+  }
+
+  public List<ForeignSkuItemCLI> getForeignSkuItemCliForEye(){
+      String sql = "select si from ForeignSkuItemCLI si inner join CartLineItem c on si.cartLineItem=c.id inner join ProductVariant pv on si.productVariant=pv.id \n" +
+              "inner join Product p  on pv.product=p.id inner join Category c on p.primaryCategory=c.name\n" +
+              "where c.name like '%eye%' ";
+      return (List<ForeignSkuItemCLI>)getSession().createQuery(sql).list();
+  }
+
+  public List<CartLineItemExtraOption> getCartLineItemExtraConfigForEye(Long id){
+      String sql = "from CartLineItemExtraOption c inner join CartLineItem cl on cl.id=c.cartLineItem where cl.id= :id";
+      return (List<CartLineItemExtraOption>)getSession().createQuery(sql).setParameter("id", id).list();
   }
 
   public List<SkuItemLineItem> getSkuItemLIsTemp(SkuItem skuItem) {
@@ -153,6 +166,7 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
     skuGroup = (SkuGroup)baseDao.save(skuGroup);
     return skuGroup;
   }
+
 
 
 }

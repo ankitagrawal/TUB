@@ -10,7 +10,9 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.api.HKAPIBookingInfo;
 import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -20,6 +22,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
+import com.hk.pact.service.codbridge.UserCartDetail;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -61,7 +64,9 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   BaseDao baseDao;
   @Autowired
   WarehouseService warehouseService;
-  
+  @Autowired
+  BaseDao baseDao;
+
   ShippingOrderService shippingOrderService;
 
   private InventoryHealthService inventoryHealthService;
@@ -1224,9 +1229,43 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     }
     return true;
   }
+
+  public void populateForeignSkuItemCLI() {
+      List<ForeignSkuItemCLI> foreignSkuItemCliForEye= getSkuItemLineItemDao().getForeignSkuItemCliForEye();
+      if (foreignSkuItemCliForEye != null && foreignSkuItemCliForEye.size()>0){
+          String str = "";
+          for(ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCliForEye){
+                  CartLineItem cartLineItem = foreignSkuItemCLI.getCartLineItem();
+                  List<CartLineItemExtraOption> cartLineItemExtraConfigForEye = getSkuItemLineItemDao().getCartLineItemExtraConfigForEye(cartLineItem.getId());
+                  //ProductVariant productVariant =  cartLineItem.getProductVariant();
+                      if (cartLineItemExtraConfigForEye != null && cartLineItemExtraConfigForEye.size()>0){
+                          StringBuilder stringBuilder = new StringBuilder();
+                              for (CartLineItemExtraOption cartLineItemExtraOption : cartLineItemExtraConfigForEye){
+                                stringBuilder.append(cartLineItemExtraOption.getName()).append(" : ").append(cartLineItemExtraOption.getValue());
+                                stringBuilder.append(" | ");
+                              }
+                      int index = stringBuilder.lastIndexOf("|");
+                      str = stringBuilder.substring(0,index-1);
+                      }
+
+                  foreignSkuItemCLI.setExtraConfig(str);
+                  foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
+          }
+
+      }
+  }
+
   
   public InventoryService getInventoryService() {
     return ServiceLocatorFactory.getService(InventoryService.class);
   }
+
+    public BaseDao getBaseDao() {
+        return baseDao;
+    }
+
+    public void setBaseDao(BaseDao baseDao) {
+        this.baseDao = baseDao;
+    }
 
 }
