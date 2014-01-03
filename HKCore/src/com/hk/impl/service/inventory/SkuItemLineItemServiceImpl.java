@@ -9,6 +9,7 @@ import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.api.HKAPIBookingInfo;
 import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
+import com.hk.domain.api.HKApiSkuResponse;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
@@ -64,8 +65,6 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   BaseDao baseDao;
   @Autowired
   WarehouseService warehouseService;
-  @Autowired
-  BaseDao baseDao;
 
   ShippingOrderService shippingOrderService;
 
@@ -1230,31 +1229,51 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     return true;
   }
 
-  public void populateForeignSkuItemCLI() {
-      List<ForeignSkuItemCLI> foreignSkuItemCliForEye= getSkuItemLineItemDao().getForeignSkuItemCliForEye();
-      if (foreignSkuItemCliForEye != null && foreignSkuItemCliForEye.size()>0){
-          String str = "";
-          for(ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCliForEye){
-                  CartLineItem cartLineItem = foreignSkuItemCLI.getCartLineItem();
-                  List<CartLineItemExtraOption> cartLineItemExtraConfigForEye = getSkuItemLineItemDao().getCartLineItemExtraConfigForEye(cartLineItem.getId());
-                  //ProductVariant productVariant =  cartLineItem.getProductVariant();
-                      if (cartLineItemExtraConfigForEye != null && cartLineItemExtraConfigForEye.size()>0){
-                          StringBuilder stringBuilder = new StringBuilder();
-                              for (CartLineItemExtraOption cartLineItemExtraOption : cartLineItemExtraConfigForEye){
-                                stringBuilder.append(cartLineItemExtraOption.getName()).append(" : ").append(cartLineItemExtraOption.getValue());
-                                stringBuilder.append(" | ");
-                              }
-                      int index = stringBuilder.lastIndexOf("|");
-                      str = stringBuilder.substring(0,index-1);
-                      }
-
-                  foreignSkuItemCLI.setExtraConfig(str);
-                  foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
-          }
-
-      }
-  }
-
+	public void populateConfigForeignSkuItemCLI() {
+		List<ForeignSkuItemCLI> foreignSkuItemCliForEye = getSkuItemLineItemDao().getForeignSkuItemCliForEye();
+		if (foreignSkuItemCliForEye != null && foreignSkuItemCliForEye.size() > 0) {
+			String str = "";
+			for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCliForEye) {
+				CartLineItem cartLineItem = foreignSkuItemCLI.getCartLineItem();
+				List<CartLineItemExtraOption> cartLineItemExtraConfigForEye = getSkuItemLineItemDao().getCartLineItemExtraConfigForEye(cartLineItem.getId());
+				// ProductVariant productVariant = cartLineItem.getProductVariant();
+				if (cartLineItemExtraConfigForEye != null && cartLineItemExtraConfigForEye.size() > 0) {
+					StringBuilder stringBuilder = new StringBuilder();
+					for (CartLineItemExtraOption cartLineItemExtraOption : cartLineItemExtraConfigForEye) {
+						stringBuilder.append(cartLineItemExtraOption.getName()).append(" : ").append(cartLineItemExtraOption.getValue());
+						stringBuilder.append(" | ");
+					}
+					int index = stringBuilder.lastIndexOf("|");
+					str = stringBuilder.substring(0, index - 1);
+				}
+				foreignSkuItemCLI.setExtraConfig(str);
+				foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
+			}
+			populateConfigOnBright(foreignSkuItemCliForEye);
+		}
+	}
+	
+	public void populateConfigOnBright(List<ForeignSkuItemCLI> foreignSkuItemCLIs){
+		 for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
+			 try {
+				 HKAPIForeignBookingResponseInfo bookingResponseInfo = new HKAPIForeignBookingResponseInfo();
+				 bookingResponseInfo.setFsiCLIId(foreignSkuItemCLI.getId());
+				 bookingResponseInfo.setItemExtraConfig(foreignSkuItemCLI.getExtraConfig());
+         String url = brightlifecareRestUrl + "product/variant/populateConfig/";
+         ClientRequest request = new ClientRequest(url);
+         ClientResponse response = request.get();
+         int status = response.getStatus();
+         if (status == 200) {
+        	 String data = (String) response.getEntity(String.class);
+           Boolean bookedAtBright = new Gson().fromJson(data, Boolean.class);
+           logger.debug("Config populated for FSICLI:- ", foreignSkuItemCLI.getId());
+         }
+     } catch (Exception e) {
+         logger.error("Exception while getting Bright unbooked inventory for Sku", e.getMessage());
+     }
+			 
+		}
+	}
   
   public InventoryService getInventoryService() {
     return ServiceLocatorFactory.getService(InventoryService.class);

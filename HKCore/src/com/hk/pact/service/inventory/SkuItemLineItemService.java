@@ -87,4 +87,6 @@ public interface SkuItemLineItemService {
   public Boolean freeInventoryForLineItem(LineItem lineItem);
 
   public void createFreshBookingAfterMarkedReview(LineItem lineItem);
+  
+  public void populateConfigForeignSkuItemCLI();
 }

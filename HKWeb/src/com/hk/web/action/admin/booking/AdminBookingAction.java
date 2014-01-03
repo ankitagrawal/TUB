@@ -23,6 +23,7 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuItemLineItemService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Component
@@ -132,6 +133,12 @@ public class AdminBookingAction extends BaseAction {
     addRedirectAlertMessage(new SimpleMessage("  Successfully  Freed Booking  For item  " +  cartLineItemId));
    }
     return new RedirectResolution(AdminBookingAction.class).addParameter("getSkuCartItemLineItems").addParameter("baseOrderId", baseOrderId);
+  }
+  
+  @Secure(hasAnyRoles = { RoleConstants.GOD }, authActionBean = AdminPermissionAction.class)
+  public Resolution populateConfig(){
+  	
+  	return new RedirectResolution(AdminHomeAction.class);
   }
 
 

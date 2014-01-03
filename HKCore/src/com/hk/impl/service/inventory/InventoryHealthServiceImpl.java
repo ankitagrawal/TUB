@@ -928,22 +928,18 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 foreignSkuItemCLI.setProcessedStatus(EnumUnitProcessedStatus.AUTHORIZATION_PENDING.getId());
             }
             foreignSkuItemCLI.setCounter(1L);
-
             List<CartLineItemExtraOption> cartLineItemExtraOptions = cartLineItem.getCartLineItemExtraOptions();
-
             if (cartLineItemExtraOptions != null && cartLineItemExtraOptions.size()>0)
             {
                 StringBuilder stringBuilder = new StringBuilder();
-
                 for (CartLineItemExtraOption ob : cartLineItemExtraOptions)
                 {
-                    stringBuilder.append(ob.getName()).append(" : ").append(ob.getValue());
-                    stringBuilder.append(" | ");
+                  stringBuilder.append(ob.getName()).append(" : ").append(ob.getValue());
+                  stringBuilder.append(" | ");
                 }
                 int index = stringBuilder.lastIndexOf("|");
                 String itemExtraConfig = stringBuilder.substring(0,index-1);
                 logger.debug("extra config = "+itemExtraConfig);
-
                 foreignSkuItemCLI.setExtraConfig(itemExtraConfig);
             }
 
