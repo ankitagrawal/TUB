@@ -54,7 +54,7 @@ public interface SkuItemLineItemDao extends BaseDao {
 
   public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku);
   
-  public List<ForeignSkuItemCLI> getForeignSkuItemCliForEye();
+  public List<Long> getForeignSkuItemCliForEye();
   
   public List<CartLineItemExtraOption> getCartLineItemExtraConfigForEye(Long id);
 

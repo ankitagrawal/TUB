@@ -1230,10 +1230,13 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   }
 
 	public void populateConfigForeignSkuItemCLI() {
-		List<ForeignSkuItemCLI> foreignSkuItemCliForEye = getSkuItemLineItemDao().getForeignSkuItemCliForEye();
-		if (foreignSkuItemCliForEye != null && foreignSkuItemCliForEye.size() > 0) {
+		List<Long> ids = getSkuItemLineItemDao().getForeignSkuItemCliForEye();
+		List<ForeignSkuItemCLI> foreignSkuItemCliForEye = new ArrayList<ForeignSkuItemCLI>();
+		if (ids != null && ids.size() > 0) {
 			String str = "";
-			for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCliForEye) {
+			for (Long id : ids) {
+				ForeignSkuItemCLI foreignSkuItemCLI = skuItemLineItemDao.getForeignSkuItemCLI(id);
+				foreignSkuItemCliForEye.add(foreignSkuItemCLI);
 				CartLineItem cartLineItem = foreignSkuItemCLI.getCartLineItem();
 				List<CartLineItemExtraOption> cartLineItemExtraConfigForEye = getSkuItemLineItemDao().getCartLineItemExtraConfigForEye(cartLineItem.getId());
 				// ProductVariant productVariant = cartLineItem.getProductVariant();

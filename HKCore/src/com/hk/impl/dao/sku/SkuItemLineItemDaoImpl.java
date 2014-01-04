@@ -14,7 +14,9 @@ import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.sku.*;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -150,10 +152,13 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
 		return skuGroup;
 	}
 
-	public List<ForeignSkuItemCLI> getForeignSkuItemCliForEye() {
-		String sql = "select si from ForeignSkuItemCLI si inner join CartLineItem c on si.cartLineItem=c.id inner join ProductVariant pv on si.productVariant=pv.id \n"
-				+ "inner join Product p  on pv.product=p.id inner join Category c on p.primaryCategory=c.name\n" + "where c.name like '%eye%' ";
-		return (List<ForeignSkuItemCLI>) getSession().createQuery(sql).list();
+	public List<Long> getForeignSkuItemCliForEye() {
+		String sql = "select si.id from foreign_si_cli si inner join cart_line_item c on si.cart_line_item_id =c.id inner join product_variant pv on si.product_variant_id = pv.id \n" 
+				 + "inner join product p  on pv.product_id = p.id inner join category ct on p.primary_category=ct.name where ct.name like '%eye%'";
+		SQLQuery query1 = baseDao.createSqlQuery(sql);
+    query1.addScalar("foreignBaseOrderId", Hibernate.LONG);
+    List<Long> foreignSkuItemCliForEye = query1.list();
+    return  foreignSkuItemCliForEye;
 	}
 
 	public List<CartLineItemExtraOption> getCartLineItemExtraConfigForEye(Long id) {
