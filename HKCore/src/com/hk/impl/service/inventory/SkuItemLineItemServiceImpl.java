@@ -1284,7 +1284,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
          String url = brightlifecareRestUrl + "product/variant/populateConfig/";
          ClientRequest request = new ClientRequest(url);
          request.body("application/json", json);
-         ClientResponse response = request.get();
+         ClientResponse response = request.post();
          int status = response.getStatus();
          if (status == 200) {
         	 String data = (String) response.getEntity(String.class);
