@@ -1233,12 +1233,12 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 		List<Long> ids = getSkuItemLineItemDao().getForeignSkuItemCliForEye();
 		List<ForeignSkuItemCLI> foreignSkuItemCliForEye = new ArrayList<ForeignSkuItemCLI>();
 		if (ids != null && ids.size() > 0) {
-			String str = "";
 			for (Long id : ids) {
+				String itemExtraConfig = "";
 				ForeignSkuItemCLI foreignSkuItemCLI = skuItemLineItemDao.getForeignSkuItemCLI(id);
 				foreignSkuItemCliForEye.add(foreignSkuItemCLI);
 				CartLineItem cartLineItem = foreignSkuItemCLI.getCartLineItem();
-				List<CartLineItemExtraOption> cartLineItemExtraConfigForEye = getSkuItemLineItemDao().getCartLineItemExtraConfigForEye(cartLineItem.getId());
+				/*List<CartLineItemExtraOption> cartLineItemExtraConfigForEye = getSkuItemLineItemDao().getCartLineItemExtraConfigForEye(cartLineItem.getId());
 				// ProductVariant productVariant = cartLineItem.getProductVariant();
 				if (cartLineItemExtraConfigForEye != null && cartLineItemExtraConfigForEye.size() > 0) {
 					StringBuilder stringBuilder = new StringBuilder();
@@ -1249,7 +1249,21 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 					int index = stringBuilder.lastIndexOf("|");
 					str = stringBuilder.substring(0, index - 1);
 				}
-				foreignSkuItemCLI.setExtraConfig(str);
+				foreignSkuItemCLI.setExtraConfig(str);*/
+				List<CartLineItemExtraOption> cartLineItemExtraOptions = cartLineItem.getCartLineItemExtraOptions();
+        if (cartLineItemExtraOptions != null && cartLineItemExtraOptions.size()>0)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (CartLineItemExtraOption ob : cartLineItemExtraOptions)
+            {
+              stringBuilder.append(ob.getName()).append(" : ").append(ob.getValue());
+              stringBuilder.append(" | ");
+            }
+            int index = stringBuilder.lastIndexOf("|");
+            itemExtraConfig = stringBuilder.substring(0,index-1);
+            logger.debug("extra config = "+itemExtraConfig);
+        }
+        foreignSkuItemCLI.setExtraConfig(itemExtraConfig);
 				foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
 			}
 			populateConfigOnBright(foreignSkuItemCliForEye);
