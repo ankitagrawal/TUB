@@ -1256,17 +1256,26 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
 	public void populateConfigOnBright(List<ForeignSkuItemCLI> foreignSkuItemCLIs){
 		 for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
 			 try {
+				 
+				 Gson gson = new Gson();
+         
 				 HKAPIForeignBookingResponseInfo bookingResponseInfo = new HKAPIForeignBookingResponseInfo();
 				 bookingResponseInfo.setFsiCLIId(foreignSkuItemCLI.getId());
 				 bookingResponseInfo.setItemExtraConfig(foreignSkuItemCLI.getExtraConfig());
+				 String json = gson.toJson(Arrays.asList(bookingResponseInfo));
+				 
          String url = brightlifecareRestUrl + "product/variant/populateConfig/";
          ClientRequest request = new ClientRequest(url);
+         request.body("application/json", json);
          ClientResponse response = request.get();
          int status = response.getStatus();
          if (status == 200) {
         	 String data = (String) response.getEntity(String.class);
            Boolean bookedAtBright = new Gson().fromJson(data, Boolean.class);
            logger.debug("Config populated for FSICLI:- ", foreignSkuItemCLI.getId());
+         }
+         else {
+        	 logger.debug("API Call Failed ", foreignSkuItemCLI.getId());
          }
      } catch (Exception e) {
          logger.error("Exception while getting Bright unbooked inventory for Sku", e.getMessage());

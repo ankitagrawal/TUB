@@ -137,7 +137,7 @@ public class AdminBookingAction extends BaseAction {
   
   @Secure(hasAnyRoles = { RoleConstants.GOD }, authActionBean = AdminPermissionAction.class)
   public Resolution populateConfig(){
-  	
+  	skuItemLineItemService.populateConfigForeignSkuItemCLI();
   	return new RedirectResolution(AdminHomeAction.class);
   }
 
