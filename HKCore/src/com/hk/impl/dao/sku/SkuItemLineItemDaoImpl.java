@@ -153,7 +153,7 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
 	}
 
 	public List<Long> getForeignSkuItemCliForEye() {
-		String sql = "select si.id from foreign_si_cli si inner join cart_line_item c on si.cart_line_item_id =c.id inner join product_variant pv on si.product_variant_id = pv.id \n" 
+		String sql = "select si.id as foreignBaseOrderId from foreign_si_cli si inner join cart_line_item c on si.cart_line_item_id =c.id inner join product_variant pv on si.product_variant_id = pv.id \n" 
 				 + "inner join product p  on pv.product_id = p.id inner join category ct on p.primary_category=ct.name where ct.name like '%eye%'";
 		SQLQuery query1 = baseDao.createSqlQuery(sql);
     query1.addScalar("foreignBaseOrderId", Hibernate.LONG);
