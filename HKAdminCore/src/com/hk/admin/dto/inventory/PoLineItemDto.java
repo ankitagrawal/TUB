@@ -64,6 +64,9 @@ public class PoLineItemDto {
     }
 
     public void setPayable(Double payable) {
+        if(payable == null){
+            this.payable = 0.0D;
+        }
         this.payable = payable;
     }
 

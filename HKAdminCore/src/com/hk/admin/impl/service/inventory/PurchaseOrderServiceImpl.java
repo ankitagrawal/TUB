@@ -158,7 +158,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
   public void poSentToSupplier(PurchaseOrder po){
 
-      List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
+      /*List<PurchaseOrderStatus> purchaseOrderStatus = EnumPurchaseOrderStatus.getAllPurchaseOrderStatusForSystemGeneratedPOs();
 
       for (PurchaseOrderStatus status : purchaseOrderStatus) {
           EnumPurchaseOrderStatus poStatus = EnumPurchaseOrderStatus.getById(status.getId());
@@ -171,7 +171,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
               po.setPurchaseOrderStatus(EnumPurchaseOrderStatus.SentToSupplier.asEnumPurchaseOrderStatus());
               po = (PurchaseOrder) getBaseDao().save(po);
           }
-      }
+      }*/
+
+      po.setUpdateDate(new Date());
+      po.setApprovedBy(userService.getAdminUser());
+      po.setPurchaseOrderStatus(EnumPurchaseOrderStatus.Approved.asEnumPurchaseOrderStatus());
+      po = (PurchaseOrder) getBaseDao().save(po);
+      adminEmailManager.sendPOApprovedEmail(po);
+      po.setPurchaseOrderStatus(EnumPurchaseOrderStatus.SentToSupplier.asEnumPurchaseOrderStatus());
+      po = (PurchaseOrder) getBaseDao().save(po);
   }
 
   public PurchaseOrderDao getPurchaseOrderDao() {
