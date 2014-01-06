@@ -2,6 +2,8 @@ package com.hk.web.action.admin.booking;
 
 import java.util.*;
 
+import com.hk.domain.sku.ForeignSkuItemCLI;
+import com.hk.pact.dao.sku.SkuItemLineItemDao;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -37,14 +39,18 @@ public class AdminBookingAction extends BaseAction {
 	SkuItemLineItemService skuItemLineItemService;
 	@Autowired
 	InventoryService inventoryService;
+    @Autowired
+    SkuItemLineItemDao skuItemLineItemDao;
 
 	private Long shippingOrderId;
 	private Long baseOrderId;
-  private Long cartLineItemId;
+    private Long cartLineItemId;
 
 	private List<SkuItemCLI> skuCLIList;
 	private List<SkuItemLineItem> skuLiList;
 	private HashMap<ShippingOrder, List<SkuItemLineItem>> soSiLiMap;
+
+    private List<ForeignSkuItemCLI> foreignSkuItemCLIList;
 
 	public Resolution getSkuItemLineItems() {
 		if (shippingOrderId != null) {
@@ -83,6 +89,17 @@ public class AdminBookingAction extends BaseAction {
 		}
 		return new ForwardResolution("/pages/admin/bookingStatusForSO.jsp");
 	}
+
+    public Resolution getForeignBookingStatus(){
+        if(baseOrderId!= null){
+            Order bo = orderService.find(baseOrderId);
+            Set<CartLineItem> cartLineItemList = bo.getCartLineItems();
+            for(CartLineItem cartLineItem:cartLineItemList) {
+                foreignSkuItemCLIList = skuItemLineItemDao.getForeignSkuItemCli(cartLineItem);
+            }
+        }
+        return new ForwardResolution("/pages/admin/bookingStatusForFiCli.jsp");
+    }
 
 	@Secure(hasAnyRoles = { RoleConstants.GOD }, authActionBean = AdminPermissionAction.class)
 	public Resolution freeBookingTable() {
@@ -194,4 +211,13 @@ public class AdminBookingAction extends BaseAction {
   public void setCartLineItemId(Long cartLineItemId) {
     this.cartLineItemId = cartLineItemId;
   }
+
+    public List<ForeignSkuItemCLI> getForeignSkuItemCLIList() {
+        return foreignSkuItemCLIList;
+    }
+
+    public void setForeignSkuItemCLIList(List<ForeignSkuItemCLI> foreignSkuItemCLIList) {
+        this.foreignSkuItemCLIList = foreignSkuItemCLIList;
+    }
+
 }
