@@ -1479,6 +1479,9 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
     }
 
     public void freezeInventoryForAB(HKAPIForeignBookingResponseInfo info) {
+
+      try {
+
         ForeignSkuItemCLI existingFscli = getBaseDao().get(ForeignSkuItemCLI.class, info.getFsiCLIId());
         SkuItem existingSkuItem = skuItemLineItemService.getSkuItem(existingFscli.getId());
         Long existingSkuItemId = existingFscli.getSkuItemId();
@@ -1492,47 +1495,51 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         Date mfgDate = null;
         Date expDate = null;
         if (info.getMfgdt() != null) {
-            mfgDate = getFormattedDate(info.getMfgdt());
+          mfgDate = getFormattedDate(info.getMfgdt());
         }
         if (info.getExpdt() != null) {
-            expDate = getFormattedDate(info.getExpdt());
+          expDate = getFormattedDate(info.getExpdt());
         }
 
         if (skuGroup == null) {
-            skuGroup = getSkuItemLineItemDao().createSkuGroupWithoutBarcode(info.getBatch(), mfgDate, expDate, info.getCp(), info.getMrp(), null, null, null, existingSku);
-            skuGroup.setForeignSkuGroupId(actualSkuGroupId);
-            skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
+          skuGroup = getSkuItemLineItemDao().createSkuGroupWithoutBarcode(info.getBatch(), mfgDate, expDate, info.getCp(), info.getMrp(), null, null, null, existingSku);
+          skuGroup.setForeignSkuGroupId(actualSkuGroupId);
+          skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
         }
         if (actualSkuItemId.equals(existingSkuItemId)) {
-            existingSkuItem.setSkuGroup(skuGroup);
+          existingSkuItem.setSkuGroup(skuGroup);
 
         } else {
-            // need to check item which i got in response got booked in different order
-            ForeignSkuItemCLI fsicliBookedForDifferentOrder = skuItemLineItemService.getFSICI(actualSkuItemId);
-            if (fsicliBookedForDifferentOrder != null) {
-                SkuItem bookedSkuItemFordifferentOrder = skuItemLineItemService.getSkuItem(fsicliBookedForDifferentOrder.getId());
-                String tempBarcode = bookedSkuItemFordifferentOrder.getBarcode();
-                bookedSkuItemFordifferentOrder.setBarcode(existingSkuItem.getBarcode());
+          // need to check item which i got in response got booked in different order
+          ForeignSkuItemCLI fsicliBookedForDifferentOrder = skuItemLineItemService.getFSICI(actualSkuItemId);
+          if (fsicliBookedForDifferentOrder != null) {
+            SkuItem bookedSkuItemFordifferentOrder = skuItemLineItemService.getSkuItem(fsicliBookedForDifferentOrder.getId());
+            String tempBarcode = bookedSkuItemFordifferentOrder.getBarcode();
+            bookedSkuItemFordifferentOrder.setBarcode(existingSkuItem.getBarcode());
 
-                fsicliBookedForDifferentOrder.setSkuItemId(existingFscli.getSkuItemId());
-                fsicliBookedForDifferentOrder.setForeignBarcode(existingSkuItem.getBarcode());
-                fsicliBookedForDifferentOrder.setForeignSkuGroupId(existingFscli.getForeignSkuGroupId());
+            fsicliBookedForDifferentOrder.setSkuItemId(existingFscli.getSkuItemId());
+            fsicliBookedForDifferentOrder.setForeignBarcode(existingSkuItem.getBarcode());
+            fsicliBookedForDifferentOrder.setForeignSkuGroupId(existingFscli.getForeignSkuGroupId());
 
-                String tempBarcodeId = existingSkuItem.getBarcode() + "-SWP-" + existingSkuItem.getId();
-                existingSkuItem.setBarcode(tempBarcodeId);
-                existingSkuItem = (SkuItem) getBaseDao().save(existingSkuItem);
-                bookedSkuItemFordifferentOrder = (SkuItem) getBaseDao().save(bookedSkuItemFordifferentOrder);
-                getBaseDao().save(fsicliBookedForDifferentOrder);
-                existingSkuItem.setBarcode(tempBarcode);
-                existingSkuItem.setSkuGroup(skuGroup);
+            String tempBarcodeId = existingSkuItem.getBarcode() + "-SWP-" + existingSkuItem.getId();
+            existingSkuItem.setBarcode(tempBarcodeId);
+            existingSkuItem = (SkuItem) getBaseDao().save(existingSkuItem);
+            bookedSkuItemFordifferentOrder = (SkuItem) getBaseDao().save(bookedSkuItemFordifferentOrder);
+            getBaseDao().save(fsicliBookedForDifferentOrder);
+            existingSkuItem.setBarcode(tempBarcode);
+            existingSkuItem.setSkuGroup(skuGroup);
 
-            } else {
-                existingSkuItem.setBarcode(info.getBarcode());
-                existingSkuItem.setSkuGroup(skuGroup);
-            }
+          } else {
+            existingSkuItem.setBarcode(info.getBarcode());
+            existingSkuItem.setSkuGroup(skuGroup);
+          }
         }
         getBaseDao().save(existingSkuItem);
         updateForeignSICLITable(Arrays.asList(info));
+      } catch (Exception ex) {
+        logger.error("Exceptions occured while freezing for : fsiclid  " + info.getFsiCLIId()  + " for barcode " + info.getBarcode()  +
+         " for Bright order -- " + info.getFboId() + "-- Exception is --" + ex);
+      }
 
     }
 
