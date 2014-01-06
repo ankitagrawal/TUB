@@ -240,7 +240,7 @@
         <s:param name="printable" value="true"/>
         PC Invoice
     </s:link>)
-          (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre"
+          (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" class="accountingInvoiceLink" event="pre"
                    target="_blank">
           <s:param name="shippingOrder" value="${shippingOrder}"/>
           Accounting Invoice

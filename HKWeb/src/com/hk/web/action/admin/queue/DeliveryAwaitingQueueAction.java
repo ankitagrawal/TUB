@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.courier.Zone;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -58,6 +59,8 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
     CourierService courierService;
 
     List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
+
+    private Zone zone;
 
     private Long orderId;
     private String gatewayOrderId;
@@ -115,6 +118,8 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
         shippingOrderSearchCriteria.setCourierList(courierList);
         shippingOrderSearchCriteria.setAwbList(awbList);
+        shippingOrderSearchCriteria.setShipmentZone(zone);
+        shippingOrderSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
 
         shippingOrderPage = getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
         if (shippingOrderPage != null) {
@@ -152,11 +157,12 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
     public Set<String> getParamSet() {
         Set<String> params = new HashSet<String>();
         params.add("courier");
-        // params.add("startDate");
-        // params.add("endDate");
+        params.add("startDate");
+        params.add("endDate");
         params.add("orderId");
         params.add("gatewayOrderId");
         params.add("trackingId");
+        params.add("zone");
         return params;
     }
 
@@ -263,5 +269,14 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
     public void setAdminShippingOrderService(AdminShippingOrderService adminShippingOrderService) {
         this.adminShippingOrderService = adminShippingOrderService;
     }
+
+    public Zone getZone() {
+        return zone;
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
+    }
+
 
 }

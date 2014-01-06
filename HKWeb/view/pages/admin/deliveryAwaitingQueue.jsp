@@ -22,7 +22,6 @@
           <li><label>Order ID</label> <s:text name="orderId"/></li>
           <li><label>Gateway Order ID</label> <s:text name="gatewayOrderId" class="gatewayOrderId"/></li>
           <li><label>Tracking ID</label> <s:text name="trackingId"/></li>
-<%--
           <li>
             <label>Start
               date</label><s:text class="date_input startDate" style="width:150px"
@@ -33,12 +32,22 @@
               date</label><s:text class="date_input endDate" style="width:150px"
                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
           <li>
---%>
           <s:select name="courier" class="courierService">
             <s:option value="">All Couriers</s:option>
             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
                                        label="name"/>
           </s:select>
+          </li>
+          <li>
+                <label>Zone:</label>
+                <s:select name="zone">
+                    <s:option value="null">Select</s:option>
+                    <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
+                                               value="id"
+                                               label="name"/>
+                </s:select>
+          </li>
+
           <li>
             <div class="buttons"><s:submit name="searchOrders" value="Search"/></div>
           </li>
@@ -94,6 +103,16 @@
     <div style="display:inline;float:right;">
       <s:submit name="markShippingOrderAsDelivered" id="markShippingOrdersAsDelivered"
                 value="Mark Orders As Delivered"/></div>
+      <div style="float:left; font-size: 0.9em; margin-top: 5px; margin-left:20px">
+          <s:hidden name="shippingOrderList" value="${deliveryQueueBean.shippingOrderList}"/>
+
+          <s:submit name="batchPrintOrders" class="batchPrinting" value=" Do Batch Printing"/>
+          <s:hidden name="baseGatewayOrderId" value="${deliveryQueueBean.orderId}"/>
+          <s:hidden name="gatewayOrderId" value="${deliveryQueueBean.gatewayOrderId}"/>
+          <s:hidden name="courier" value="${deliveryQueueBean.courier}"/>
+          <s:hidden name="startDate" value="${deliveryQueueBean.startDate}"/>
+          <s:hidden name="endDate" value="${deliveryQueueBean.endDate}"/>
+      </div>
   </s:form>
   <script type="text/javascript">
     $('#markShippingOrdersAsDelivered').click(function() {
@@ -105,6 +124,33 @@
         }
       });
       return true;
+    });
+
+    $(".batchPrinting").click(function() {
+        $('.shippingOrderDetailCheckbox').each(function() {
+            var shippingOrderDetailCheckbox = $(this);
+            var isChecked = shippingOrderDetailCheckbox.attr('checked');
+            shippingOrderDetailCheckbox.attr("checked", true);
+        });
+        var invoiceLinks = document.getElementsByClassName("accountingInvoiceLink");
+        //var personalCareInvoiceLinks = document.getElementsByClassName("personalCareInvoiceLink");
+        var len = invoiceLinks.length;
+        for (var i = 0; i < len; i++) {
+            var j = i + 1;
+            //Normal Partial Invoice
+            document.getElementById("orderInvoice").src = invoiceLinks[i].href;
+            if (document.getElementById("orderInvoice").src != "") {
+                alert("Sending copy 1 to printer of " + j + " of  " + len + " orders");
+                printInvoice('orderInvoice');
+            }
+            /*//Personal Care Partial Invoice
+             document.getElementById("orderInvoice").src = personalCareInvoiceLinks[i].href;
+             if (document.getElementById("orderInvoice").src != "") {
+             alert("Sending copy 2 to printer of " + j + " of  " + len + " orders");
+             printInvoice('orderInvoice');
+             }*/
+        }
+        return true;
     });
 
   </script>
