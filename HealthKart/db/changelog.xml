@@ -14528,7 +14528,7 @@
             <column name="prefix_invoice_generation" type="VARCHAR(45)"/>
         </addColumn>
     </changeSet>
-    <!--<changeSet author="Arjun Gupta" id="1384774420613-1">
+    <changeSet author="Arjun Gupta" id="1384774420613-1">
         <sql>
             UPDATE warehouse  SET prefix_invoice_generation='HR'  WHERE id in(1,10,101);
             UPDATE warehouse  SET prefix_invoice_generation='MH'  WHERE id in(2,20);
@@ -14539,7 +14539,7 @@
             UPDATE warehouse  SET prefix_invoice_generation='GK'  WHERE id =1001;
             UPDATE warehouse  SET prefix_invoice_generation='BLR'  WHERE id =1002;
         </sql>
-    </changeSet>-->
+    </changeSet>
     <changeSet author="arjun (generated)" id="1384775891669-4">
         <addNotNullConstraint columnDataType="VARCHAR(45)" columnName="prefix_invoice_generation" tableName="warehouse"/>
     </changeSet>
