@@ -80,6 +80,7 @@
     }
 %>
 <c:set var="shippingOrderStatusActionAwaiting" value="<%=EnumShippingOrderStatus.SO_ActionAwaiting.getId()%>"/>
+<c:set var="shippingOrderReadyForValidation" value="<%=EnumShippingOrderStatus.SO_Ready_For_Validation.getId()%>"/>
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
 <c:set var="shippingOrderStatusHold" value="<%=EnumShippingOrderStatus.SO_OnHold.getId()%>"/>
 <c:set var="paymentStatusAuthPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
@@ -327,7 +328,8 @@
     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
             <s:param name="shippingOrder" value="${shippingOrder}"/>
 
-            <c:if test="${shippingOrder.shippingOrderStatus.id eq shippingOrderStatusActionAwaiting}">
+            <c:if test="${shippingOrder.shippingOrderStatus.id eq shippingOrderStatusActionAwaiting
+            || shippingOrder.shippingOrderStatus.id eq shippingOrderReadyForValidation }">
             <br>
             Reason:
             <s:select name="shippingOrder.reason" id="soReason">
