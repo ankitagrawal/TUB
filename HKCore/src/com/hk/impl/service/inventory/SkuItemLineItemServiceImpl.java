@@ -9,8 +9,11 @@ import com.hk.constants.sku.EnumSkuItemOwner;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.api.HKAPIBookingInfo;
 import com.hk.domain.api.HKAPIForeignBookingResponseInfo;
+import com.hk.domain.api.HKApiSkuResponse;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -20,6 +23,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.dao.sku.SkuItemLineItemDao;
+import com.hk.pact.service.codbridge.UserCartDetail;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryHealthService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -61,7 +65,7 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
   BaseDao baseDao;
   @Autowired
   WarehouseService warehouseService;
-  
+
   ShippingOrderService shippingOrderService;
 
   private InventoryHealthService inventoryHealthService;
@@ -1224,9 +1228,89 @@ public class SkuItemLineItemServiceImpl implements SkuItemLineItemService {
     }
     return true;
   }
+
+	public void populateConfigForeignSkuItemCLI() {
+		List<Long> ids = getSkuItemLineItemDao().getForeignSkuItemCliForEye();
+		List<ForeignSkuItemCLI> foreignSkuItemCliForEye = new ArrayList<ForeignSkuItemCLI>();
+		if (ids != null && ids.size() > 0) {
+			for (Long id : ids) {
+				String itemExtraConfig = "";
+				ForeignSkuItemCLI foreignSkuItemCLI = skuItemLineItemDao.getForeignSkuItemCLI(id);
+				foreignSkuItemCliForEye.add(foreignSkuItemCLI);
+				CartLineItem cartLineItem = foreignSkuItemCLI.getCartLineItem();
+				/*List<CartLineItemExtraOption> cartLineItemExtraConfigForEye = getSkuItemLineItemDao().getCartLineItemExtraConfigForEye(cartLineItem.getId());
+				// ProductVariant productVariant = cartLineItem.getProductVariant();
+				if (cartLineItemExtraConfigForEye != null && cartLineItemExtraConfigForEye.size() > 0) {
+					StringBuilder stringBuilder = new StringBuilder();
+					for (CartLineItemExtraOption cartLineItemExtraOption : cartLineItemExtraConfigForEye) {
+						stringBuilder.append(cartLineItemExtraOption.getName()).append(" : ").append(cartLineItemExtraOption.getValue());
+						stringBuilder.append(" | ");
+					}
+					int index = stringBuilder.lastIndexOf("|");
+					str = stringBuilder.substring(0, index - 1);
+				}
+				foreignSkuItemCLI.setExtraConfig(str);*/
+				List<CartLineItemExtraOption> cartLineItemExtraOptions = cartLineItem.getCartLineItemExtraOptions();
+        if (cartLineItemExtraOptions != null && cartLineItemExtraOptions.size()>0)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (CartLineItemExtraOption ob : cartLineItemExtraOptions)
+            {
+              stringBuilder.append(ob.getName()).append(" : ").append(ob.getValue());
+              stringBuilder.append(" | ");
+            }
+            int index = stringBuilder.lastIndexOf("|");
+            itemExtraConfig = stringBuilder.substring(0,index-1);
+            logger.debug("extra config = "+itemExtraConfig);
+        }
+        foreignSkuItemCLI.setExtraConfig(itemExtraConfig);
+				foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
+			}
+			populateConfigOnBright(foreignSkuItemCliForEye);
+		}
+	}
+	
+	public void populateConfigOnBright(List<ForeignSkuItemCLI> foreignSkuItemCLIs){
+		 for (ForeignSkuItemCLI foreignSkuItemCLI : foreignSkuItemCLIs) {
+			 try {
+				 
+				 Gson gson = new Gson();
+         
+				 HKAPIForeignBookingResponseInfo bookingResponseInfo = new HKAPIForeignBookingResponseInfo();
+				 bookingResponseInfo.setFsiCLIId(foreignSkuItemCLI.getId());
+				 bookingResponseInfo.setItemExtraConfig(foreignSkuItemCLI.getExtraConfig());
+				 String json = gson.toJson(Arrays.asList(bookingResponseInfo));
+				 
+         String url = brightlifecareRestUrl + "product/variant/populateConfig/";
+         ClientRequest request = new ClientRequest(url);
+         request.body("application/json", json);
+         ClientResponse response = request.post();
+         int status = response.getStatus();
+         if (status == 200) {
+        	 String data = (String) response.getEntity(String.class);
+           Boolean bookedAtBright = new Gson().fromJson(data, Boolean.class);
+           logger.debug("Config populated for FSICLI:- ", foreignSkuItemCLI.getId());
+         }
+         else {
+        	 logger.debug("API Call Failed ", foreignSkuItemCLI.getId());
+         }
+     } catch (Exception e) {
+         logger.error("Exception while getting Bright unbooked inventory for Sku", e.getMessage());
+     }
+			 
+		}
+	}
   
   public InventoryService getInventoryService() {
     return ServiceLocatorFactory.getService(InventoryService.class);
   }
+
+    public BaseDao getBaseDao() {
+        return baseDao;
+    }
+
+    public void setBaseDao(BaseDao baseDao) {
+        this.baseDao = baseDao;
+    }
 
 }

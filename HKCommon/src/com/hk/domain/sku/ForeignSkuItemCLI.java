@@ -102,6 +102,9 @@ public class ForeignSkuItemCLI {
   @Column(name="shipping_order_booking_type")
   private Long shippingOrderBookingTypeId;
 
+  @Column(name="extra_config")
+  private String extraConfig;
+
   public Long getId() {
     return id;
   }
@@ -260,5 +263,13 @@ public class ForeignSkuItemCLI {
 
   public void setShippingOrderBookingTypeId(Long shippingOrderBookingTypeId) {
     this.shippingOrderBookingTypeId = shippingOrderBookingTypeId;
+  }
+
+  public String getExtraConfig() {
+      return extraConfig;
+  }
+
+  public void setExtraConfig(String extraConfig) {
+      this.extraConfig = extraConfig;
   }
 }
