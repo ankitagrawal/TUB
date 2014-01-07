@@ -720,10 +720,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 //find if this SkuItem Barcode is already present
                 SkuItem existingItem = skuItemDao.getSkuItemByBarcode(tempFsicli.getForeignBarcode());
                 if(existingItem != null){
+                	existingItem.setBarcode(existingItem.getBarcode()+"-new");
+              		existingItem = (SkuItem) getBaseDao().save(existingItem);
                 	ForeignSkuItemCLI foreignSkuItemCLI = skuItemLineItemDao.getForeignSkuItemCLI(tempFsicli.getForeignBarcode());
                 	if(foreignSkuItemCLI != null){
-                		existingItem.setBarcode(existingItem.getBarcode()+"-new");
-                		existingItem = (SkuItem) getBaseDao().save(existingItem);
                 		foreignSkuItemCLI.setForeignBarcode(existingItem.getBarcode());
                 		foreignSkuItemCLI.setSkuItemId(null);
                 		foreignSkuItemCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignSkuItemCLI);
