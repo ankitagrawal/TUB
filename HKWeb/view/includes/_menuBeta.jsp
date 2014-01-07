@@ -60,6 +60,10 @@
   </div>
   </li>
   </c:forEach>
+      <li class="gm-mc brdr-t">
+          <a href="http://www.healthkart.com/store/clearance/index.jsp" class="">Clearance Sale</a>
+          <span style="">&raquo;</span>
+      </li>
   <%--<li class="gm-mc brdr-t">
       &lt;%&ndash;<a href="javascript:void(0)" class="gm-mc-nm">Packs</a>&ndash;%&gt;
       &lt;%&ndash;<span style="">&raquo;</span>&ndash;%&gt;

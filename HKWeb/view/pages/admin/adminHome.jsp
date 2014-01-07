@@ -122,6 +122,7 @@
     <h3><s:link
             beanclass="com.hk.web.action.admin.reversePickup.ReversePickupListAction"> New Reverse Pickup List</s:link></h3>
     </shiro:hasPermission>
+
 <%--
 	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link
@@ -410,6 +411,10 @@
     <h3>
         <s:link beanclass="com.hk.web.action.admin.accounts.SupplierTransactionAction"
                 title="View Supplier Accounts" event="pre">View Supplier Accounts</s:link></h3>
+                
+    <shiro:hasRole name="<%=RoleConstants.GOD%>">
+        <h3><s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction" event="populateConfig">Populate Item Description for Eye Orders</s:link></h3>
+    </shiro:hasRole>
 
 
 </div>
