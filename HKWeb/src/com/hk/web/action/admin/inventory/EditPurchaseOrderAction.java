@@ -312,7 +312,7 @@ public class EditPurchaseOrderAction extends BaseAction {
     public Resolution  saveAquaUnplannedPO(PurchaseOrder purchaseOrder)
     {
         if (purchaseOrder != null && purchaseOrder.getId() != null) {
-            logger.debug("poLineItems@Save: " + poLineItems.size());
+            logger.info("poLineItems@Save: " + poLineItems.size());
 
             double discountRatio = 0;
             if (purchaseOrder.getPayable() != null && purchaseOrder.getPayable() > 0 && purchaseOrder.getDiscount() != null) {
@@ -328,14 +328,14 @@ public class EditPurchaseOrderAction extends BaseAction {
                             poLineItem.setProcurementPrice((poLineItem.getPayableAmount() / poLineItem.getQty())
                                     - (poLineItem.getPayableAmount() / poLineItem.getQty() * discountRatio));
                         }
-                        Sku sku = null;
+                        /*Sku sku = null;
                         try {
                             sku = skuService.getSKU(poLineItem.getProductVariant(), purchaseOrder.getWarehouse());
                         } catch (Exception e) {
                             addRedirectAlertMessage(new SimpleMessage("SKU doesn't exist for " + poLineItem.getProductVariant().getId()));
                             return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
                         }
-                        poLineItem.setSku(sku);
+                        poLineItem.setSku(sku);*/
                         poLineItem.setPurchaseOrder(purchaseOrder);
                         try {
                             poLineItemDao.save(poLineItem);
