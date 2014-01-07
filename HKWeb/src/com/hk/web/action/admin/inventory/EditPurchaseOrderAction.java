@@ -312,38 +312,16 @@ public class EditPurchaseOrderAction extends BaseAction {
     public Resolution  saveAquaUnplannedPO(PurchaseOrder purchaseOrder)
     {
         if (purchaseOrder != null && purchaseOrder.getId() != null) {
-            logger.info("poLineItems@Save: " + poLineItems.size());
+            logger.info("poLineItems@Save: " + purchaseOrder.getPoLineItems().size());
 
-            double discountRatio = 0;
-            if (purchaseOrder.getPayable() != null && purchaseOrder.getPayable() > 0 && purchaseOrder.getDiscount() != null) {
-                discountRatio = purchaseOrder.getDiscount() / purchaseOrder.getPayable();
-            }
             for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
                 if (poLineItem != null && poLineItem.getQty() != null) {
 
                     if (poLineItem.getQty() == 0 && poLineItem.getId() != null) {
                         getBaseDao().delete(poLineItem);
                     } else if (poLineItem.getQty() > 0) {
-                        if (poLineItem.getPayableAmount() != null) {
-                            poLineItem.setProcurementPrice((poLineItem.getPayableAmount() / poLineItem.getQty())
-                                    - (poLineItem.getPayableAmount() / poLineItem.getQty() * discountRatio));
-                        }
-                        /*Sku sku = null;
-                        try {
-                            sku = skuService.getSKU(poLineItem.getProductVariant(), purchaseOrder.getWarehouse());
-                        } catch (Exception e) {
-                            addRedirectAlertMessage(new SimpleMessage("SKU doesn't exist for " + poLineItem.getProductVariant().getId()));
-                            return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
-                        }
-                        poLineItem.setSku(sku);*/
                         poLineItem.setPurchaseOrder(purchaseOrder);
-                        try {
-                            poLineItemDao.save(poLineItem);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            addRedirectAlertMessage(new SimpleMessage("Duplicate variant - " + poLineItem.getSku().getProductVariant().getId()));
-                            return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
-                        }
+                        poLineItemDao.save(poLineItem);
                     }
                 }
             }
@@ -356,11 +334,10 @@ public class EditPurchaseOrderAction extends BaseAction {
             purchaseOrder.setPurchaseOrderStatus(EnumPurchaseOrderStatus.Approved.asEnumPurchaseOrderStatus());
             purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
-            //send mail here
-
             if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
                 adminEmailManager.sendPOApprovedEmail(purchaseOrder);
                 purchaseOrder.setPurchaseOrderStatus(EnumPurchaseOrderStatus.SentToSupplier.asEnumPurchaseOrderStatus());
+                purchaseOrder.setApprovedBy(userService.getAdminUser());
                 purchaseOrder.setPoPlaceDate(new Date());
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date());
