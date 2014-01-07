@@ -4,6 +4,7 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.StockTransfer;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.*;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -52,5 +53,9 @@ public interface SkuItemLineItemDao extends BaseDao {
   public ForeignSkuItemCLI getFSICI(Long foreignSkuItemId);
 
   public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku);
+  
+  public List<Long> getForeignSkuItemCliForEye();
+  
+  public List<CartLineItemExtraOption> getCartLineItemExtraConfigForEye(Long id);
 
 }

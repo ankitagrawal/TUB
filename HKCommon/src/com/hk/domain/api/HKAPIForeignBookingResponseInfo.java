@@ -23,6 +23,7 @@ public class HKAPIForeignBookingResponseInfo {
   private Long unitNum;
   private Long whId;
   private Long bkTyId;
+  private String itemExtraConfig;
 
   private String fsogwId;
   public String getFsogwId(){
@@ -153,5 +154,13 @@ public class HKAPIForeignBookingResponseInfo {
 
   public void setBkTyId(Long bkTyId) {
     this.bkTyId = bkTyId;
+  }
+
+  public String getItemExtraConfig() {
+      return itemExtraConfig;
+  }
+
+  public void setItemExtraConfig(String itemExtraConfig) {
+      this.itemExtraConfig = itemExtraConfig;
   }
 }

@@ -14583,6 +14583,11 @@
             <column name="foreign_shipping_order_gateway_id" type="VARCHAR(30)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Arjun (generated)" id="20131225-1303">
+        <addColumn tableName="foreign_si_cli">
+            <column name="extra_config" type="text"/>
+        </addColumn>
+    </changeSet>
 	<changeSet author="Shakti Singh (generated)" id="20130912-01">
         <sql>
             insert into gateway (id,name, active, priority) values(500,'HKPay', 0, 0);
