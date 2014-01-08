@@ -722,7 +722,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 if(existingItem != null){
                 	existingItem.setBarcode(existingItem.getBarcode()+"-new");
               		existingItem = (SkuItem) getBaseDao().save(existingItem);
-              		List<ForeignSkuItemCLI> foreignSkuItemCLIs = skuItemLineItemDao.getForeignSkuItemCLI(tempFsicli.getForeignBarcode());
+              		List<ForeignSkuItemCLI> foreignSkuItemCLIs = getSkuItemLineItemDao().getForeignSkuItemCLI(tempFsicli.getForeignBarcode());
                 	if(foreignSkuItemCLIs != null && foreignSkuItemCLIs.size()>0){
                 		for (ForeignSkuItemCLI foreignCLI : foreignSkuItemCLIs) {
 											if(foreignCLI.getProcessedStatus().equals(EnumUnitProcessedStatus.UNPROCESSED.getId())||
