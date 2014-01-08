@@ -649,11 +649,6 @@ public class XslParser {
                 rowCount++;
             }
 
-            //Set the status of PO as sent to supplier if it is aqua unplanned PO
-           /* if (aquaUnplannedPO){
-                purchaseOrderService.poSentToSupplier(purchaseOrder);
-
-            }*/
 
         } catch (Exception e) {
             logger.error("Exception @ Row:" + rowCount + 1 + e.getMessage());
