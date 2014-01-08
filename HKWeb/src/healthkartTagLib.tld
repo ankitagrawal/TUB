@@ -1423,4 +1423,13 @@
             ${hk:bookedOnBright(${shippingOrder})}
         </example>
     </function>
+
+    <function>
+        <description>
+            returns line item booking status
+        </description>
+        <name>lineItemBookingStatus</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.Long lineItemBookingStatus(com.hk.domain.shippingOrder.LineItem)</function-signature>
+    </function>
 </taglib>

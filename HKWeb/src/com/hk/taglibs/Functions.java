@@ -23,6 +23,7 @@ import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.analytics.Reason;
@@ -51,6 +52,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuItemLineItem;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -1034,6 +1036,17 @@ public class Functions {
     	return adminShippingOrderService.bookedOnBright(shippingOrder);
     }
 
-
-
+    public static Long lineItemBookingStatus(LineItem lineItem) {
+        List<SkuItemLineItem> skuItemLineItems = lineItem.getSkuItemLineItems();
+        if (skuItemLineItems.size() > 0){
+            for (SkuItemLineItem skuItemLineItem : skuItemLineItems) {
+                if (skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.BOOKED.getId())) {
+                    return 1l;
+                } else if (skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())) {
+                    return 0l;
+                }
+            }
+        }
+        return -1l;
+    }
 }
