@@ -296,7 +296,7 @@ public class EditPurchaseOrderAction extends BaseAction {
             Boolean aquaUnplannedPO = (Boolean)hashmap.get(XslConstants.AQUA_UNPLANNED_PO);
             logger.info("aqua unplanned PO = "+aquaUnplannedPO);
             Set<PoLineItem> poLineItems = (Set<PoLineItem>)hashmap.get(XslConstants.PO_LINEITEMS);
-            addRedirectAlertMessage(new SimpleMessage(poLineItems.size() + " PO Line Items Created Successfully."));
+            addRedirectAlertMessage(new SimpleMessage(poLineItems.size() + " PO Line Items Created Successfully for PO Number:-"+ purchaseOrder.getId()));
 
             if(aquaUnplannedPO){
                 return saveAquaUnplannedPO(purchaseOrder);
