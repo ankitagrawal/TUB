@@ -497,6 +497,11 @@
                     <s:param name="baseOrderId" value="${order.id}"/>
                     Booking Status
                 </s:link>)
+    &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.booking.AdminBookingAction"
+                         event="getForeignBookingStatus" target="_blank">
+    <s:param name="baseOrderId" value="${order.id}"/>
+    Foreign Booking Status
+    </s:link>)
 
     <s:link beanclass="com.hk.web.action.admin.order.OrderCommentAction" event="pre" target="_blank">
     <c:if test="${!empty order.comments}">
