@@ -1521,7 +1521,10 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             fsicliBookedForDifferentOrder.setForeignBarcode(existingSkuItem.getBarcode());
             fsicliBookedForDifferentOrder.setForeignSkuGroupId(existingFscli.getForeignSkuGroupId());
 
-            String tempBarcodeId = existingSkuItem.getBarcode() + "-SWP-" + existingSkuItem.getId();
+            String tempBarcodeId = existingSkuItem.getId() + "-SWP-" + existingSkuItem.getBarcode();
+            if (tempBarcodeId.length() > 30){
+              tempBarcodeId = tempBarcodeId.substring(0,25);
+            }
             existingSkuItem.setBarcode(tempBarcodeId);
             existingSkuItem = (SkuItem) getBaseDao().save(existingSkuItem);
             bookedSkuItemFordifferentOrder = (SkuItem) getBaseDao().save(bookedSkuItemFordifferentOrder);
@@ -1530,6 +1533,21 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             existingSkuItem.setSkuGroup(skuGroup);
 
           } else {
+
+            // freeze fix - starts
+             SkuItem  skuItemWithSameBarcode =   skuItemDao.getSkuItemByBarcode(info.getBarcode());
+            if (skuItemWithSameBarcode != null){
+              logger.info(" Already existing SkuItem --" +  skuItemWithSameBarcode.getId() + "  with same barcode " +skuItemWithSameBarcode.getBarcode() + " and  actually updating fsicli for"  + info.getFsiCLIId() );
+              if( !existingSkuItem.getId().equals(skuItemWithSameBarcode.getId())){
+                String tempBarcodeId = existingSkuItem.getId() + "-SWP-" + existingSkuItem.getBarcode();
+                if (tempBarcodeId.length() > 30){
+                  tempBarcodeId = tempBarcodeId.substring(0,25);
+                }
+                skuItemWithSameBarcode.setBarcode(tempBarcodeId);
+                getBaseDao().save(skuItemWithSameBarcode);
+              }
+            }
+            // freeze fix ends
             existingSkuItem.setBarcode(info.getBarcode());
             existingSkuItem.setSkuGroup(skuGroup);
           }
