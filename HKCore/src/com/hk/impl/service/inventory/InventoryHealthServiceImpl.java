@@ -1525,7 +1525,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
         if (actualSkuItemId.equals(existingSkuItemId)) {
           existingSkuItem.setSkuGroup(skuGroup);
-
+          existingSkuItem.setBarcode(info.getBarcode());
         } else {
           // need to check item which i got in response got booked in different order
           ForeignSkuItemCLI fsicliBookedForDifferentOrder = skuItemLineItemService.getFSICI(actualSkuItemId);
