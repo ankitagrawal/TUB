@@ -555,7 +555,7 @@
             <c:choose>
                 <%--if order is in action awaiting state draw appropriate colour border for line item div--%>
 
-                <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id || shippingOrderStatusHold == shippingOrder.orderStatus.id}">
+                <c:when test="${shippingOrder.orderStatus.id == shippingOrderStatusActionAwaiting || shippingOrder.orderStatus.id == shippingOrderStatusHold || shippingOrder.orderStatus.id == shippingOrderReadyForValidation}">
                     <c:choose>
                         <c:when test="${lineItemBookingStatus == 1}">
                             <tr style="border-left:5px solid green;">
