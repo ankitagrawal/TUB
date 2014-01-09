@@ -22,6 +22,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.EmailManager;
 import com.hk.pact.dao.core.SupplierDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.taglibs.Functions;
@@ -55,6 +56,8 @@ public class EditPurchaseOrderAction extends BaseAction {
 
 	@Autowired
 	private ProductVariantService productVariantService;
+    @Autowired
+    UserService userService;
 	@Autowired
 	XslParser xslParser;
 	@Autowired
@@ -218,6 +221,7 @@ public class EditPurchaseOrderAction extends BaseAction {
 			purchaseOrder.setFinalPayableAmount(purchaseOrder.getPayable() - overallDiscount);
 			purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
 
+
 			if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.SentForApproval.getId())) {
 				emailManager.sendPOSentForApprovalEmail(purchaseOrder);
 			} else if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
@@ -288,23 +292,69 @@ public class EditPurchaseOrderAction extends BaseAction {
 		fileBean.save(excelFile);
 
 		try {
-			Map<Object,Object> hashmap =new HashMap<Object, Object>();
-            hashmap =  xslParser.readAndCreatePOLineItems(excelFile, purchaseOrder);
+			Map<Object,Object> hashmap =  xslParser.readAndCreatePOLineItems(excelFile, purchaseOrder);
             Boolean aquaUnplannedPO = (Boolean)hashmap.get(XslConstants.AQUA_UNPLANNED_PO);
             logger.info("aqua unplanned PO = "+aquaUnplannedPO);
             Set<PoLineItem> poLineItems = (Set<PoLineItem>)hashmap.get(XslConstants.PO_LINEITEMS);
-            //Set<PoLineItem> poLineItems = xslParser.readAndCreatePOLineItems(excelFile, purchaseOrder);
-			addRedirectAlertMessage(new SimpleMessage(poLineItems.size() + " PO Line Items Created Successfully."));
+            addRedirectAlertMessage(new SimpleMessage(poLineItems.size() + " PO Line Items Created Successfully for PO Number:-"+ purchaseOrder.getId()));
+
             if(aquaUnplannedPO){
-                addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-                return new RedirectResolution(POAction.class);
+                return saveAquaUnplannedPO(purchaseOrder);
             }
+
 		} catch (Exception e) {
 			logger.error("Exception while reading excel sheet.", e);
 			addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
 		}
 		return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
 	}
+
+    public Resolution  saveAquaUnplannedPO(PurchaseOrder purchaseOrder)
+    {
+        if (purchaseOrder != null && purchaseOrder.getId() != null) {
+            logger.info("poLineItems@Save: " + purchaseOrder.getPoLineItems().size());
+
+            for (PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
+                if (poLineItem != null && poLineItem.getQty() != null) {
+
+                    if (poLineItem.getQty() == 0 && poLineItem.getId() != null) {
+                        getBaseDao().delete(poLineItem);
+                    } else if (poLineItem.getQty() > 0) {
+                        poLineItem.setPurchaseOrder(purchaseOrder);
+                        poLineItemDao.save(poLineItem);
+                    }
+                }
+            }
+            purchaseOrder.setUpdateDate(new Date());
+            purchaseOrderDto = purchaseOrderManager.generatePurchaseOrderDto(purchaseOrder);
+            purchaseOrder.setPayable(purchaseOrderDto.getTotalPayable());
+            double overallDiscount = purchaseOrder.getDiscount() != null ? purchaseOrder.getDiscount() : 0;
+            purchaseOrder.setFinalPayableAmount(purchaseOrder.getPayable() - overallDiscount);
+            purchaseOrder.setApprovedBy(userService.getAdminUser());
+            purchaseOrder.setPurchaseOrderStatus(EnumPurchaseOrderStatus.Approved.asEnumPurchaseOrderStatus());
+            purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
+
+            if (purchaseOrder.getPurchaseOrderStatus().getId().equals(EnumPurchaseOrderStatus.Approved.getId())) {
+                adminEmailManager.sendPOApprovedEmail(purchaseOrder);
+                purchaseOrder.setPurchaseOrderStatus(EnumPurchaseOrderStatus.SentToSupplier.asEnumPurchaseOrderStatus());
+                purchaseOrder.setApprovedBy(userService.getAdminUser());
+                purchaseOrder.setPoPlaceDate(new Date());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date());
+                calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getLeadTime());
+                purchaseOrder.setEstDelDate(calendar.getTime());
+                if (purchaseOrder.getSupplier().getCreditDays() != null && purchaseOrder.getSupplier().getCreditDays() >= 0) {
+                    calendar.add(Calendar.DATE, purchaseOrder.getSupplier().getCreditDays());
+                    purchaseOrder.setEstPaymentDate(calendar.getTime());
+                } else {
+                    purchaseOrder.setEstPaymentDate(new Date());
+                }
+                purchaseOrder = (PurchaseOrder) getBaseDao().save(purchaseOrder);
+            }
+        }
+        addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+        return new RedirectResolution(POAction.class);
+    }
 
 	public Resolution saveSupplier() {
 		purchaseOrder.setSupplier(supplier);

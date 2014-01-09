@@ -22,6 +22,7 @@ import com.hk.domain.reverseOrder.ReverseLineItem;
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.sku.SkuItemDao;
@@ -137,6 +138,8 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
         LineItem lineItem = lineItemRecheckinBarcodeMapEntry.getKey();
         ProductVariant productVariant = lineItem.getSku().getProductVariant();
         ShippingOrder shippingOrder = lineItem.getShippingOrder();
+	      Warehouse warehouse=shippingOrder.getWarehouse();
+	      Store store=warehouse.getStore();
         String recheckinBarcode = lineItemRecheckinBarcodeMapEntry.getValue();
         Long alreadyCheckedInUnits = getAdminProductVariantInventoryDao().getCheckedInPVIAgainstReturn(lineItem);
         List<ProductVariantInventory> checkedOutInventories = getAdminProductVariantInventoryDao().getCheckedOutSkuItems(shippingOrder, lineItem);
@@ -161,10 +164,18 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
               recheckinCounter++;
 
               if (conditionOfItem.equals(GOOD)) {
+	              if(store.equals(null)){
                 getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
                     null, EnumSkuItemStatus.Checked_IN_Non_Saleable, EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD_NON_SALEABLE), 0L, loggedOnUser);
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN_Non_Saleable.getSkuItemStatus());
                 skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+	              }else
+	              {
+		              getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
+				              null, EnumSkuItemStatus.Checked_IN, EnumSkuItemOwner.SELF, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
+		              skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		              skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
+	              }
                 skuItemDao.save(skuItem);
                 inventoryService.checkInventoryHealth(productVariant);
                 break;

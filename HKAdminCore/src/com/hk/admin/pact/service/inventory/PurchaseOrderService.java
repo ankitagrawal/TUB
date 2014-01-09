@@ -38,6 +38,4 @@ public interface PurchaseOrderService {
 
   public Supplier getBrightSupplierForAquaWH(Warehouse warehouse);
 
-  public void poSentToSupplier(PurchaseOrder po);
-
 }
