@@ -688,9 +688,9 @@
                         <c:if test="${isActionQueue == true}">
                             <c:if test="${!productVariant.product.service}">
                                 <p>
-                                    [RED:no inventory]
-                                    [green:booked]
-                                    [orange:expected checked in]
+                                    <span style="background-color:red;">.</span> NO Booking <br/>
+                                    <span style="background-color:orange;">.</span> Booking@BRIGHT <br/>
+                                    <span style="background-color:green;">.</span> Booking@AQUA
                                 </p>
                             </c:if>
                         </c:if>
