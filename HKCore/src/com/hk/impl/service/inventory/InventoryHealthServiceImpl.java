@@ -716,6 +716,23 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 skuItem.setSkuGroup(skuGroup);
                 skuItem.setCreateDate(new Date());
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getSkuItemStatus());
+                
+                //find if this SkuItem Barcode is already present
+                SkuItem existingItem = skuItemDao.getSkuItemByBarcode(tempFsicli.getForeignBarcode());
+                if(existingItem != null){
+                	existingItem.setBarcode(existingItem.getBarcode()+"-new");
+              		existingItem = (SkuItem) getBaseDao().save(existingItem);
+              		List<ForeignSkuItemCLI> foreignSkuItemCLIs = getSkuItemLineItemDao().getForeignSkuItemCLI(tempFsicli.getForeignBarcode());
+                	if(foreignSkuItemCLIs != null && foreignSkuItemCLIs.size()>0){
+                		for (ForeignSkuItemCLI foreignCLI : foreignSkuItemCLIs) {
+											if(foreignCLI.getProcessedStatus().equals(EnumUnitProcessedStatus.UNPROCESSED.getId())||
+													foreignCLI.getProcessedStatus().equals(EnumUnitProcessedStatus.PROCESSED.getId())){
+												foreignCLI.setSkuItemId(null);
+												foreignCLI = (ForeignSkuItemCLI) getBaseDao().save(foreignCLI);
+											}
+										}
+                	}
+                } 
                 skuItem.setBarcode(tempFsicli.getForeignBarcode());
                 skuItem.setSkuItemOwner(EnumSkuItemOwner.SELF.getSkuItemOwnerStatus());
                 skuItem.setForeignSkuItemCLI(tempFsicli);
@@ -1508,7 +1525,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         }
         if (actualSkuItemId.equals(existingSkuItemId)) {
           existingSkuItem.setSkuGroup(skuGroup);
-
+          existingSkuItem.setBarcode(info.getBarcode());
         } else {
           // need to check item which i got in response got booked in different order
           ForeignSkuItemCLI fsicliBookedForDifferentOrder = skuItemLineItemService.getFSICI(actualSkuItemId);
