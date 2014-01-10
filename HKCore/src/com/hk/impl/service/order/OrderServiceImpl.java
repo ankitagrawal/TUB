@@ -853,9 +853,9 @@ public class OrderServiceImpl implements OrderService {
         }
       }
     } catch (Exception e) {
-    	shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), EnumShippingOrderLifecycleActivity.ABCommunicationBookingSuccess, null,
+    	/*shippingOrderService.logShippingOrderActivity(lineItem.getShippingOrder(), EnumShippingOrderLifecycleActivity.ABCommunicationBookingSuccess, null,
 					"Exception while booking/updating Bright Inventory"
-							+ lineItem.getSku().getProductVariant());
+							+ lineItem.getSku().getProductVariant());*/
       logger.error("Exception while booking/updating Bright Inventory against BO# " + lineItem.getCartLineItem().getOrder().getId(), e);
       
     }
