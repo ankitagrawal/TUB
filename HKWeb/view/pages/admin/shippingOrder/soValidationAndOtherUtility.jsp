@@ -38,9 +38,9 @@ pageContext.setAttribute("shippingOrderStatusList", shippingOrderStatusList);
 		<div align = "center">
 			<table border="1">
 				<tr>
-					<td><strong>SO Gateway IDs :</strong><br /> <span style="font-size: .9em;">(comma separated values)</span>
+					<td><strong>SO IDs :</strong><br /> <span style="font-size: .9em;">(comma separated values)</span>
 					</td>
-					<td><s:textarea name="gatewayOrderIds" rows="5" cols="30" style="height:50px;" /></td>
+					<td><s:textarea name="shippingOrderIds" rows="5" cols="30" style="height:50px;" /></td>
 				</tr>
 				<tr>
 					<td colspan="2" align="center" style="text-align: center;"><strong>OR</strong></td>
