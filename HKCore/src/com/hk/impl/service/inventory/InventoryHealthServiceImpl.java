@@ -818,6 +818,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             } catch (Exception e) {
                 logger.error("Exception while booking Bright Inventory against BO# so removing the entry from fsicli id " + cartLineItem.getOrder().getId() + e.getMessage());
                 ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
+	            if(foreignSkuItemCLI != null) {
                 cartLineItem = (CartLineItem) foreignSkuItemCLI.getCartLineItem();
                 cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
                 getBaseDao().save(cartLineItem);
@@ -826,6 +827,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
                 orderLoggingService.logOrderActivity(cartLineItem.getOrder(), loggedOnUser,
                         EnumOrderLifecycleActivity.ABCommunicationTempBookingFailure.asOrderLifecycleActivity(), "Exception while temp booking Bright Inventory"
                                 + cartLineItem.getProductVariant());
+	            }
             }
             if (infos == null || infos.size() <= 0) {
                 logger.debug(" Going to delete  FSICLi for  temp booking at Bright as infos got is null");

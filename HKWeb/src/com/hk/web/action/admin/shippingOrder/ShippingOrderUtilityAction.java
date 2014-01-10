@@ -45,7 +45,7 @@ public class ShippingOrderUtilityAction extends BasePaginatedAction {
   }
 
   private List<ShippingOrder> shippingOrderList;
-  private Integer defaultPerPage = 200;
+  private Integer defaultPerPage = 1000;
   private Page shippingOrderPage;
   private List<ShippingOrderStatus> shippingOrderStatusList;
   private List<ShippingOrderStatus> shippingOrderStatus;
