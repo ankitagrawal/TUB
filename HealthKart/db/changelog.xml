@@ -14604,4 +14604,10 @@
             <column name="gateway_order_id"/>
         </createIndex>
     </changeSet>
+		<changeSet author="R1(generated)" id="20140110-01">
+			<sql>
+				alter table sku_item add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE
+				CURRENT_TIMESTAMP;
+			</sql>
+		</changeSet>
     </databaseChangeLog>

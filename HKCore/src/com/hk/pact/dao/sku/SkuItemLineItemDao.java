@@ -57,5 +57,7 @@ public interface SkuItemLineItemDao extends BaseDao {
   public List<Long> getForeignSkuItemCliForEye();
   
   public List<CartLineItemExtraOption> getCartLineItemExtraConfigForEye(Long id);
+  
+  public List<ForeignSkuItemCLI> getForeignSkuItemCLI(String barcode);
 
 }

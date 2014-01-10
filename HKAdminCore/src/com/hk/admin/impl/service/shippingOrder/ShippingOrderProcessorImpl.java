@@ -701,6 +701,9 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
             EnumReason.InsufficientUnbookedInventoryManual.asReason(), "So cancelled has  JIt  products -- " + cancelledSO.getId());
 
       }else {
+
+        /*
+
       //  cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Cancelled));
         logger.error("Going to call cancellation for so :" + cancelledSO.getId());
         Payment payment = cancelledSO.getBaseOrder().getPayment();
@@ -716,9 +719,14 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
           emailManager.sendOrderCancelEmailToUser(cancelledSO.getBaseOrder());
         }
 
+        */
+        cancelledSO.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Ready_For_Validation));
         shippingOrderService.logShippingOrderActivity(cancelledSO, user,
-            shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_Cancelled),
-            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO cancelled as No booking done for this order ");
+            shippingOrderService.getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_ReadyForValidation),
+            EnumReason.InsufficientUnbookedInventoryManual.asReason(), "SO  on about to cancel state --auto cancellation is stopped now ");
+        shippingOrderService.save(cancelledSO);
+
+        return false;
 
       }
 

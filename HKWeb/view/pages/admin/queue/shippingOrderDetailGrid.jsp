@@ -549,17 +549,20 @@
 					<c:set var="bookedQtyProcessingQ" value="${hk:bookedQty(sku, soIdsForProcessingQueue)}" />
 				</c:if>
 
+            <c:set var="lineItemBookingStatus" value="${hk:lineItemBookingStatus(lineItem)}" />
+
 			<%--<tr>--%>
             <c:choose>
                 <%--if order is in action awaiting state draw appropriate colour border for line item div--%>
-                <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id || shippingOrderStatusHold == shippingOrder.orderStatus.id}">
+
+                <c:when test="${shippingOrder.orderStatus.id == shippingOrderStatusActionAwaiting || shippingOrder.orderStatus.id == shippingOrderStatusHold || shippingOrder.orderStatus.id == shippingOrderReadyForValidation}">
                     <c:choose>
-                        <c:when test="${(bookedQtyActionQ+bookedQtyProcessingQ) <= skuNetInventory}">
+                        <c:when test="${lineItemBookingStatus == 1}">
                             <tr style="border-left:5px solid green;">
                         </c:when>
                         <c:otherwise>
                             <c:choose>
-                                <c:when test="${lineItem.qty <= skuNetInventory}">
+                                <c:when test="${lineItemBookingStatus == 0}">
                                     <tr style="border-left:5px solid orange;">
                                 </c:when>
                                 <c:otherwise>
@@ -685,9 +688,9 @@
                         <c:if test="${isActionQueue == true}">
                             <c:if test="${!productVariant.product.service}">
                                 <p>
-                                    [AQ:${bookedQtyActionQ}]
-                                    [PQ:${bookedQtyProcessingQ}]
-                                    [Net-Phy:${skuNetInventory}]
+                                    <span style="background-color:red;">.</span> NO Booking <br/>
+                                    <span style="background-color:orange;">.</span> Booking@BRIGHT <br/>
+                                    <span style="background-color:green;">.</span> Booking@AQUA
                                 </p>
                             </c:if>
                         </c:if>
