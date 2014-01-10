@@ -487,7 +487,18 @@ public class InventoryCheckinAction extends BaseAction {
 									grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
 									getGoodsReceivedNoteDao().save(grn);
 									editPVFillRate(grn);
-									addRedirectAlertMessage(new SimpleMessage("All inventory checked in. GRN is marked closed"));
+									String message ="All inventory checked in. GRN is marked closed";
+									addRedirectAlertMessage(new SimpleMessage(message));
+
+									Set<ShippingOrder> shippingOrders = adminInventoryService.manuallyEscalateShippingOrdersForThisCheckin(grn);
+									if (shippingOrders != null && shippingOrders.size() > 0) {
+										String escalated = "";
+										for (ShippingOrder shippingOrder : shippingOrders) {
+											escalated += shippingOrder.getId().toString() + ", ";
+										}
+										message.concat("<br>Shipping Order(s) - " + escalated + " were escalated.");
+									}
+
 									return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 								} else {
 									grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
