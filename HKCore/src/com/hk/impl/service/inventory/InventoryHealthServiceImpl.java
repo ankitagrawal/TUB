@@ -1,41 +1,5 @@
 package com.hk.impl.service.inventory;
 
-import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import com.hk.domain.order.CartLineItemExtraOption;
-import org.hibernate.Hibernate;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
-import org.jboss.resteasy.client.ClientRequest;
-import org.jboss.resteasy.client.ClientResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hk.constants.catalog.product.EnumUpdatePVPriceStatus;
@@ -58,15 +22,11 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.CartLineItemExtraOption;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.ForeignSkuItemCLI;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.sku.SkuGroup;
-import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.SkuItemCLI;
-import com.hk.domain.sku.SkuItemLineItem;
+import com.hk.domain.sku.*;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.edge.pact.service.HybridStoreVariantService;
@@ -90,7 +50,28 @@ import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.web.AppConstants;
+import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class InventoryHealthServiceImpl implements InventoryHealthService {
@@ -849,11 +830,13 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
             if (infos == null || infos.size() <= 0) {
                 logger.debug(" Going to delete  FSICLi for  temp booking at Bright as infos got is null");
                 ForeignSkuItemCLI foreignSkuItemCLI = getBaseDao().get(ForeignSkuItemCLI.class, fsicliId);
+	            if(foreignSkuItemCLI != null){
                 cartLineItem = (CartLineItem) foreignSkuItemCLI.getCartLineItem();
                 cartLineItem.getForeignSkuItemCLIs().remove(foreignSkuItemCLI);
                 getBaseDao().save(cartLineItem);
                 getBaseDao().delete(foreignSkuItemCLI);
                 logger.debug(" Deleted FSICLi for failed temp booking at Bright  due to null infos");
+	            }
             } else if (infos != null && infos.size() > 0) {
                 updateForeignSICLITable(infos);
             }
