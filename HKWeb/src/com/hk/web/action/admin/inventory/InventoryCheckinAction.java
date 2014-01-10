@@ -483,6 +483,16 @@ public class InventoryCheckinAction extends BaseAction {
 
 								getInventoryService().checkInventoryHealth(productVariant);
 								if (getInventoryService().allInventoryCheckedIn(grn)) {
+
+                  Set<ShippingOrder> shippingOrders = adminInventoryService.manuallyEscalateShippingOrdersForThisCheckin(grn);
+                  if (shippingOrders != null && shippingOrders.size() > 0) {
+                    String escalated = "";
+                    for (ShippingOrder shippingOrder : shippingOrders) {
+                      escalated += shippingOrder.getId().toString() + ", ";
+                    }
+                    message.concat("<br>Shipping Order(s) - " + escalated + " were escalated.");
+                  }
+
 									getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
 									grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
 									getGoodsReceivedNoteDao().save(grn);
@@ -490,14 +500,7 @@ public class InventoryCheckinAction extends BaseAction {
 									String message ="All inventory checked in. GRN is marked closed";
 									addRedirectAlertMessage(new SimpleMessage(message));
 
-									Set<ShippingOrder> shippingOrders = adminInventoryService.manuallyEscalateShippingOrdersForThisCheckin(grn);
-									if (shippingOrders != null && shippingOrders.size() > 0) {
-										String escalated = "";
-										for (ShippingOrder shippingOrder : shippingOrders) {
-											escalated += shippingOrder.getId().toString() + ", ";
-										}
-										message.concat("<br>Shipping Order(s) - " + escalated + " were escalated.");
-									}
+
 
 									return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 								} else {
