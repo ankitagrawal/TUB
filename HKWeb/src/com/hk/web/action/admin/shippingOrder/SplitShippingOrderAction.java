@@ -58,8 +58,9 @@ public class SplitShippingOrderAction extends BaseAction {
             }
         }
         boolean orderSplitSuccess = false;
-        if (shippingOrder!=null &&
-                EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId())) {
+        if (shippingOrder!=null &&(
+                EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId()) || 
+                EnumShippingOrderStatus.SO_Ready_For_Validation.getId().equals(shippingOrder.getOrderStatus().getId()))) {
             orderSplitSuccess = shippingOrderProcessor.autoSplitSO(shippingOrder, selectedLineItems,
                     splittedOrders, messages);
 
