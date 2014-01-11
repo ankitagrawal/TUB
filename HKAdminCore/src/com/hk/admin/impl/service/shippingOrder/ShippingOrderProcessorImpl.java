@@ -635,7 +635,7 @@ public class ShippingOrderProcessorImpl implements ShippingOrderProcessor {
     boolean lineItemsCreated = false;
     boolean bookedAtBright = false;
     for (LineItem lineItem : cancelledSO.getLineItems()) {
-      if (lineItem.getSkuItemLineItems().size() > 0) {
+      if (lineItem.getSkuItemLineItems() != null && lineItem.getSkuItemLineItems().size() > 0) {
         lineItemsCreated = true;
          for (SkuItemLineItem skuItemLineItem :lineItem.getSkuItemLineItems()){
              if (skuItemLineItem.getSkuItem().getSkuItemStatus().getId().equals(EnumSkuItemStatus.EXPECTED_CHECKED_IN.getId())){
