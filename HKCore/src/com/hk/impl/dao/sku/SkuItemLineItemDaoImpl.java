@@ -131,8 +131,9 @@ public class SkuItemLineItemDaoImpl extends BaseDaoImpl implements SkuItemLineIt
 	}
 
 	public ForeignSkuItemCLI getFSICI(Long foreignSkuItemId) {
-		String sql = "from ForeignSkuItemCLI f where f.skuItemId = :foreignSkuItemId";
-		return (ForeignSkuItemCLI) getSession().createQuery(sql).setParameter("foreignSkuItemId", foreignSkuItemId).uniqueResult();
+		String sql = "from ForeignSkuItemCLI f where f.skuItemId = :foreignSkuItemId order by f.id desc";
+    List<ForeignSkuItemCLI> fsiclis =  (List<ForeignSkuItemCLI> ) getSession().createQuery(sql).setParameter("foreignSkuItemId", foreignSkuItemId).list();
+    return fsiclis != null && !fsiclis.isEmpty() ? fsiclis.get(0) : null;
 	}
 	
 	public List<ForeignSkuItemCLI> getForeignSkuItemCLI(String foreignBarcode){
