@@ -1558,7 +1558,7 @@ public class InventoryHealthServiceImpl implements InventoryHealthService {
         updateForeignSICLITable(Arrays.asList(info));
       } catch (Exception ex) {
         logger.error("Exceptions occured while freezing for : fsiclid  " + info.getFsiCLIId()  + " for barcode " + info.getBarcode()  +
-         " for Bright order -- " + info.getFboId() + "-- Exception is --" + ex);
+         " for Bright order -- " + info.getFboId() + "-- Exception is --" + ex, ex);
       }
 
     }
