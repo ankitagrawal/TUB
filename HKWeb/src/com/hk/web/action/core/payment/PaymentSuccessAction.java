@@ -101,7 +101,11 @@ public class PaymentSuccessAction extends BaseAction {
     }
 
     //Loyalty program
-    UserOrderKarmaProfile karmaProfile = loyaltyProgramService.getUserOrderKarmaProfile(order.getId());
+
+    UserOrderKarmaProfile karmaProfile = null;
+	  if (order != null) {
+		  karmaProfile = loyaltyProgramService.getUserOrderKarmaProfile(order.getId());
+	  }
     if (karmaProfile != null) {
       loyaltyPointsEarned = karmaProfile.getKarmaPoints();
     }
