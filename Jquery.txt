@@ -1,0 +1,1886 @@
+
+1. Browser send request to server for file.
+2. Browser diplay the html returned by server
+To change your web pages on the fly, without reloading, you need to
+talk to your browser. How do you pull that off ? With an HTML tag
+known as <script>.
+
+The <script> tag tells the browser that you’ll be giving it some directions to follow.
+Enter jQuery (and JavaScript)!
+The language we use to give the browser directions is JavaScript.Every browser comes with a built-in JavaScript interpreter that takes
+the directions you write in between the <script> tags and translates those directions into different kinds of action on the web page.
+
+
+
+<script>
+$(document).ready(function(){ When the web page document is ready, do what's below.
+$("button").click(function(){ When any button element is clicked, do this stuff:
+$("h1").hide("slow"); Make all h1 elements disappear slowly from the page.
+$("h2").show("fast"); Make all h2 elements show quickly on the page.
+$("img").slideUp(); Make all img elements slide upward and disappear.
+}); End the click function.
+}); End the document ready function.
+</script>
+
+
+
+Your browser uses the HTML Document Object Model (DOM) to build a page from simple HTML markup and CSS code into a clickable page
+complete with text, images, videos, and all the other great content we love to browse.
+
+  jQuery makes the DOM less scary
+
+  For instance, let’say we want to change the HTML inside of the only paragraph element on our page.
+
+  document.getElementsByTagName("p")[0].innerHTML = "Change the page.";  // Set the HTML inside that element... ...to this stuff
+
+  $("p").html("Change the page.");
+
+
+  //
+     for (i = 0; i <= 4; i++)
+{
+document.getElementsByTagName("p")[i].innerHTML="Change the page";
+}
+
+One of jQuery’s main strengths is that it allows you to work with the DOM without having to know every little thing about it. Underneath it all, JavaScript is
+doing the heavy lifting.
+
+
+Javascript interpreter doesnot change the original HTML and CSS . It makes the changes to dom represntation of page in browser memory.
+
+jQuery () = $()  --- 3 things can be put --  css selector, HTML, ,JavascriptObject
+
+Element Selector, Class selector , id selector
+$("h1").hide();  ,,  $(".my_class").slideUp(); ,,  $("#my_id").fadeOut(),,,
+
+As its name suggests, jQuery is all about querying. You ask for something with a
+selector, and the JavaScript interpreter asks the DOM to get it for you. If you ask
+for an element with nested elements, jQuery will give you the nested elements too.
+Let’s take apart a jQuery selector a bit more to make sure we know how it works.
+
+
+$("#myTop").css({"background-color":"blue"});      <div id="myTop”> </div>
+
+
+$("span.Italian").toggle();    <span class="Italian">Nel Mezzo del cammin di nostra vita</span>
+                               <span class="English">In the middle of this roadcalled "our life"</span>
+
+$("p#mytext").show();   <p id="mytext">One morning, when Gregor Samsa woke from troubled dreams . . .</p>
+
+
+
+
+
+<div id="showfriend">
+<a href="#">Our Furry Friends Need
+Your Help
+<img src="images/furry_friend.jpg">
+</a>
+
+The furry friend image of the dog is nested inside
+the anchor tag. This image shouldn’t show up until
+the user clicks the link in the anchor tag.
+
+
+
+
+$("img").fadeIn();       from being invisible (transparent) to being visible (opaque).
+$(document).ready (function() {  ---  Make sure the page is ready for intraction
+
+
+var pts =100;
+var msg = "High score: <strong>"+pts+"</strong>"
+
+<p>jQuery lets me add stuff onto my web page without having to reload it.</p>
+$("p").append ("Hi everyone");
+
+The $(this) selector gives us an easy way to point to the current element.
+
+$(".guess_box").click( function() {
+var discount = Math.floor((Math.random()*5) + 5);
+var discount_msg = "<p>Your Discount is "+ discount +"%</p>";
+alert(discount_msg);
+$(this).append(discount_msg);
+});
+
+
+<div>My To Do List</div>
+<ol>
+<li>Learn jQuery</li>
+<li>Ask the Boss for a raise</li>
+<li>Tweet about my raise</li>
+</ol>
+<button id="btnRemove">
+
+
+$("li").remove();
+
+
+
+Dig down with descendant selectors
+
+$("div p")
+
+$("div div p")
+
+$(" div p#my_name")                      <!-- <p id= "my_name"> -->
+
+
+
+===============Jquery events and function ======
+
+Binding An event ---
+
+$("#myElement").click( function() {
+alert($(this).text());
+});
+
+
+
+$("#myElement").bind('click', function() {
+alert($(this).text());
+});
+
+
+To remove one event:
+
+$("#myElement").unbind('click');
+$("#myElement").unbind();   // to remove all events
+
+// Going through the elements
+
+$(".nav_item").each(function(){
+	$(this).hide();
+});
+Loop through each of the elements that match our selector. Run this handler function.
+Run
+
+$(".guess_box").each( function(){
+$(this).unbind('click');
+});
+
+// seperate script file
+
+1 You can include it in more than one page (code reuse).
+2 Your page will load faster.
+3 The HTML code you write will be cleaner and easier to read.
+<script src="scripts/my_scripts.js"></script>
+
+
+====  Wouldn’t it be dreamy if we could write our jQuery code once, but use it again whenever we need? But I know it’s just a fantasy...
+
+jQuery provides a lot of functions for you, but you can also write your own custom functions to provide features not supplied by
+jQuery. By creating a custom function, you can use your own code again and again without repeating it in your script. Instead, you
+just call the function by name when you want to run its code.
+
+function myFunc1(){
+	$("div").hide();
+}
+
+var myFunc2 = function() {
+	$("div").show();
+}
+
+Naming your functions allows you to call them from more than one place in your code. Unnamed functions—also known as anonymous functions—are pretty
+limited in how you can use them. Let’s look at anonymous functions in more detail so you can see how limiting it is not to have a name.
+
+Anonymous, or self-executing, functions don’t have a name, and they get called immediately when they’re encountered in the code. Also, any variables declared inside these functions are
+available only when the function is running.
+
+o
+myFunc1();
+
+$("#myElement").click(myFunc2);  // No parantheese when our function is called as handler
+
+
+
+Passing a variable to a function
+
+function welcome (name) {
+alert ("Hello"+ name);
+}
+
+
+// call our function
+welcome("John");
+
+
+function multiply (num1, num2) {
+var result = num1*num2;
+return result;
+}
+
+var total = multiply (6, 7);
+
+
+
+The index of an element in a list refers to where it appears on the list. Indexes always start at 0.
+
+
+$(document).ready(function() {
+$(".guess_box").click( checkForCode );
+function getRandom(num){
+var my_num = Math.floor(Math.random()*num);
+return my_num;
+}
+var hideCode = function(){
+var numRand = getRandom(4);
+$(".guess_box").each(function(index, value) {
+if(numRand == index){
+$(this).append("<span id='has_discount'></span>");
+return false;
+}
+});
+}
+hideCode();
+function checkForCode(){
+var discount;
+if($.contains(this, document.getElementById("has_discount") ) )
+{
+var my_num = getRandom(5);
+discount = "<p>Your Discount is "+my_num+"%</p>" ;
+}else{
+discount = "<p>Sorry, no discount this time!</p>" ;
+}
+$(this).append(discount);
+$(".guess_box").each( function(){
+$(this).unbind('click');
+});
+}
+}); //End document.ready()
+
+
+
+This is a static method of the jQuery library that takes two parameters. It checks all the child elements of the first parameter,
+seeing whether it contains the second parameter, and returns a true or false.
+In our case, $.contains(document.body, document.getElementById("header")) is true; on the other hand,
+$.contains(document.getElementById("header"),document.body) would be false.
+
+<html>
+<head>
+<link href="styles/test_style.css" rel="stylesheet">
+</head>
+<body>
+<div id="header" class="no_hover"><h1>Header</h1></div>
+<button type="button" id="btn1">Click to Add</button>
+<button type="button" id="btn2">Click to Remove</button>
+<script src="scripts/jquery.1.6.2.js"></script>
+<script src="scripts/my_test_scripts.js"></script>
+</body>
+</html>
+
+
+$(document).ready(function() {
+$("#btn1").click( function(){
+$("#header").addClass("hover");
+$("#header").removeClass("no_hover");
+});
+$("#btn2").click( function(){
+$("#header").removeClass("hover");
+$("#header").addClass("no_hover");
+});
+});
+
+
+
+
+
+
+
+
+
+To use Ajax, we’ll look at a data format that’s been around for a while (XML) and jQuery’s method of handling Ajax requests, ajax.
+
+$.ajax({
+url: "my_page.html"
+success: function(data){
+}
+});
+
+
+here -- url --url of what u want to get via ajax..
+run this function if ajax method is successful
+data returned from ajax call
+
+
+
+$(document).ready(function(){
+$.ajax({
+url: "finishers.xml",
+cache: false,
+dataType: "xml",
+success: function(xml){
+}
+
+datatype we are expecting to get back from server.
+
+
+Parsing XML data
+$("li").find("ul").css('background-color', 'blue');  //  This will find all the ul elements that are contained in any li elements and settheir background color to blue.
+
+
+_____________
+$.ajax({
+url: _____"finisher.xml"____________,
+cache: false,
+dataType: "xml",
+__sucess:_______ function(xml){
+$(__'#finisher_m_____________).empty();
+$('#finishers_f')_empty()_________;
+$('#finishers_all').empty();
+$(xml).find____("runner").each____________(function() {
+var info = '<li>Name: ' + $(this).find__("fname").text______________ + ' ' + $(this).
+find("lname").text() + '. Time: ' + ___$(this).find("time")_________________.text() + '</li>';
+if( $(this).find("gender").text() == "m" ){
+$('#finishers_m').append__(info)_____
+}else if ( $(this).find("gender").text() == "f" ){
+__________________.append(info);
+}else{ }
+__________________.append(info);
+});
+___________
+}
+});
+}
+
+
+
+<form id="my_form">
+<input type="text" name="a" value="1" />
+<input type="text" name="b" value="2" />
+<input type="hidden" name="c" value="3" />
+</form>
+
+$("#my_form").serialize();
+
+a=1&b=2&c=3  -- result
+
+$("#my_form:input").serializeArray();
+[
+{
+name: "a",
+value: "1"
+},
+{
+name: "c",
+value: "3"
+}
+]
+
+
+$.post(url_to_send, data, function(json){});
+
+
+
+Create a btnSave click action that takes all the data in the form and serializes it. Then send this
+information to the server using a jQuery post method. Get the URL to post to from the action
+attribute of the form. Also, create a clearInputs function that sets all values of the form fields
+to blank if the post is successful. You will also need to cancel the default submit action of the
+form, using a .submit listener on the form, with the ID of addRunner.
+
+$('_____btnsave______').click(function() {
+var data = $("#addRunner :input")._____serializeArray___________();
+$.post($("#addRunner").attr('action'), __data______ , ____function_______(json){
+if (json.status == "fail") {
+alert(json.___message________);
+}
+if (json.status == ___"success"________) {
+alert(json.message);
+clearInputs();
+}
+}, "json");
+});
+function ______clearInputs()_________{
+$("#addRunner :input").each(function(){
+$(this).val('');
+});
+}
+$("#addRunner").___________(function(){
+return false;
+});
+
+
+
+
+
+
+books:{
+book:[
+{
+title:'The Color of Magic',
+author:'Terry Pratchett',
+year:1983
+},
+{
+title:'Mort',
+author:'Terry Pratchett',
+year:1987
+},
+{
+title:'And Another thing...',
+author:'Eoin Colfer',
+year:2009
+}
+]
+}
+}
+
+
+
+$.getJSON(url_to_load, function(json) {
+});
+
+
+$.ajax({
+url: url_to_load,
+dataType: 'json',
+data: json,
+success: function(json){
+};
+})
+
+
+
+
+
+
+ $('.addToWishlistLink').click(function() {
+                      var elem = this;
+                      $.getJSON($(this).attr('href'), function(res) {
+                          _addToWishlist(res, elem);
+                      });
+                      count1 = count1 + 1;
+                      if (count1 == 0) {
+                          $('#productsInWishlist').html(0);
+                      } else {
+                          $('#productsInWishlist').html(count1);
+                      }
+                      return false;
+                  });
+
+
+
+function _addToWishlist(res, elem) {
+                      if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                          $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your Wishlist");
+                          $(elem).html("<span style='font-size:.9em;color:black;'>" + res.message + " </span> ");
+                          $('.progressLoader').hide();
+                          $(elem).siblings().show();
+                      }
+                      if(res.code == '<%=HealthkartResponse.STATUS_REDIRECT%>'){
+                          var redirectUrl = window.location.pathname;
+                          window.location.href = "${pageContext.request.contextPath}/pages/login.jsp?redirectUrl="+redirectUrl;
+                      }
+                      
+                  }
+
+
+
+ function _addToWishlist(res, elem) {
+                      if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                          $('.message .line1').html("<strong>" + res.data.name + "</strong> has been added to your Wishlist");
+                          $(elem).html("<span style='font-size:.9em;color:black;'>" + res.message + " </span> ");
+                          $('.progressLoader').hide();
+                          $(elem).siblings().show();
+                      }
+                      if(res.code == '<%=HealthkartResponse.STATUS_REDIRECT%>'){
+                          var redirectUrl = window.location.pathname;
+                          window.location.href = "${pageContext.request.contextPath}/pages/login.jsp?redirectUrl="+redirectUrl;
+                      }
+                      
+                  }
+
+In action
+
+ if (status) {
+                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Added to Wishlist", dataMap);
+            } else {
+                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Already in Wishlist", dataMap);
+            }
+
+	    return new JsonResolution(healthkartResponse);
+
+
+
+
+  $('.cartToWishlist').click(function() {
+            $.getJSON($(this).attr('href'), _cartToWishlist);
+            $(this).parents('.lineItemRow').find('.removeLink').click();
+            count1= count1 + 1 ;
+          if (count1 == 0) {
+             $('#productsInWishlist').html(0);
+          } else {
+              $('#productsInWishlist').html(count1);
+            }
+            return false;
+        });        
+
+
+
+
+      function _cartToWishlist(res) {
+            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                $('.message .line1').html("<strong>" + res.data.name + "</strong> has been removed from cart");
+                    $('.progressLoader').hide();
+            }
+            $('#gulal').show();
+        }  
+
+
+
+==============================================
+
+
+1. Why java ? 4 points
+
+2. What is the main difference between the Java platform and the other software platforms
+
+3. What is the difference between C++ and Java?
+
+4. Explain Java class loaders? If you have a class in a package, what do you need to do to run it? Explain dynamic
+class loading?
+
+5.  NoClassDefFoundError:
+
+c:\>java –cp c:/myProject com.xyz.client.Pet
+OR
+c:\>java -classpath c:/myProject/client.jar com.xyz.client.Pet
+
+
+6. Two objects loaded by different class loaders are never equal even if they carry the same values, which mean a
+class is uniquely identified in the context of the associated class loader. This applies to singletons too, where each class
+loader will have its own singleton. [Refer Q51 in Java section for singleton design pattern]
+
+
+7. Explain static vs. dynamic class loading?
+
+
+8. What are “static initializers” or “static blocks with no function names”?
+
+public static final int A = 5;
+public static final int B; //note that it is not ?? public static final int B = null;
+//note that since B is final, it can be initialized only once.
+
+
+9. What is the difference between constructors and other regular methods? What happens if you do not provide a
+constructor? Can you call one constructor from another? How do you call the superclass’s constructor?
+
+10. What are the advantages of Object Oriented Programming Languages (OOPL)?
+
+11. How do you express an ‘is a’ relationship and a ‘has a’ relationship or explain inheritance and composition? What
+is the difference between composition and aggregation?     
+
+Which one to favor, composition or inheritance? 
+
+
+What is the difference between aggregation and composition?
+
+What do you mean by polymorphism, inheritance, encapsulation, and dynamic binding?
+
+
+Why would you prefer code reuse via composition over inheritance     
+
+
+
+
+Due to the flexibility and power of object composition, most design patterns emphasize object composition over
+inheritance whenever it is possible.
+
+
+Why there are some interfaces with no defined methods (i.e. marker interfaces) in Java
+
+
+What is the main difference between an ArrayList and a Vector? What is the main difference between HashMap
+and Hashtable? What is the difference between a stack and a queue? LF
+
+Map myMap = Collections.synchronizedMap (myMap); // single lock for the entire map
+List myList = Collections.synchronizedList (myList); // single lock for the entire list
+
+
+Explain the Java Collections Framewo
+
+
+The “Comparable” allows itself to compare with another
+similar object (i.e. A class that implements Comparable
+becomes an object to be compared with). The method
+compareTo() is specified in the interface.
+
+
+Collection<String> myCollection = new ArrayList<String>(10);
+myCollection.add("123");
+myCollection.add("456");
+myCollection.add("789");
+for (Iterator it = myCollection.iterator(); it.hasNext();) {
+String myObject = (String)it.next();
+System.out.println(myObject);
+if (someConditionIsTrue) {
+myCollection.remove(myObject); //can throw ConcurrentModificationException in single as
+//well as multi-thread access situations.
+}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+
+========================================
+
+
+Difference Between Merge And Update Methods In Hibernate
+
+Both update() and merge() methods in hibernate are used to convert the object which is in detached state into persistence state.  But there is little difference.  Let us see which method will be used in what situation.
+
+
+-----
+-----
+SessionFactory factory = cfg.buildSessionFactory();
+Session session1 = factory.openSession();
+ 
+Student s1 = null;
+Object o = session1.get(Student.class, new Integer(101));
+s1 = (Student)o;
+session1.close();
+ 
+s1.setMarks(97);
+ 
+Session session2 = factory.openSession();
+Student s2 = null;
+Object o1 = session2.get(Student.class, new Integer(101));
+s2 = (Student)o1;
+Transaction tx=session2.beginTransaction();
+ 
+session2.merge(s1);
+Explanation
+
+See from line numbers 6 – 9, we just loaded one object s1 into session1 cache and closed session1 at line number 9, so now object s1 in the session1 cache will be destroyed as session1 cache will expires when ever we say session1.close()
+Now s1 object will be in some RAM location, not in the session1 cache
+Hear s1 is in detached state, and at line number 11 we modified that detached object s1, now if we call update() method then hibernate will throws an error, because we can update the object in the session only
+So we opened another session [session2] at line number 13,  and again loaded the same student object from the database, but with name s2
+so in this session2, we called session2.merge(s1); now into s2 object s1 changes will be merged and saved into the database
+Hope you are clear…, actually update and merge methods will come into picture when ever we loaded the same object again and again into the database, like above.
+
+
+
+Once an object is saved in a database, we can modify that object any number of times right, If we want to know how many no of times that an object is modified then we need to apply this versioning concept.
+When ever we use versioning then hibernate inserts version number as zero, when ever object is saved for the first time in the database.  Later hibernate increments that version no by one automatically when ever a modification is done on that particular object.
+In order to use this versioning concept, we need the following two changes in our application
+Add one property of type int in our pojo class
+In hibernate mapping file, add an element called version soon after id element
+
+
+
+Note(Important..!!!)______
+Guys your know some thing.., actually we can run any logic (Save or Update)  for the first time, but make sure the versioning column is a number (>=0), but save logic has ability to insert zero by default if there is no value, and update logic will directly tries to increments already existing value by 1, it wont insert any value by default if its null, hope you are clear about this point, and mates its the very important concept in the interview point of view, if you have any doubt just Ask a Question on this our team will respond ASAP
+
+
+
+
+
+
+
+Let us try to understand the first level cache in hibernate,  actually i tried to give almost all the concept about this first level cache hope you will enjoy this 
+By default, for each hibernate application, the first level cache is automatically been enabled
+As a programmer, we no need to have any settings to enable the first level cache and also we cannot disable this first level cache
+the first level cache is associated with the session object and scope of the cache is limited to one session only
+When we load an object for the first time from the database then the object will be loaded from the database and the loaded object will be stored in the cache memory maintained by that session object
+If we load the same object once again, with in the same session, then the object will be loaded from the local cache memory not from the database
+If we load the same object by opening other session then again the object will loads from the database and the loaded object will be stored in the cache memory maintained by this new session
+
+
+
+
+The loaded objects will be stored in cache memory maintained by a session object and if we want to remove the objects that are stored in the cache memory,  then we need to call either evict() or clear() methods.   Actually evice() is used to remove a particular object from the cache memory and clear() is to remove all objects in the cache memory
+
+
+
+Session ses = factory.openSession();
+Object ob = ses1.get(Student.class, new Integer(101));
+Student s = (Student)ob
+System.out.println(s.getStudentId());
+ 
+ses.evict(s);
+ 
+Object ob1 = ses.get(Student.class, new Integer(101));
+
+
+Opened session at line number 1
+Loaded the object with id 101, so hibernate will lads this object from the database as this is the first time in the session
+At line number 4, i printed my data  bla bla..
+then in line number 6, i removed this object [ with id 101 ] from the cache memory of the session by calling evict() method
+Now in line number 8 again i tried to load the same object,  so as we are in the same session hibernate first will verify whether the object is there in the cache or not, if not loads the object from the database, but we removed the object from the cache with evict() method right, so hibernate will loads from the database
+I mean, first checks at local session then only from the database if its not available in the local cache
+
+
+
+
+
+Importance Of Wrapper And Primitive Types In Hibernate
+
+
+See in the Product.java, line numbers 5,6,7 am using primitives just like previous programs
+In ClientProgram.java, i have been written setters for productId, proName, but i have not written setter for price
+But once you execute this program in the database it will saves the price as 0(zero), so misunderstanding of data will happen like watch price is zero  [ free of cost hah ]
+
+
+
+Hibernate Lifecycle Of pojo Class Objects
+
+When ever an object of a pojo class is created then it will be in the Transient state
+When the object is in a Transient state it doesn’t represent any row of the database, i mean not associated with any Session object, if we speak more we can say no relation with the database its just an normal object
+If we modify the data of a pojo class object, when it is in transient state then it doesn’t effect on the database table
+When the object is in persistent state, then it represent one row of the database, if the object is in persistent state then it is associated with the unique Session
+if we want to move an object from persistent to detached state, we need to do either closing that session or need to clear the cache of the session
+if we want to move an object from persistent state into transient state then we need to delete that object permanently from the database
+
+
+
+
+
+If we do any modifications all the changes will first applied to the object in session cache only (Let__ we do the modifications 5 times, then 5 times we need to save the changes into the database right, which means number of round trips from our application to database will be increased, Actually if we load an object from the database, first it will saves in the cache-memory so if we do any number of changes all will be effected at cache level only and finally we can call save or update method so with the single call of save or update method the data will be saved into the database.
+
+
+
+
+
+Hibernate Converting Object From Detached to Persistent state
+
+ Configuration cfg = new Configuration();
+        cfg.configure("hibernate.cfg.xml");
+ 
+        SessionFactory factory = cfg.buildSessionFactory();
+ 
+        Session session1 = factory.openSession();
+ 
+         Product p=null;          //Transient state..
+         Object o=session1.get(Product.class, new Integer(1001));
+         p=(Product)o;           //now p is in Persistent state..
+ 
+        session1.close();
+ 
+        p.setPrice(36000);            // p is in Detached state
+ 
+        Session session2=factory.openSession();
+ 
+         Transaction tx=session2.beginTransaction();
+            session2.update(p);      // now p reached to Persistent state
+         tx.commit();
+ 
+        session2.close();
+
+
+We have opened the session1 at line number 14 and closed at line number 20, see i have been loaded the Product class object by using get(-,-) method
+Remember get() method always returns the super class object (Object)
+so i typecast into my pojo class object type, so now we can use print any value from this object so its in the Persistent state
+see line number 22,  am trying to change the Price,  but it wont effect the database because its not in the session cache so i need to take one more session to update this value in the database, so for that reason i took one more session from line numbers 24 – 30
+Gun short point is, things related to database must go with in the session only that’s it
+
+
+
+
+
+How To Enable Second Level Caching In Hibernate
+
+First level cache will be enabled by default, but for enable second level cache we need to follow some settings, let us see few points regarding this..
+ 
+Second level cache was introduced in hibernate 3.0
+When ever we are loading any object from the database,  then hibernate verify whether that object is available in the local cache memory of that particular session [ means first level cache ], if not available then hibernate verify whether the object is available in global cache or factory cache [ second level cache ], if not available then hibernate will hit the database and loads the object from there, and then first stores in the local cache of the session [ first level ] then in the global cache [ second level cache ]
+When another session need to load the same object from the database,  then hibernate copies that object from global cache [ second level cache ] into the local cache of this new session
+ 
+Second level cache in the hibernate is of  from 4 vendors…
+Easy Hibernate [EHCache] Cache from hibernate framework
+Open Symphony [OS] cache from Open Symphony
+SwarmCache
+TreeCache from JBoss
+
+To enable second level cache in the hibernate, then the following 3 changes are required
+Add provider classin hibernate configuration file like…
+1
+2
+3
+<property name="hibernate.cache.provider_class">
+org.hibernate.cache.EhCacheProvider
+</property>
+Configure cache elementfor a class in hibernate mapping file…
+1
+<cache usage="read-only" />
+Note: this must write soon after <class>
+create xml file called ehcache.xml and store in at class path location [ no confusions, i mean in the place where you have mapping and configuration XML's ] in web application.
+
+ 
+
+
+
+
+
+
+Lets take an example, we have 2 pojo classes in our application like Student, Employee.
+If we load student object from the database, then as its the first time hibernate will hits the database and fetch this student object data and stores in the session1 cache memory [ First level cache ], then in the global cache [ second level cache ] provided if we write <cache usage=”read-only” /> in the student mapping file
+I mean hibernate will stores in the local session memory by default, but it only stores in the global cache [ second level cache ] only if we write <cache usage=”read-only” /> in the student mapping file, if not so hibernate wont stores in the global cache
+Now take another session like session 2 for example, if session 2 also load the student object then hibernate will loads from the global cache [ second level cache ] as student object is available at global [Actually when ever we want to load any object hibernate first will checks at local, then global then database right hope you remembered this ], now if session 3 modify that student object then hibernate will thorows an error because we have written <cache usage=”read-only” /> in student mapping file
+We can avoid this by writing <cache usage=”read-write” />
+so remember <cache /> element has that much importance
+ 
+
+
+
+
+ http://commons.apache.org/proper/commons-email/
+ http://commons.apache.org/proper/commons-email/userguide.html
+
+
+
+ useSmsService=false
+hkSMSURL=http://smscountry.com/SMSCwebservice_Bulk.aspx
+hkSMSUserName=AquamarineHealth
+hkSMSPassword=kart@2012
+hkSMSSender=HLTKRT
+
+
+
+activemq-core-5.7.0.jar
+
+
+
+
+=================================================================================================================================
+
+
+    public Payment findByGatewayOrderId(String gatewayOrderId) {
+        return (Payment) getSession().createQuery("from Payment p where p.gatewayOrderId = :gatewayOrderId").setString("gatewayOrderId", gatewayOrderId).uniqueResult();
+    }
+
+     public List<Payment> listByOrderId(Long orderId) {
+        // noinspection unchecked
+        return (List<Payment>) getSession().createQuery("from Payment p where p.order.id = :orderId").setLong("orderId", orderId).list();
+    }
+
+    
+     return getSession().createQuery("select distinct o.address from Order o where o.address.phone is not null").list();
+
+
+     public List<Address> getAllAddressesByCategories(List<Category> applicableCategories) {
+        String hqlQuery = "select distinct(li.order.address) from CartLineItem li left join li.productVariant.product.categories c "
+                + "where c in (:applicableCategories) and  li.order.address.phone is not null";
+        return getSession().createQuery(hqlQuery).setParameterList("applicableCategories", applicableCategories).list();
+    }
+
+
+  
+    where payment.status.name <> PaymentStatus.AWAITING_APPROVAL
+    counts the number of payments in each status, excluding all payments in the AWAITING_APPROVAL status where the most recent status change was made by the current user
+
+
+
+    public void resetInventory(ProductVariant productVariant) {
+        List<Long> toBeRemovedIds = (List<Long>) getSession().
+                createQuery("select id from SkuItem si where si.skuGroup.sku.productVariant = :productVariant").
+                setParameter("productVariant", productVariant).
+                list();
+        if (toBeRemovedIds != null && !toBeRemovedIds.isEmpty()) {
+            getSession().
+                    createQuery("delete from SkuItem si where si.id in (:toBeRemovedIds)").
+                    setParameterList("toBeRemovedIds", toBeRemovedIds).
+                    executeUpdate();
+        }
+    }
+
+
+
+ public List<SkuItem> getCheckedInSkuItems(Sku sku) {
+        String sql = "from SkuItem si where  si.skuItemStatus.id =  :checkedInStatusId  and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
+        Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", EnumSkuItemStatus.Checked_IN.getId());
+        return query.list();
+    }
+
+
+     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId) {
+        String sql = "select si from SkuItem si where si.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId ";
+        if (statusId != null) {
+            sql = sql + "and si.skuItemStatus.id = :statusId ";
+        }
+        Query query = getSession().createQuery(sql).setParameter("barcode", barcode).setParameter("warehouseId", warehouseId);
+        if (statusId != null) {
+            query.setParameter("statusId", statusId);
+        }
+        List<SkuItem> skuItems = query.list();
+	      if(skuItems != null && skuItems.size() > 1){
+		      logger.error(" barcode -> " + barcode + " resulting in more than on sku_item in warehouse id " + warehouseId);
+	      }
+        return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
+    }
+
+
+
+
+
+
+   DetachedCriteria criteria = DetachedCriteria.forClass(ProductVariantInventory.class);
+        if (rvLineItem != null) {
+            criteria.add(Restrictions.eq("rvLineItem", rvLineItem));
+        }
+        if (stockTransferLineItem != null) {
+            criteria.add(Restrictions.eq("stockTransferLineItem", stockTransferLineItem));
+        }
+
+	 criteria.setProjection(Projections.distinct(Projections.property("skuItem")));
+        return (List<SkuItem>) findByCriteria(criteria);
+
+
+
+    public Long getBookedQtyOfSkuInProcessingQueue(List<!-- <Sku> --> skuList) {
+		Long qtyInQueue = 0L;
+		if (skuList != null && !skuList.isEmpty()) {
+			String query = "select sum(li.qty) from LineItem li " + "where li.sku in (:skuList) " + "and li.shippingOrder.shippingOrderStatus.id in (:orderStatusIdList) ";
+			qtyInQueue = (Long) getSession().createQuery(query).setParameterList("skuList", skuList).setParameterList("orderStatusIdList",
+					EnumShippingOrderStatus.getShippingOrderStatusIDs(EnumShippingOrderStatus.getStatusForBookedInventoryInProcessingQueue())).uniqueResult();
+			if (qtyInQueue == null) {
+				qtyInQueue = 0L;
+			}
+		}
+		return qtyInQueue;
+	}
+
+
+
+
+public List<!-- <GoodsReceivedNote> --> checkinCompletedGrns(Date startDate) {
+        String sql = "select o from GoodsReceivedNote o where o.createDate <= (:startDate) and o.grnStatus.id = :grnStatusValue";
+        Query query = getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("grnStatusValue", EnumGrnStatus.InventoryCheckedIn.getId());
+        return query.list();
+    }
+
+
+
+==============================
+
+1.  ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+        shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
+        shippingOrderSearchCriteria.setDropShipping(true);
+        shippingOrderSearchCriteria.setInstallable(true);
+        shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
+        if (shippingOrderPage != null) {
+            shippingOrderList = shippingOrderPage.getList();
+        }
+
+
+
+2.   public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage);
+
+      public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
+		DetachedCriteria searchCriteria = shippingOrderSearchCriteria.getSearchCriteria();
+		//searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return list(searchCriteria, true, pageNo, perPage);
+	}
+
+
+3.     public DetachedCriteria getSearchCriteria() {
+        return buildSearchCriteriaFromBaseCriteria();
+    }
+
+
+4.    protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
+        return buildBaseCriteria();
+    }
+
+    private DetachedCriteria buildBaseCriteria() {
+        this.baseCriteria = getBaseCriteria();
+        if (orderId != null) {
+            baseCriteria.add(Restrictions.eq("id", orderId));
+        }
+
+        if (StringUtils.isNotBlank(gatewayOrderId)) {
+            baseCriteria.add(Restrictions.eq("gatewayOrderId", gatewayOrderId));
+        }
+
+        if (storeId != null) {
+            baseCriteria.add(Restrictions.eq("store.id", storeId));
+        }
+
+        /*
+         * if (sortByUpdateDate) { if (!orderAsc) {
+         * baseCriteria.addOrder(org.hibernate.criterion.Order.desc("updateDate")); } else {
+         * baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate")); } }
+         */
+
+        if (sortByUpdateDate && orderAsc) {
+            baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate"));
+        }
+
+        // TODO: fix later after rewrite
+        // baseCriteria.setMaxResults(2);
+
+        /*
+         * if (maxResults == -1) { baseCriteria.setMaxResults(DEFAULT_MAX_RESULTS); } else {
+         * baseCriteria.setMaxResults(maxResults); }
+         */
+
+        return baseCriteria;
+    }
+
+
+
+
+
+5.. getBaseCriteria  
+
+   protected abstract DetachedCriteria getBaseCriteria();  >>> this is the abstract method in Abstract orderSearch Criteria
+
+6. Now in implementaion class
+
+     protected DetachedCriteria getBaseCriteria() {
+        DetachedCriteria criteria = DetachedCriteria.forClass(ShippingOrder.class);
+        return criteria;
+    }
+
+
+7.    protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
+        DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
+   
+       shippingOrderLifecycleCriteria.add(Restrictions.between("activityDate", activityStartDate, activityEndDate));
+
+          DetachedCriteria shipmentCriteria = null;
+        if (awbList != null && awbList.size() > 0) {
+            shipmentCriteria = criteria.createCriteria("shipment");
+
+            shipmentCriteria.add(Restrictions.in("awb", awbList));
+        }
+
+       /// If i keep adding criteria over shipment criteria those going in shipment Criteria
+     
+         if (isInstallable()){
+                lineItemsCriteria = criteria.createCriteria("lineItems");
+                skuCriteria = lineItemsCriteria.createCriteria("sku");
+                productVariantCriteria = skuCriteria.createCriteria("productVariant");
+                productCriteria = productVariantCriteria.createCriteria("product");
+                productCriteria.add(Restrictions.eq("installable", true));
+            }
+
+
+
+8.      public Page list(DetachedCriteria criteria, boolean hasDistinctRootEntity, int pageNo, int perPage) {
+
+        int totalResults = count(criteria, hasDistinctRootEntity);
+        criteria.setProjection(null);
+        if (hasDistinctRootEntity) {
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        } else {
+            criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+        }
+        int firstResult = (pageNo - 1) * perPage;
+        List resultList = findByCriteria(criteria, firstResult, perPage);
+        return new Page(resultList, perPage, pageNo, totalResults);
+    }
+
+
+
+9.    private int count(DetachedCriteria criteria, boolean hasDistinctRootEntity) {
+        int totalResults = 0;
+        //DetachedCriteria countCriteria = copy(criteria);
+        if (hasDistinctRootEntity) {
+            criteria.setProjection(Projections.countDistinct("id"));
+        } else {
+            criteria.setProjection(Projections.rowCount());
+        }
+        List totalResultsList = getHibernateTemplate().findByCriteria(criteria);
+        totalResults = (Integer) totalResultsList.get(0);
+
+        return totalResults;
+    }
+
+
+10 .     public Page(List resultList, int pageSize, int page, int totalResults) {
+        this.resultList = resultList;
+        this.pageSize = pageSize;
+        this.page = page;
+        this.totalResults = totalResults;
+        this.totalPages = (totalResults - 1) / pageSize + 1;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   public abstract class AbstractOrderSearchCriteria {
+
+    private Long               orderId;
+    private Long               storeId;
+    private String             gatewayOrderId;
+
+    protected boolean          sortByPaymentDate = true;
+    protected boolean          sortByScore       = true;
+    protected boolean          sortByLastEscDate       = true;
+    protected boolean          sortByDispatchDate       = true;
+
+    private boolean            orderAsc          = false;
+    private boolean            sortByUpdateDate  = true;
+
+    private SearchDao          searchDao;
+    protected DetachedCriteria baseCriteria;
+
+      
+
+    public AbstractOrderSearchCriteria setOrderAsc(boolean orderAsc) {
+        this.orderAsc = orderAsc;
+        return this;
+    }
+
+     protected abstract DetachedCriteria getBaseCriteria();
+
+
+    public SearchDao getSearchDao() {
+        if (searchDao == null) {
+            searchDao = (SearchDao) ServiceLocatorFactory.getService(SearchDao.class);
+        }
+        return searchDao;
+    }
+
+
+     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
+        return buildBaseCriteria();
+    }
+
+
+
+ private DetachedCriteria buildBaseCriteria() {
+        this.baseCriteria = getBaseCriteria();
+        if (orderId != null) {
+            baseCriteria.add(Restrictions.eq("id", orderId));
+        }
+
+        if (StringUtils.isNotBlank(gatewayOrderId)) {
+            baseCriteria.add(Restrictions.eq("gatewayOrderId", gatewayOrderId));
+        }
+
+        if (storeId != null) {
+            baseCriteria.add(Restrictions.eq("store.id", storeId));
+        }
+
+        /*
+         * if (sortByUpdateDate) { if (!orderAsc) {
+         * baseCriteria.addOrder(org.hibernate.criterion.Order.desc("updateDate")); } else {
+         * baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate")); } }
+         */
+
+        if (sortByUpdateDate && orderAsc) {
+            baseCriteria.addOrder(org.hibernate.criterion.Order.asc("updateDate"));
+        }
+
+        // TODO: fix later after rewrite
+        // baseCriteria.setMaxResults(2);
+
+        /*
+         * if (maxResults == -1) { baseCriteria.setMaxResults(DEFAULT_MAX_RESULTS); } else {
+         * baseCriteria.setMaxResults(maxResults); }
+         */
+
+        return baseCriteria;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+http://javaprogrammingtips4u.blogspot.in/2010/04/how-to-use-transaction-manager-with.html
+
+We are currently discussing the Best Practice for placing the @Transactional annotations in our code.
+Do you place the @Transactional in the DAO classes and/or their methods or is it better to annotate the Service classed which are calling using the DAO objects? Or does it make sense to annotate both "layers"?
+
+I think transactions belong on the Service layer. It's the one that knows about units of work and use cases. It's the right answer if you have several DAOs injected into a Service that need to work together in a single transaction
+
+
+"org.hibernate.HibernateException: No Hibernate Session bound to thread, and configuration does not allow creation of non-transactional one here".
+
+
+
+
+
+
+
+========================
+
+1.  Scanning code part
+
+<!-- 
+ <%--<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction" id="stForm2">--%>
+            <%--<fieldset class="right_label">--%>
+                <%--<legend>Scan Barcode to delete:</legend>--%>
+                <%--<ul>--%>
+                    <%--<li>--%>
+                        <%--<s:label name="barcode">Product Variant Barcode</s:label>--%>
+                        <%--<s:text name="hkBarcode" id="productVariantBarcode"/>--%>
+                    <%--</li>--%>
+                    <%--<li></li>--%>
+                <%--</ul>--%>
+            <%--</fieldset>--%>
+        <%--</s:form>--%> -->
+
+
+   $('#stForm2').submit(function() {
+                var pvb = $('#productVariantBarcode').val();
+                if (pvb == null || pvb == "") {
+                    alert("Value can't be Empty");
+                    return false;
+                }
+            });
+            $('#productVariantBarcode').change(function() {
+
+                var formName = $('#stForm2');
+                var formURL = formName.attr('action');
+                formName.attr('action', formURL + "?cycleCount=" + ${cycle.cycleCount} + "&deleteScannedSkuItem=");
+                formName.submit();
+            });
+
+
+//  The live() method was deprecated in jQuery version 1.7, and removed in version 1.9. Use the on() method instead.
+
+  $(selector).live(event,data,function)
+
+   $('.scannedBarcode').live("change", function() {
+                    var value = $(this).val();
+                    if (value == null || value.trim() == '') {
+                        return false;
+                    }
+                    else {
+                        $(this).attr("disable", "disable");
+                        return $('.saveform').click();
+                    }
+                });
+
+
+
+
+
+ $(this).attr("disable", "disable");
+
+  if (!(skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId()))){
+
+                                }
+
+
+
+
+				=======================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+drop table all_prob_pvi;
+
+create table all_prob_pvi
+
+select pvi.txn_date, pvi.id pvi_id, pvi.qty as cout, pvi.sku_item_id, pvi.line_item_id, li.qty li_qty,li.shipping_order_id,
+s.id sku_id, s.warehouse_id, s.product_variant_id,pvi.user_id
+	
+
+ from product_variant_inventory pvi , 
+
+
+(SELECT pvi.sku_item_id as sku_item_id, pvi.txn_date, pvi.line_item_id 
+FROM `product_variant_inventory` pvi , line_item li 
+WHERE date(pvi.`txn_date`) > date('2013-03-13')
+and pvi.qty =  -1  and
+  pvi.line_item_id is not null and 
+pvi.line_item_id = li.id and 
+li.qty > 1 
+group by pvi.sku_item_id, date(pvi.txn_date), line_item_id
+having count(*) > 1  ) bad_sku,
+
+line_item li , 
+sku s
+WHERE date(pvi.`txn_date`) > date('2013-03-13')
+and pvi.qty =  -1  and
+  pvi.line_item_id is not null and 
+pvi.line_item_id = li.id and 
+li.qty > 1  and 
+pvi.sku_item_id  = bad_sku.sku_item_id and 
+date(pvi.txn_date) = date(bad_sku.txn_date) and 
+pvi.line_item_id = bad_sku.line_item_id and 
+li.sku_id = s.id 
+order by pvi.sku_item_id, pvi.id;
+
+select user_id , count(*) from all_prob_pvi group by user_id order by count(*) desc;
+
+select * from product_variant_inventory pvi where line_item_id  = 944349;
+select * from product_variant_inventory pvi where sku_item_id = 990624;
+
+select * from user where id = 5392235;
+
+select * from all_prob_pvi  app, sku_item si, sku_group sg
+where app.sku_item_id = si.id and si.sku_group_id = sg.id and sg.barcode is null order by sku_item_id, line_item_id;
+
+
+select * from all_prob_pvi where sku_item_id = 990624 order by sku_item_id, line_item_id;
+
+select * from sku_item where id = 990624;
+
+select * from sku_group where barcode is null order by id ;
+
+select * from sku_item where sku_group_id = 95498; >> 974497
+
+
+
+
+
+
+
+
+
+------
+
+
+
+
+drop table all_good_pvi;
+drop table actual_prob_pvi;
+
+create table all_good_pvi
+select * from all_prob_pvi  group by sku_item_id;
+
+select * from 	actual_prob_pvi api, product_variant_inventory pvi where api.pvi_id = pvi.id and api.sku_item_id = pvi.sku_item_id;
+
+select * from 	actual_prob_pvi api, product_variant_inventory pvi, sku_group sg, sku_item si where api.pvi_id = pvi.id and api.sku_item_id = pvi.sku_item_id and api.sku_id = sg.sku_id  and sg.id = si.sku_group_id and si.sku_item_status_id = 10;	
+
+create table actual_prob_pvi
+select * from all_prob_pvi app where app.pvi_id  not in (select pvi_id from all_good_pvi);
+
+select * from product_variant_inventory pvi where line_item_id  = 943807;
+
+select * from product_variant_inventory pvi where id =2154522;
+
+select * from sku_item where id = 975544;
+select * from sku_group where id = 95652;
+
+select * from actual_prob_pvi;
+
+create table product_variant_inventory_back_up (select * from product_variant_inventory);
+
+
+
+select si.id  as sku_item_id from sku_item si , sku_group sg, sku sku where si.sku_group_id = sg.id
+				                    and sg.sku_id = sku.id
+				                    and si.sku_item_status_id = 10
+				                    and sku.id =  1983; 
+
+select Count(*) from product_variant_inventory;
+
+select count(*) from actual_prob_pvi;	
+
+3258 - 3032 
+== 226 records
+
+224 -database
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==================================================
+
+
+<!DOCTYPE html>
+<html>
+<body>
+<h2>JSON Object Creation in JavaScript</h2>
+
+<p>
+Name: <span id="jname"></span><br>  
+Age: <span id="jage"></span><br> 
+Address: <span id="jstreet"></span><br> 
+Phone: <span id="jphone"></span><br> 
+</p>  
+
+<script>
+var JSONObject = {
+  "name":"John Johnson",
+  "street":"Oslo West 16", 
+  "age":3,
+  "phone":"555 1234567"};
+document.getElementById("jname").innerHTML=JSONObject.name  
+document.getElementById("jage").innerHTML=JSONObject.age  
+document.getElementById("jstreet").innerHTML=JSONObject.street  
+document.getElementById("jphone").innerHTML=JSONObject.phone  
+</script>
+
+</body>
+</html>
+
+
+
+
+Data is in name/value pairs
+Data is separated by commas
+Curly braces hold objects
+Square brackets hold arrays
+
+
+"employees": [
+{ "firstName":"John" , "lastName":"Doe" }, 
+{ "firstName":"Anna" , "lastName":"Smith" }, 
+{ "firstName":"Peter" , "lastName":"Jones" }
+]
+
+
+In the example above, the object "employees" is an array containing three objects. Each object is a record of a person (with a first name and a last name).
+
+
+
+var employees = [
+{ "firstName":"John" , "lastName":"Doe" }, 
+{ "firstName":"Anna" , "lastName":"Smith" }, 
+{ "firstName":"Peter" , "lastName": "Jones" }
+];
+
+
+employees[0].lastName;
+The data can be modified like this:
+
+employees[0].firstName = "Jonatan";
+
+
+
+
+Converting a JSON Text to a JavaScript Object
+One of the most common use of JSON is to fetch JSON data from a web server (as a file or as an HttpRequest), convert the JSON data to a JavaScript object, and then it uses the data in a web page.
+
+
+var txt = '{ "employees" : [' +
+'{ "firstName":"John" , "lastName":"Doe" },' +
+'{ "firstName":"Anna" , "lastName":"Smith" },' +
+'{ "firstName":"Peter" , "lastName":"Jones" } ]}'; 
+
+
+The eval() function uses the JavaScript compiler which will parse the JSON text and produce a JavaScript object. The text must be wrapped in parenthesis to avoid a syntax error:
+
+var obj = eval ("(" + txt + ")");
+
+
+<p>
+First Name: <span id="fname"></span><br /> 
+Last Name: <span id="lname"></span><br /> 
+</p> 
+
+<script>
+document.getElementById("fname").innerHTML = obj.employees[1].firstName 
+document.getElementById("lname").innerHTML = obj.employees[1].lastName 
+</script>
+
+$.get(URL,data,function(data,status,xhr),dataType)	
+
+
+
+=======================================
+
+
+Install JSTL Library:
+If you are using Apache Tomcat container then follow the following two simple steps:
+
+Download the binary distribution from Apache Standard Taglib and unpack the compressed file.
+
+To use the Standard Taglib from its Jakarta Taglibs distribution, simply copy the JAR files in the distribution's 'lib' directory to your application's webapps\ROOT\WEB-INF\lib directory.
+
+
+<c:set var="salary" scope="session" value="${2000*2}"/>
+<c:out value="${salary}"/>
+
+
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<html>
+<head>
+<title><c:forEach> Tag Example</title>
+</head>
+<body>
+<c:forEach var="i" begin="1" end="5">
+   Item <c:out value="${i}"/><p>
+</c:forEach>
+</body>
+</html>
+
+
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<html>
+<head>
+<title><c:forTokens> Tag Example</title>
+</head>
+<body>
+<c:forTokens items="Zara,nuha,roshy" delims="," var="name">
+   <c:out value="${name}"/><p>
+</c:forTokens>
+</body>
+</html>
+
+
+
+
+
+=========================
+
+
+Select all <p> elements that are siblings of the <div> element:
+
+$("div ~ p")
+
+
+With jquery ajax we can load text, xml , html, json from server using get and post method, and u can load the data into selected html page
+
+
+jQuery load() Method
+
+$(selector).load(URL,data,callback); 
+ url -- request to load
+ data key value pair passed
+ The optional callback parameter is the name of a function to be executed after the load() method is completed
+
+
+ $("#div1").load("demo_test.txt");
+
+ $("#div1").load("demo_test.txt #p1");
+
+
+ $("button").click(function(){
+  $.get("demo_test.asp",function(data,status){
+    alert("Data: " + data + "\nStatus: " + status);
+  });
+});
+
+
+
+$("button").click(function(){
+  $.post("demo_test_post.asp",
+  {
+    name:"Donald Duck",
+    city:"Duckburg"
+  },
+  function(data,status){
+    alert("Data: " + data + "\nStatus: " + status);
+  });
+});
+
+
+
+
+=========================================================================
+
+
+   $('.editBuckets').click(function() {
+            var elem = $(this);
+            $.getJSON($(this).attr('href'), function(res) {
+                var trgt = elem.parent().siblings('.bucketContainer').children('.checkBoxList');
+                  trgt.html('');
+                _editBuckets(res, elem,trgt);
+            });
+            return false;
+        });
+
+
+
+
+
+   function _editBuckets(res, elem,trgt) {
+            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+               // $(elem).siblings().show();
+
+               var checkedBuckets = res.data.name;
+                var checkedBucketsId = "";
+                for (var i = 0; i < checkedBuckets.length; i++) {
+                    checkedBucketsId += "[" +checkedBuckets[i].id + "],";
+                }
+
+                var allBuckets = "";
+            <c:forEach items="${actionItemBean.buckets}" var="bucket" varStatus="ctr">
+                var bucketId = "[${bucket.id}]";
+                if (checkedBucketsId.indexOf(bucketId) != -1) {
+//                    alert("buckets id " + bucketId );
+                    allBuckets += '<label><input type="checkbox" class="bckts" name="buckets[${ctr.index}].selected" checked="checked" />';
+                } else {
+                    allBuckets += '<label><input type="checkbox" class="bckts" name="buckets[${ctr.index}].selected" />';
+                }
+                allBuckets += '${bucket.name}' +
+                              '<input type="hidden" class="bcktId" name="buckets[${ctr.index}].id" value="${bucket.id}"/>' +
+                              '</label>' +
+                              '<br/>';
+            </c:forEach>
+                //alert(allBuckets);
+                trgt.append(allBuckets);
+                trgt.parents(".bucketContainer").show();
+                //                               alert(buckets.get(0).name);
+                //                               $("#div1").text("Buckets-->" + checkedBucket.length);
+            }
+
+        }
+    });
+
+
+
+
+     <div class="checkBoxList">
+                                <%--<script> alert ("saving id" + ${actionItem.id});</script> --%>
+
+                        </div>
+
+
+
+
+
+Description: Get the descendants of each element in the current set of matched elements, filtered by a selector, 
+
+$input.is(':checked') )
+
+
+ $('.saveBuckets').click(function() {
+           var parent=  $(this).parents(".bucketContainer");
+            var ele = parent;
+             var actionItem = ele.find ("[name=actionItem]") ;
+            var actionItemId = ele.children('.actItemId').val();
+            var bucket = {selected :false,id :0};
+            var chldEle = {};
+            ele.find('label').each(function() {
+                var chld = $(this);
+
+                chld.find('input').each(function() {
+                    var iEle = $(this);
+
+                    if (iEle.attr('type') == 'checkbox') {
+                      //  console.log(iEle.is(':checked'));
+                        chldEle[iEle.attr('name')] = 'false';
+                        if (iEle.is(':checked')) {
+                            chldEle[iEle.attr('name')] = 'true';
+//                           console.log('saki naka' + iEle.attr('name'));
+                        }
+                    } else {
+                        chldEle[iEle.attr('name')] = iEle.val();
+
+//                        console.log('checking values' + iEle.val());
+                    }
+                }
+
+                        );
+            });
+             chldEle[actionItem.attr('name')] = actionItemId;
+//            alert(actionItemId );
+//            var buckets = new Array();
+//            var i =0;
+//               $(this).parents(".bucketContainer").find('label').each(function(){
+//                       var selected = $(this).children('.bckts').is(':checked');
+//                       var bucketId = $(this).children('.bcktId').val();
+//                   if(selected !=null && bucketId!=null){
+//                       var bucket= {selected : selected, id : bucketId};
+//                       buckets[i++] = bucket;
+//                   }
+//               });
+//            alert(buckets);
+            $.ajax({
+                url:$('#actionItemRes').attr('href'),
+                    data : chldEle,       
+                    type: 'post',
+                    dataType: 'json',
+                    success : function(res){
+
+                  if(res.code == '<%=HealthkartResponse.STATUS_OK%>'){
+                      var str = '';
+                                for (i in res.data.name ){
+                                   str += res.data.name[i].name + ' ,';
+                                }
+                      ele.parents('.addressRow').find('.current-buckets').html(str);
+                     
+                  } else{
+//                      alert("hello");
+                  }
+                    }
+               });
+               <%--$.getJSON($('#actionItemRes').attr('href'),{buckets: chldEle, actionItem: actionItemId},function(res){--%>
+                  <%--if(res.code == <%=HealthkartResponse.STATUS_OK%>){--%>
+                                  <%--alert("sab sahi chal gaya");--%>
+                  <%--} else{--%>
+                      <%--alert("hello");--%>
+                  <%--}--%>
+               <%--});--%>
+        });
+
+
+
+
+
+When you assign a numeric value to a variable, do not put quotes around the value. If you put quotes around a numeric value, it will be treated as text.
+<p id="demo"></p>
+var carname="Volvo";
+document.getElementById("demo").innerHTML=carname;
+
+JS Objecct
+
+"Everything" in JavaScript is an Object: a String, a Number, an Array, a Function....
+
+var message="Hello World!";
+var x=message.length;
+
+
+
+
+Creating JavaScript Objects
+With JavaScript you can define and create your own objects.
+
+There are 2 different ways to create a new object:
+
+1. Define and create a direct instance of an object.
+2. Use a function to define an object, then create new object instances.
+
+
+Creating a Direct Instance
+This example creates a new instance of an object, and adds four properties to it:
+
+person=new Object();
+person.firstname="John";
+person.lastname="Doe";
+person.age=50;
+person.eyecolor="blue";
+
+
+document.write(person.firstname + " is " + person.age + " years old." );
+
+Alternate
+person={firstname:"John",lastname:"Doe",age:50,eyecolor:"blue"};
+
+
+
+
+function person(firstname,lastname,age,eyecolor)
+{
+this.firstname=firstname;
+this.lastname=lastname;
+this.age=age;
+this.eyecolor=eyecolor;
+}
+
+
+var myFather=new person("John","Doe",50,"blue");
+var myMother=new person("Sally","Rally",48,"green");
+
+
+
+/// adding method
+
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+function person(firstname,lastname,age,eyecolor)
+{
+this.firstname=firstname;
+this.lastname=lastname;
+this.age=age;
+this.eyecolor=eyecolor;
+ 
+this.changeName=changeName;
+function changeName(name)
+{
+this.lastname=name;
+}
+}
+myMother=new person("Sally","Rally",48,"green");
+myMother.changeName("Doe");
+document.write(myMother.lastname);
+</script>
+
+</body>
+</html>
