@@ -1,0 +1,23 @@
+1) create Dispatcher servlet --> check web .xml  --> changing url name
+ii) offers-servlet.xml in web -inf
+iii) creating new package controller and adding offercontroller
+iv) offer-servlet.xml -- firts namespaces , context and mvc 
+v)<context:component-scan
+		base-package="com.myProject.web.controller">
+	</context:component-scan>
+	<mvc:annotation-driven></mvc:annotation-driven>
+	
+vi)	add internalResourceviewResolver Class to 
+org.springframework.web.servlet.view.InternalResourceViewResolver.class
+
+
+vii) <bean id="jspviewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<property name="prefix" value="/WEB-INF/jsps/"></property>
+	<property name="suffix" value=".jsp"></property>
+	</bean>
+	
+viii http://localhost:8080/offers/mv
+
+ix) adding jstl <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+and then add jstl jar	

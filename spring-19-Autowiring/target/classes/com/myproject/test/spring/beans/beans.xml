@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+
+	<bean id="person" class="com.myproject.test.spring.Person">
+		<constructor-arg value="111"></constructor-arg>
+		<constructor-arg value="ankit"></constructor-arg>
+		<property name="taxId" value="1234"></property>
+		<property name="address" ref="address"></property>
+	</bean>
+	<bean id="address" class="com.myproject.test.spring.Address">
+		<constructor-arg name="street" value="shatabdhi vihar"></constructor-arg>
+		<constructor-arg name="postcode" value="201301"></constructor-arg>
+	</bean>
+	<bean id="logger" class="com.myproject.test.spring.Logger">
+	</bean>
+	<bean id="fileWritter"
+		class="com.myproject.test.spring.Filewritter">
+	</bean>
+	<bean id="consoleWriter"
+		class="com.myproject.test.spring.ConsoleWriter">
+	</bean>
+	<context:annotation-config></context:annotation-config>
+</beans>
