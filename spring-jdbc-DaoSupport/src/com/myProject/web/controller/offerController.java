@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.myProject.web.dao.DaoManager;
 import com.myProject.web.dao.HibernateDaoImpl;
 import com.myProject.web.dao.Offer;
 import com.myProject.web.service.OfferService;
@@ -68,9 +70,7 @@ public class offerController {
 	public String createOff(){
 		// logical name what view 
 
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/myProject/web/config/spring-doa.xml");
-		
-		HibernateDaoImpl jd =context.getBean("hibernateDaoImpl", HibernateDaoImpl.class);
+		HibernateDaoImpl jd = DaoManager.getHibernateTemplate();
 		System.out.println(" i am calling dj");
 		int  count= jd.getCircleCount();
 		System.out.println("count is" +count);
