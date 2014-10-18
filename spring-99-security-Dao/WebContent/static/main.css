@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+input[type=text]{
+	width:250px;
+}
+
+.error{
+	font-size: small;
+	color: red;
+	margin-left: 10px;
+}
+
+
+span.error{
+	font-size: medium;
+	color: red;
+	margin-left: 10px;
+}
